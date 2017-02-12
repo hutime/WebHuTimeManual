@@ -1,0 +1,459 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>グラフレイヤ - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>グラフレイヤ</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+            style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      グラフは、折れ線グラフレイヤ（HuTime.LineChartLayer）、プロットグラフレイヤ（HuTime.PlotChartLayer）、または、棒グラフレイヤ（HuTime.BarChartLayer）を使って表示する。これらのレイヤは<a href="Layer.html">Layerクラス</a>から派生した、クラスであり、パネルへの配置など、その基本的な使用方法は他のレイヤと同じである。グラフの元データは、CSVファイルなどの形で別途与える。元データのどの項目（列）が開始、終了時間で、どの項目がグラフに値であるかの設定は、グラフ用のレコードセット（HuTime.ChartRecordset）の中で行う。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．グラフの元データ</h2>
+    <p>
+      csv（カンマ区切りテキスト）やtsv（タブ区切りテキスト）の場合、先頭行がタイトル行となっているファイルを用いるのが容易である。以下は、元データの例で、2015年7月の京都市の気象データである（冒頭部分のみ）。
+    </p>
+
+    <div>
+      <pre class="code">
+Date,Precipitation,Temperature,Humidity,Wend Speed,Sunshine Hours
+2015-07-01,33.5,22.7,85,1.7,0
+2015-07-02,0,25.2,67,2.2,4.6
+2015-07-03,1,25.4,67,1.6,3.2
+2015-07-04,12.5,22.7,80,1.6,0
+2015-07-05,0,22.8,72,1.5,0.3
+      </pre>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．レイヤオブジェクトの生成</h2>
+    <p>
+      グラフレイヤオブジェクトの生成時に、グラフの元データとなるレコードセットオブジェクトを指定する。レコードセットオブジェクトの生成時に、グラフの元データのURLおよび日時や値となるデータ項目（列）の指定を行う。レイヤの高さや上下の余白の設定は、他のレイヤと同じである。
+    </p>
+
+    <div class="method">
+      <h3>コンストラクタ</h3>
+      <h4>
+        HuTime.LineChartLayer([<span class="val">recordset</span> [, <span class="val">vBreadth</span> [,
+        <span class="val">vMarginTop</span>
+        [, <span class="val">vMarginBottom</span>]]]])
+      </h4>
+      <h4>
+        HuTime.PlotChartLayer([<span class="val">recordset</span> [, <span class="val">vBreadth</span> [,
+        <span class="val">vMarginTop</span>
+        [, <span class="val">vMarginBottom</span>]]]])
+      </h4>
+      <h4>
+        HuTime.BarChartLayer([<span class="val">recordset</span> [, <span class="val">vBreadth</span> [,
+        <span class="val">vMarginTop</span>
+        [, <span class="val">vMarginBottom</span>]]]])
+      </h4>
+
+      <dl>
+        <dt><span class="val">recordset</span></dt>
+        <dd>型：HuTime.ChartRecordset</dd>
+        <dd>元データを収容したレコードセット。コンストラクタで設定されたレコードセットは、recordsetsプロパティの最先頭の配列要素としてアクセスできる（<span class="val">layer</span>.recordsets[0]）。省略した場合は、別途appendRecordsetメソッドによりレコードセットを追加する必要がある。
+        </dd>
+
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの高さ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginTop</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの上側の余白の大きさ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginBottom</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの下側の余白の大きさ（単位：px）。</dd>
+
+      </dl>
+    </div>
+
+    <div>
+      <h3>レコードセットの概要</h3>
+      <p>
+        グラフ用のレコードセットを用いる。
+      </p>
+      <div class="method">
+        <h4>
+          HuTime.CalendarChartRecordset(<span class="val">source</span>,
+          <span class="val">tBegin</span>, <span class="val">tEnd</span>,
+          <span class="val">value</span> [, <span class="val">calendarId</span>,
+          [, <span class="val">plotStyle</span> [, <span class="val">lineStyle</span>]]])
+        </h4>
+        <dl>
+          <dt><span class="val">source</span></dt>
+          <dd>型：文字列またはHuTime.StreamReaderBase</dd>
+          <dd>文字列が入力された場合は、レコードセットの元データのURLとして解釈し、新たなStreamReaderオブジェクトを生成し、データを読み込む。</dd>
+
+          <dt><span class="val">tBegin</span></dt>
+          <dd>型：文字列または数値</dd>
+          <dd>レコード中の開始日時の項目名または列番号。</dd>
+
+          <dt><span class="val">tEnd</span></dt>
+          <dd>型：文字列または数値</dd>
+          <dd>レコード中の終了日時の項目名または列番号。</dd>
+
+          <dt><span class="val">value</span></dt>
+          <dd>型：文字列または数値</dd>
+          <dd>レコード中のグラフの値となる項目名または列番号。</dd>
+
+          <dt><span class="val">calendarId</span></dt>
+          <dd>型：文字列</dd>
+          <dd>開始・終了日時の暦ID。省略した場合は、グレゴリオ暦が設定される。</dd>
+
+          <dt><span class="val">plotStyle</span></dt>
+          <dd>型：HuTime.FigureStyle</dd>
+          <dd>折れ線グラフやプロットグラフのプロット、および、棒グラフの棒の書式を設定する。省略した場合は、グラフレイヤの既定の書式が設定される。</dd>
+
+          <dt><span class="val">lineStyle</span></dt>
+          <dd>型：HuTime.StringStyle</dd>
+          <dd>折れ線グラフの線の書式を設定する。省略した場合は、グラフレイヤの既定の書式が設定される。</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．パネルへの追加と表示</h2>
+    <p>
+      他のレイヤと同様に、グラフレイヤもPanelオブジェクトのappendLayerメソッドでパネルに追加する。描画はredrawメソッドのフローに沿って行われるが、元データの取得が完了していない場合は、表示が遅れる。
+    </p>
+
+    <div class="contentFigure">
+      <img src="/manual/img/ChartLayer04-01.png" alt="Chart layer example"/>
+      <p>折れ線グラフレイヤの表示の例（下記サンプルコード）。元データは<a href="#section02">「２．グラフの元データ」</a>で示した2015年7月の京都市の気温である。下記コードの変数lyrのコンストラクタをHuTime.PlotChartLayerまたはHuTime.BarChartLayerに変更することで、それぞれ、プロットグラフ、棒グラフを表示することもできる。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ChartLayerSample04-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset(&quot;Weather201507.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;));
+    pnl.appendLayer(lyr);
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>５．書式設定</h2>
+    <p>
+      グラフでは、プロットグラフのプロット、折れ線グラフのプロットと線、棒グラフの棒の書式を設定することができる。グラフ内の書式はレコードセットごとに設定し、レコードセットのコンストラクタの引数として設定した書式は、そのレコードセット既定の書式となる。また、プロットグラフおよび折れ線グラフのプロットの形や大きさは、レコードセットオブジェクトの以下のプロパティで変更する。</p>
+    <div>
+      <dl>
+        <dt>plotSymbol</dt>
+        <dd>型：数値</dd>
+        <dd>プロットの形。円:0 , 正方形:1, 三角形:2 , 十字:3。</dd>
+
+        <dt>plotWidth</dt>
+        <dd>型：数値</dd>
+        <dd>プロットの大きさ（単位：px）。</dd>
+
+        <dt>plotRotate</dt>
+        <dd>型：数値</dd>
+        <dd>プロットの回転（単位：度）。</dd>
+      </dl>
+
+    </div>
+    <p>
+      以下は、<a href="#section04">「４．パネルへの追加と表示」</a>のサンプルコードに書式を設定した例である。
+    </p>
+
+
+
+    <div class="contentFigure">
+      <img src="/manual/img/ChartLayer05-01.png" alt="Chart layer example"/>
+      <p>折れ線グラフレイヤの書式設定の例（下記サンプルコード）。<a href="#section04">「４．パネルへの追加と表示」</a>のサンプルコードに書式設定を追加するため、HuTime.CalendarChartRecordsetのコンストラクタで、引数として書式（<a href="FigureStyle.html">HuTime.FigureStyleオブジェクト</a>）を設定している。また、プロットの形、大きさ、回転をそれぞれ設定している。
+      </p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ChartLayerSample05-01.html" target="_blank">実行例はこちら</a>）。HuTime.CalendarChartRecordsetのコンストラクタの引数calendarIdにはnullが指定されている。また、<a href="CalendarScaleLayer.html">暦目盛レイヤ</a>（変数：scl）が追加されている。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset(&quot;Weather201507.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;, null,
+            new HuTime.FigureStyle(&quot;blue&quot;), new HuTime.FigureStyle(null, &quot;red&quot;, 3)));
+    lyr.recordsets[0].plotSymbol = HuTime.PlotSymbol.Square;
+    lyr.recordsets[0].plotWidth = 12;
+    lyr.recordsets[0].plotRotate = 45;
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+
+  </div>
+
+  <div id="section06">
+    <h2>６．複数のデータセットの表示</h2>
+    <p>
+      appendRecordsetプロパティを用いることにより、グラフレイヤにレコードセットを複数設定することができる。各レコードセットで異なる書式を設定することにより、レコードセットの違いをグラフ上で表現することができる。
+    </p>
+    <div class="method">
+      <h4>appendRecordset(<span class="val">recordset</span>)</h4>
+      <p>グラフレイヤにレコードセットを追加する。</p>
+      <dl>
+        <dt class="val">recordset</dt>
+        <dd>型：HuTime.ChartRecordset</dd>
+        <dd>追加するレコードセット。</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/ChartLayer06-01.png" alt="Chart layer example"/>
+      <p>折れ線グラフレイヤに複数のレコードセットを設定した例（下記サンプルコード）。新たに、元データとして、Weather201507Tokyo.csv（2015年7月の東京の気象データ）をappendRecordsetメソッドにより追加し、気温のデータを書式（緑色のプロット）を設定して表示している。</p>
+    </div>
+
+    <div>
+      <p>
+        <span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ChartLayerSample06-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset(&quot;Weather201507.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;));
+    lyr.appendRecordset(new HuTime.CalendarChartRecordset(
+        &quot;Weather201507Tokyo.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;, null,
+            new HuTime.FigureStyle(&quot;green&quot;)));
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section07">
+    <h2>７．レコードごとの書式設定</h2>
+    <p>
+      グラフ内のデータを、同一レコードセット内の何らかの項目にしたがって色分けするには、レコードセットオブジェクトのrangeStyleプロパティに色分けのための関数を設定する。設定した関数には、引数としてHuTime.ChartRecordオブジェクトが渡されるので、その内容を使ってHuTime.FigureStyleオブジェクトを返す。
+    </p>
+    <p>
+      図およびサンプルコードでは、気温のデータを降水の有無で色分けしている（データ項目Precipitationが0を超える場合は青色、0の場合は赤色）。まず２つの書式をそれぞれ定義する（styleRainおよびstyleNoRain）。次に、レコードセットオブジェクトを別途生成し、データ項目Precipitationを読み込むための設定をレコードセットに追加する。最後に、レコードセットのplotStyleプロパティに書式を出力するための処理を記述する。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/ChartLayer07-01.png" alt="Chart layer example"/>
+      <p>レコードごとの書式を設定した例（下記サンプルコード）。降水があった場合は青、降水が無かった場合は赤で表示している。</p>
+    </div>
+
+    <div>
+      <p>
+        <span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ChartLayerSample07-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var styleRain = new HuTime.FigureStyle(&quot;blue&quot;);
+    var styleNoRain = new HuTime.FigureStyle(&quot;red&quot;);
+    var recordset =
+        new HuTime.CalendarChartRecordset(&quot;Weather201507.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;);
+    recordset.recordSettings.appendDataSetting(new HuTime.RecordDataSetting(&quot;Precipitation&quot;));
+    recordset.plotStyle = function(itemName, record) {
+        if (!record.data[&quot;Precipitation&quot;])
+            return defaultRecordStyle;
+        if (record.data[&quot;Precipitation&quot;].content &gt; 0)
+            return styleRain;
+        else
+            return styleNoRain;
+    };
+
+    var lyr = new HuTime.LineChartLayer(recordset);
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section08">
+    <h2>８．レコードに対するイベントの設定</h2>
+    <p>
+      グラフ上のレコード（プロットや棒）に対する以下の動作をグラフレイヤのイベントとして補足することができる。クリックされたレコードは、イベントオブジェクトのrecordsに配列として収容される。複数のレコードが重なって表示されている場合は、該当するレコード全てがrecordsに収容される。イベントハンドラは、他のイベントと同様にaddEventListenerで追加かする。
+    </p>
+
+    <table>
+      <tr>
+        <th>動作</th>
+        <th>イベントタイプ</th>
+      </tr>
+      <tr>
+        <td>クリック</td>
+        <td>plotclick</td>
+      </tr>
+      <tr>
+        <td>ダブルクリック</td>
+        <td>plotdblclick</td>
+      </tr>
+    </table>
+
+    <p>
+      以下の例では、折れ線グラフレイヤにplotclickイベントの処理としてrecordClickを追加している。recordClickをでは、クリックされたレコードの値（この場合は気温）を連結し、ポップアップボックス内に表示する。
+    </p>
+
+    <div>
+      <p>
+        <span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ChartLayerSample08-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset(&quot;Weather201507.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;));
+    lyr.addEventListener(&quot;plotclick&quot;, recordClick);
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+
+    function recordClick(ev) {
+        var text = &quot;&quot;;
+        for (var i = 0; i &lt; ev.records.length; ++i) {
+            text += ev.records[i].record.data[&quot;Temperature&quot;].text + &quot; &quot;;
+        }
+        alert(text);
+    }
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

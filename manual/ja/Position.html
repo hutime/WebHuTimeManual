@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>レイヤ上の位置指定 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>レイヤ上の位置指定</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      図形、文字列、画像などのレイヤ上のオブジェクトを描画するためには、Positionクラス（HuTime.PositionBaseクラスの派生クラス）のオブジェクトでレイヤ上の位置を指定する。HuTimeには、データなどを配置するための<a href="Structure.html#section03">TV座標系</a>と、画面上の描画位置を示すXY座標系があり、位置指定は、これらの座標系を組み合わせて行う。位置の指定方法には、<a href="#Position02">絶対位置の指定</a>と<a href="#Position03">相対位置の指定</a>があり、最初に絶対位置を指定し、必要に応じてこれを基点とした相対位置を指定する。また、<a href="#Position04">特定の座標を示すための定数</a>や、出力されるCanvas上の座標値を<a href="#Position05">整数化するためのクラス</a>が用意されている。
+    </p>
+
+    <div class="contentFigure">
+      <img src="/manual/img/Position01-01.png" alt="Position classes"/>
+      <p>Positionクラス（HuTime.PositionBaseクラスの派生クラス）の一覧。PositionBaseは抽象クラスとして定義されており、実際には使用しない。</p>
+    </div>
+  </div>
+
+  <div id="section02">
+    <h2>２．絶対位置</h2>
+    <p>
+      基本となる位置で、座標系の違いに応じて、２つのクラスがある。グラフや年表上のレコードを表示する場合は、TV座標系のHuTime.TVPositionを用いる。TV座標系で位置が指定された場合、<a href="#">画面の表示方向（タテ表示、ヨコ表示）</a>、t軸の表示範囲、v軸の表示範囲、レイヤの高さなど、表示状態の変化に対応して画面上の表示位置が変化する。一方、レイヤのタイトルなど、画面上の位置が固定されているものにはXY座標系のHuTime.XYPositionを用いる。XY座標系で指定された位置は、表示状態が変化しても画面上の表示位置が変わらない。
+    </p>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.TVPosition(<span class="val">t</span>, <span class="val">v</span>)</h4>
+      <p>TV座標系の絶対位置。</p>
+      <dl>
+        <dt class="val">t</dt>
+        <dd>型：数値</dd>
+        <dd>絶対位置のt値。</dd>
+        <dt class="val">v</dt>
+        <dd>型：数値</dd>
+        <dd>絶対位置のv値</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.XYPosition(<span class="val">x</span>, <span class="val">y</span>)</h4>
+      <p>XY座標系の絶対位置。</p>
+      <dl>
+        <dt class="val">x</dt>
+        <dd>型：数値</dd>
+        <dd>絶対位置のx値。</dd>
+        <dt class="val">y</dt>
+        <dd>型：数値</dd>
+        <dd>絶対位置のy値</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/Position02-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of absolute position)" width="600px"/>
+      <p>レイヤ上の絶対位置の表示方向による表示位置の違い。TV座標系で指定された絶対位置（青い丸）は、表示方向に応じた画面上の表示位置を示す。一方、XY座標系系で指定された絶対位置（赤い丸）は、表示方向に拠らず、画面上の表示位置は同じである。</p>
+    </div>
+    <div class="contentFigure">
+      <img src="/manual/img/Position02-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of absolute position)" width="400px"/>
+      <p>
+        t軸の表示範囲の変更（移動、および、拡大・縮小）に伴う表示位置の変化。TV座標系で指定された絶対位置（青い丸）は、t軸の表示範囲に応じて画面上の表示位置が変化する。一方、XY座標系で指定された絶対位置（赤い丸）は、t軸の表示範囲が変更されても画面上の表示位置は変わらない（再描画されると元の位置に戻る）。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/PositionSample02-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="timeline"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+  var ht = new HuTime();
+  var pnls = new HuTime.PanelCollection(100, 200);
+  ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+
+  var pnl = new HuTime.TilePanel(100);
+  pnls.appendPanel(pnl);
+
+  var lyr = new HuTime.Layer(100, 0, 0, 100, 0);
+  lyr.vForX = HuTime.VForX.bottomForLeft;
+  pnl.appendLayer(lyr);
+
+  var posTV = new HuTime.TVPosition(140, 20);
+  var posXY = new HuTime.XYPosition(40, 30);
+  var objTV = new HuTime.Circle(new HuTime.FigureStyle(0, "blue", "blue"), posTV, 10);
+  lyr.appendObject(objTV);
+  var objXY = new HuTime.Circle(new HuTime.FigureStyle(0, "red", "red"), posXY, 10);
+  lyr.appendObject(objXY);
+
+  ht.redraw(100, 200);
+&lt;/script&gt;
+&lt;p&gt;
+  &lt;input type="radio" title="LtoR" name="displayMode" value="0" onClick="radioChange(event)" checked="checked" /&gt;Horizontal　
+  &lt;input type="radio" title="TtoB" name="displayMode" value="2" onClick="radioChange(event)" /&gt;Vertical
+&lt;/p&gt;
+&lt;script type="text/javascript"&gt;
+  radioChange = function(ev) {
+    pnls.displayMode = parseInt(ev.target.value);
+    ht.redraw();
+  };
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．相対位置</h2>
+    <p>
+      下記のクラスを用い、Positionオブジェクトで指定された位置を基準にした相対的な位置を指定する。相対値は、TV座標系またはXY座標系で指定するが、基準位置の座標系と一致させる必要はない。例えば、グラフや年表上のレコードにラベルや注釈を加えるには、レコードの表示位置を基準位置とし、そこからの相対位置でラベルや注釈の表示位置を指定する。この場合、レコードの位置はTV座標系で指定されるが、相対位置は、TV座標系でもXY座標系でも指定できる。
+    </p>
+
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.RelativeTVPosition(<span class="val">position</span>, <span class="val">ofsT</span>,
+        <span class="val">ofsV</span>)
+      </h4>
+      <p>TV座標系の相対位置。</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.PositionBase</dd>
+        <dd>相対位置のための基準位置。</dd>
+        <dt class="val">ofsT</dt>
+        <dd>型：数値</dd>
+        <dd>基準位置からのt値方向の変位。</dd>
+        <dt class="val">ofsV</dt>
+        <dd>型：数値</dd>
+        <dd>基準位置からのv値方向の変位。</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.RelativeXYPosition(<span class="val">position</span>, <span class="val">ofsX</span>,
+        <span class="val">ofsY</span>)
+      </h4>
+      <p>XY座標系の相対位置。</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.PositionBase</dd>
+        <dd>相対位置のための基準位置。</dd>
+        <dt class="val">ofsX</dt>
+        <dd>型：数値</dd>
+        <dd>基準位置からのx値方向の変位。</dd>
+        <dt class="val">ofsY</dt>
+        <dd>型：数値</dd>
+        <dd>基準位置からのy値方向の変位。</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/Position03-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of relative position)" width="600px"/>
+      <p>
+        表示方向による相対位置の表示位置の違い。TV座標系で指定された絶対位置（青塗りの丸）を基準に、TV座標による相対位置（青枠の丸）と、XY座標による相対位置（赤枠の丸）が示されている。また同様に、XY座標系で指定された絶対位置（赤塗の丸）を基準に、TV座標による相対位置（青枠の丸）と、XY座標による相対位置（赤枠の丸）が示されている。TV座標による相対位置は、表示方向に応じた基準位置との関係により、画面上の位置は異なる。一方、XY座標による相対位置は、表示方向に拠らず、基準位置との位置関係は同じである。</p>
+    </div>
+    <div class="contentFigure">
+      <img src="/manual/img/Position03-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of relative position)" width="400px"/>
+      <p>
+        t軸の表示範囲の変更（移動、および、拡大・縮小）に伴う描画位置の変化。TV座標系で指定された相対位置（青枠の丸）は、t軸の表示範囲の移動や拡大・縮小に応じて、基準位置との関係（基準位置からの距離）が変化する。一方、XY座標系で指定された相対位置（赤枠の丸）は、t軸の表示範囲が変更されても基準位置との位置関係は変わらない（再描画されると元の位置に戻る）。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/PositionSample03-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="timeline"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+  var ht = new HuTime();
+  var pnls = new HuTime.PanelCollection(100, 200);
+  ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+
+  var pnl = new HuTime.TilePanel(100);
+  pnls.appendPanel(pnl);
+
+  var lyr = new HuTime.Layer(100, 0, 0, 100, 0);
+  lyr.vForX = HuTime.VForX.bottomForLeft;
+  pnl.appendLayer(lyr);
+
+  var posTV = new HuTime.TVPosition(140, 20);
+  var posXY = new HuTime.XYPosition(40, 30);
+  var objTV = new HuTime.Circle(new HuTime.FigureStyle(0, "blue", "blue"), posTV, 10);
+  lyr.appendObject(objTV);
+  var objXY = new HuTime.Circle(new HuTime.FigureStyle(0, "red", "red"), posXY, 10);
+  lyr.appendObject(objXY);
+
+  var posTVrTV = new HuTime.RelativeTVPosition(posTV, -10, 0);
+  var objTVrTV = new HuTime.Circle(new HuTime.FigureStyle(2, "blue"), posTVrTV, 10);
+  lyr.appendObject(objTVrTV);
+  var posTVrXY = new HuTime.RelativeXYPosition(posTV, 10, 0);
+  var objTVrXY = new HuTime.Circle(new HuTime.FigureStyle(2, "red"), posTVrXY, 10);
+  lyr.appendObject(objTVrXY);
+
+  var posXYrTV = new HuTime.RelativeTVPosition(posXY, -10, 0);
+  var objXYrTV = new HuTime.Circle(new HuTime.FigureStyle(2, "blue"), posXYrTV, 10);
+  lyr.appendObject(objXYrTV);
+  var posXYrXY = new HuTime.RelativeXYPosition(posXY, 10, 0);
+  var objXYrXY = new HuTime.Circle(new HuTime.FigureStyle(2, "red"), posXYrXY, 10);
+  lyr.appendObject(objXYrXY);
+
+  ht.redraw(100, 200);
+&lt;/script&gt;
+&lt;p&gt;
+  &lt;input type="radio" title="LtoR" name="displayMode" value="0" onClick="radioChange(event)" checked="checked" /&gt;Horizontal　
+  &lt;input type="radio" title="TtoB" name="displayMode" value="2" onClick="radioChange(event)" /&gt;Vertical
+&lt;/p&gt;
+&lt;script type="text/javascript"&gt;
+  radioChange = function(ev) {
+    pnls.displayMode = parseInt(ev.target.value);
+    ht.redraw();
+  };
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．座標を示す定数</h2>
+    <p>
+      レイヤの上端、左端など、座標の特定の位置を示すための定数が以下のとおり定義されている。これらは、それぞれの座標系で座標を指定する際に、数値の代わりに用いることができる。定数で指定された座標は、t軸の表示範囲が変更されても、定数が示す位置に留まる（再描画されると元の位置に戻る）。
+    </p>
+
+    <table>
+      <tr>
+        <th>座標系</th>
+        <th>座標軸</th>
+        <th>定数</th>
+        <th>コンストラクタのパラメータ</th>
+      </tr>
+      <tr>
+        <td rowspan="4">TV座標系</td>
+        <td rowspan="2">t軸</td>
+        <td>HuTime.PositionConstant.tMin</td>
+        <td>現在表示されているt軸の範囲の最小値</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.tMax</td>
+        <td>現在表示されているt軸の範囲の最大値</td>
+      </tr>
+      <tr>
+        <td rowspan="2">v軸</td>
+        <td>HuTime.PositionConstant.vMin</td>
+        <td>現在表示されているv軸の範囲の最小値</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.vMax</td>
+        <td>現在表示されているv軸の範囲の最大値</td>
+      </tr>
+      <tr>
+        <td rowspan="4">XY座標系</td>
+        <td rowspan="2">x軸</td>
+        <td>HuTime.PositionConstant.xLeft</td>
+        <td>レイヤの左端</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.xRight</td>
+        <td>レイヤの右端</td>
+      </tr>
+      <tr>
+        <td rowspan="2">y軸</td>
+        <td>HuTime.PositionConstant.yTop</td>
+        <td>レイヤの上端</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.yBottom</td>
+        <td>レイヤの下端</td>
+      </tr>
+    </table>
+
+    <div class="contentFigure">
+      <img src="/manual/img/Position04-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of position constant)" width="600px"/>
+      <p>表示方向による、定数で指定された座標の表示位置の違い。TV座標系で指定された位置（青い丸）は、表示方向に応じた画面上の位置に表示される。一方、XY座標系で指定された位置（赤い丸）は、表示方向に拠らず、画面上の位置は同じである。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（該当部分のみ）。</p>
+      <pre class="code">
+var pos1 = new new HuTime.TVPosition(HuTime.PositionConstant.tMax, 20);
+var pos2 = new HuTime.XYPosition(40, HuTime.PositionConstant.yTop);
+      </pre>
+    </div>
+  </div>
+
+  <h2><a name="Position05">５．座標値の整数化</a></h2>
+  <p>
+    HTML5
+    Canvasで位置指定（XY座標）に小数を含む値を用いた場合、アンチエイリアス処理により描画が不鮮明になる場合がある。HuTime上でこれを避けるには、Positionオブジェクトが出力するcanvas上の座標値を整数化する機能を持つPositionクラスで元のPositionクラスをラッピングする。整数化の方法により、3種類のクラスがある。これらのクラスは、TV座標系、XY座標系いずれのPositionクラスにも適用可能である。</p>
+
+  <h3>コンストラクタ</h3>
+  <div class="method">
+    <h4>HuTime.PositionFloor(<span class="val">position</span>)
+    </h4>
+    <p>切り捨てにより整数化した画面上の座標位置。</p>
+    <dl>
+      <dt class="val">position</dt>
+      <dd>型：HuTime.PositionBase</dd>
+      <dd>整数化する位置。</dd>
+    </dl>
+  </div>
+  <div class="method">
+    <h4>HuTime.PositionFloor(<span class="val">position</span>)
+    </h4>
+    <p>切り上げにより整数化した画面上の座標位置。</p>
+    <dl>
+      <dt class="val">position</dt>
+      <dd>型：HuTime.PositionCeil</dd>
+      <dd>整数化する位置。</dd>
+    </dl>
+  </div>
+  <div class="method">
+    <h4>HuTime.PositionRound(<span class="val">position</span>)
+    </h4>
+    <p>四捨五入により整数化した画面上の座標位置。</p>
+    <dl>
+      <dt class="val">position</dt>
+      <dd>型：HuTime.PositionBase</dd>
+      <dd>整数化する位置。</dd>
+    </dl>
+  </div>
+
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（該当部分のみ）。</p>
+    <pre class="code">
+var pos1 = new HuTime.PositionFloor(new HuTime.TVPosition(140, 20));
+var pos2 = new HuTime.PositionCeil(new HuTime.RelativeTVPosition(new HuTime.XYPosition(40, HuTime.PositionConstant.yTop), -10, 0));
+  </pre>
+  </div>
+
+  <h2><a name="Position06">６．使用事例</a></h2>
+  <p>レイヤ上の位置指定について、いくつかの使用事例を挙げる。</p>
+  <table>
+    <tr>
+      <th style="width:200px;">使用事例</th>
+      <th>位置指定の方法</th>
+    </tr>
+    <tr>
+      <td>散布図の特定の点に注釈を表示する。</td>
+      <td>TV座標の絶対位置（HuTime.TVPosition）で指定された点の位置を起点とし、XY座標の相対位置（HuTime.RelativeXYPosition）で注釈の表示位置を指定する。</td>
+    </tr>
+    <tr>
+      <td>棒グラフの先端にエラーバーを表示する。</td>
+      <td>TV座標の絶対位置（HuTime.TVPosition）で指定された棒の先端位置を起点とし、TV座標の相対位置（HuTime.RelativeTVPosition）でエラーバーの始点と終点を指定する。</td>
+    </tr>
+    <tr>
+      <td>レイヤの左上に表題を表示する。</td>
+      <td>左端と上端を示す定数（HuTime.PositionConstant.xLeft,
+        HuTime.PositionConstant.yTop）により、XY座標の絶対位置（HuTime.XYPosition）でレイヤ左上を指定する。マージンを設定する場合は、XY座標の相対位置（HuTime.RelativeXYPosition）で指定する。
+      </td>
+    </tr>
+  </table>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

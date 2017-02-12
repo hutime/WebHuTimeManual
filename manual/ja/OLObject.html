@@ -1,0 +1,453 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>レイヤ上のオブジェクト - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>レイヤ上のオブジェクト</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      図形、画像、文字列をレイヤ上のオブジェクトとして扱うことができる。レイヤ上のオブジェクトは、HuTime.OnLayerObjectBaseクラスから派生したクラスから生成される。HuTime.Drawingの各メソッドで表示されたものとは異なり、1つのオブジェクトとして振る舞うため、イベントの受け取りなどを行うことが可能となる。少数であればレイヤ上のオブジェクトが便利であるが、大量に用いる場合は、リソース消費の点から、HuTime.Drawingの各メソッドを利用することが望ましい。
+    </p>
+
+    <table>
+      <tr>
+        <th style="width:150px;">機能</th>
+        <th style="width:300px;">レイヤ上のオブジェクト</th>
+        <th style="width:300px;">HuTime.Drawingによる描画</th>
+      </tr>
+      <tr>
+        <td>再描画</td>
+        <td>redrawメソッドにより、オブジェクト単位で行う。</td>
+        <td>再度、HuTime.Drawingの表示メソッドを実行する。もしくは、レイヤのredrawメソッドを実行する。</td>
+      </tr>
+      <tr>
+        <td>再描画のタイミング</td>
+        <td>レイヤに追加されることで、自動的に再描画が設定される。オブジェクトに対して、processBeforeRedrawまたはprocessAfterRedrawを定義することも可能。</td>
+        <td>レイヤのprocessBeforeRedrawまたはprocessAfterRedrawに手動で設定する。</td>
+      </tr>
+      <tr>
+        <td>画面上の重ね順</td>
+        <td>zIndexプロパティで設定。</td>
+        <td>描画順により設定。</td>
+      </tr>
+      <tr>
+        <td>可視・不可視の制御</td>
+        <td>visibleプロパティで設定。</td>
+        <td>既定の仕組みはない。レイヤのprocessBeforeRedrawまたはprocessAfterRedrawに記述された表示動作を何らかの形で制御。</td>
+      </tr>
+      <tr>
+        <td>イベントの受け取り</td>
+        <td>直接受け取れる。全体のイベントフローに組み込まれる。</td>
+        <td>直接は受け取れない。いったんレイヤで受け取って、判断する。</td>
+      </tr>
+      <tr>
+        <td>リソースの消費</td>
+        <td>1つのオブジェクトとして一定量を消費。</td>
+        <td>少ない。</td>
+      </tr>
+    </table>
+
+    <div class="contentFigure">
+      <img src="/manual/img/OLObject01-01.png" alt="On Layer Object classes"/>
+      <p>レイヤ上のオブジェクト（OnLayerObjectクラスの派生クラス）の一覧。OnLayerObjectBaseは抽象クラスとして定義されており、実際には使用しない。</p>
+    </div>
+  </div>
+
+  <div id="section02">
+    <h2>２．レイヤへのオブジェクトの種類とコンストラクタ</h2>
+    <p>
+      HuTime.Drawingのメソッドによる描画とは異なり、コンストラクタで描画対象のレイヤやcanvasは指定しない。これらは、<a href="#section04">オブジェクトをレイヤへの追加</a>する際に行う。各オブジェクトのコンストラクタで共通の引数は下記のとおり。
+    </p>
+
+    <div>
+      <dl>
+        <dt class="val">style</dt>
+        <dd>型：<a href="FigureStyle.html">FigureStyleオブジェクト</a>（HuTime.Stringでは、<a href="StringStyle.html">StringStyleオブジェクト</a>）
+        </dd>
+        <dd>図形や文字列の書式を指定する。</dd>
+        <dt class="val">rotate</dt>
+        <dd>型：数値</dd>
+        <dd>図形を回転させる角度（単位:度）。指定は任意で、省略した場合は、0が指定される。回転の中心は、その図形の中心となる。円オブジェクトなど、いくつかの図形では指定できない。</dd>
+      </dl>
+    </div>
+
+    <h3>線（ポリライン）</h3>
+    <div class="method">
+      <h4>HuTime.Line(<span class="val">style</span>, <span class="val">positions</span>)</h4>
+      <p>
+        線のノードの位置を<a href="Position.html">Positionオブジェクト</a>の配列として指定する。ポリゴンとは異なり、パスを閉じない。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">positions</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a>の配列</dd>
+        <dd>線のノードの位置の集合。</dd>
+      </dl>
+    </div>
+
+    <h3>多角形（ポリゴン）</h3>
+    <div class="method">
+      <h4>HuTime.Polygon(<span class="val">style</span>, <span class="val">positions</span>)</h4>
+      <p>
+        多角形の頂点の位置を<a href="Position.html">Positionオブジェクト</a>の配列として指定する。配列の最後の位置と最初の位置を接続し、パスを閉じる。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">positions</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a>の配列</dd>
+        <dd>多角形の頂点の位置の集合。</dd>
+      </dl>
+    </div>
+
+    <h3>正方形</h3>
+    <div class="method">
+      <h4>HuTime.Square(<span class="val">style</span>, <span class="val">position</span>,
+        <span class="val">width</span>
+        [, <span class="val">rotate</span>])</h4>
+      <p>
+        位置は正方形の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（辺の長さ）をpx単位で指定する。回転（<span class="val">rotate</span>）に45を指定すると、ひし形になる。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>正方形の中心位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>正方形の幅（単位：px）。辺の長さに相当。</dd>
+      </dl>
+    </div>
+
+    <h3>矩形</h3>
+    <div class="method">
+      <h4>HuTime.Rect(<span class="val">style</span>, <span class="val">position1</span>,
+        <span class="val">position2</span>
+        [, <span class="val">rotate</span>])
+      </h4>
+      <p>
+        位置と大きさは、矩形の対角線をなす2つの頂点の位置を<a href="Position.html">Positionオブジェクト</a>で指定する。
+      </p>
+      <dl>
+        <dt class="val">position1</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>矩形の対角線をなす一方の頂点の位置。</dd>
+        <dt class="val">position2</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>矩形の対角線をなす他方の頂点の位置。</dd>
+      </dl>
+    </div>
+
+    <h3>円</h3>
+    <div class="method">
+      <h4>HuTime.Circle(<span class="val">style</span>, <span class="val">position</span>,
+        <span class="val">width</span>)</h4>
+      <p>
+        位置は円の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（直径）をpx単位で指定する。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>円の中心位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>図形の幅（単位：px）。円の直径に相当。</dd>
+      </dl>
+    </div>
+
+    <h3>円弧</h3>
+    <div class="method">
+      <h4>HuTime.Arc(<span class="val">style</span>, <span class="val">position</span>,
+        <span class="val">radius</span>, <span class="val">startAngle</span>, <span class="val">endAngle</span>)
+      </h4>
+      <p>
+        位置は円弧を含む円の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさと形状は、その円の半径（単位：px）、および、開始・終了位置の角度（単位：度）で指定する。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>円弧を含む円の中心位置。</dd>
+        <dt class="val">radius</dt>
+        <dd>型：数値</dd>
+        <dd>円弧を含む円の半径（単位：px）。</dd>
+        <dt class="val">startAngle</dt>
+        <dd>型：数値</dd>
+        <dd>円弧の開始角度（単位：度）。</dd>
+        <dt class="val">endAngle</dt>
+        <dd>型：数値</dd>
+        <dd>円弧の終了角度（単位：度）。</dd>
+      </dl>
+    </div>
+
+    <h3>扇形</h3>
+    <div class="method">
+      <h4>HuTime.Pie(<span class="val">style</span>, <span class="val">position</span>,
+        <span class="val">radius</span>, <span class="val">startAngle</span>, <span class="val">endAngle</span>)</h4>
+      <p>
+        位置は扇形を含む円の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさと形状は、その円の半径（単位：px）、および、開始・終了位置の角度（単位：度）で指定する。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>扇形を含む円の中心位置。</dd>
+        <dt class="val">radius</dt>
+        <dd>型：数値</dd>
+        <dd>扇形を含む円の半径（単位：px）。</dd>
+        <dt class="val">startAngle</dt>
+        <dd>型：数値</dd>
+        <dd>扇形の開始角度（単位：度）。</dd>
+        <dt class="val">endAngle</dt>
+        <dd>型：数値</dd>
+        <dd>扇形の終了角度（単位：度）。</dd>
+      </dl>
+    </div>
+
+    <h3>三角形</h3>
+    <div class="method">
+      <h4>HuTime.Triangle(<span class="val">style</span>, <span class="val">position</span>,
+        <span class="val">width</span> [, <span class="val">rotate]</span>)</h4>
+      <p>
+        位置は三角形の中心（重心）を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（底辺の長さ）をpx単位で指定する。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>三角形の中心（重心）位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>三角形の幅（単位：px）。底辺の長さに相当。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．レイヤ上のオブジェクトの主なプロパティとメソッド</h2>
+
+    <h3>プロパティ</h3>
+    <dl>
+      <dt>id</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>オブジェクトを一意に識別するためのID。</dd>
+
+      <dt>name</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>オブジェクトの名称。</dd>
+
+      <dt>visible</dt>
+      <dd>型：真偽値</dd>
+      <dd>既定値：true</dd>
+      <dd>オブジェクトの可視/不可視の設定。trueの場合に可視。</dd>
+
+      <dt>zIndex</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：0</dd>
+      <dd>オブジェクトの重ね順。値が大きいほど、上に表示される。</dd>
+    </dl>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>オブジェクトを再描画する。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし。</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>addEventListener(<span class="val">type</span>, <span class="val">handler</span> [, <span class="val">useCapture</span>])
+      </h4>
+      <p>イベント処理の追加。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし。</dd>
+
+        <dt class="val">type</dt>
+        <dd>型：文字列</dd>
+        <dd>イベントの種類を示す文字列。</dd>
+
+        <dt class="val">handler</dt>
+        <dd>型：関数（function(<span class="val">ev</span>)）</dd>
+        <dd>イベント処理を行う関数。引数<span class="val">ev</span>はイベントオブジェクト（型：HuTime.Event）</dd>
+
+        <dt class="val">useCapture</dt>
+        <dd>型：真偽値</dd>
+        <dd>イベントのどのフェーズを利用するかを設定。trueの場合はキャプチャフェーズ、falseの場合はバブリングフェーズ。省略された場合は、false（バブリングフェーズ）が設定される。</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>dispatchEvent(<span class="val">ev</span>)</h4>
+      <p style="padding-bottom: 0;">レイヤ上のオブジェクトからイベントの発火させる。</p>
+      <dl style="padding-left:10px;">
+        <dt>返値</dt>
+        <dd>なし。</dd>
+
+        <dt class="val">ev</dt>
+        <dd>型：HuTime.Eventオブジェクト</dd>
+        <dd>発火させるイベントのイベントオブジェクト。<span class="val">ev</span>.targetには発火元のレイヤ上のオブジェクトが設定される。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2><a name="04">４．レイヤへのオブジェクトの追加</a></h2>
+    <p>
+      レイヤ上にオブジェクトを追加するには、そのレイヤのappendObjectメソッドを用いる。また、レイヤ上からオブジェクトを削除するには、そのレイヤのremoveObjectメソッドを用いる。オブジェクトは、1つのレイヤに1つだけ配置可能である。このため、既にいずれかのレイヤに配置されているオブジェクトにたいしてappendObjectを実行すると、既に属しているレイヤからは削除される。
+    </p>
+    <div class="method">
+      <h4><span class="val">layer</span>.appendObject(<span class="val">obj</span> [, <span class="val">canvas</span>])</h4>
+      <h4><span class="val">layer</span>.removeObject(<span class="val">obj</span>)</h4>
+      <dl>
+        <dt class="val">layer</dt>
+        <dd>型：<a href="Layer.html">HuTime.Layer</a></dd>
+        <dd>オブジェクトを追加、または削除するレイヤ。</dd>
+        <dt class="val">obj</dt>
+        <dd>型：HuTime.OnLayerObjectBase</dd>
+        <dd>追加、または削除するオブジェクト。</dd>
+        <dt class="val">canvas</dt>
+        <dd>型：canvas要素</dd>
+        <dd>
+          図形を描画するcanvas。指定は任意で、省略した場合は、<span class="val">layer</span>.canvasが指定される。<a href="TLineLayer.html">年表レイヤ</a>や<a href="ChartLayer.html">グラフレイヤ</a>など、複数のcanvas要素を持つLayerオブジェクトが対象の場合に使用。
+        </dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/OLObject04-01.png" alt="On Layer Object drawing example"/>
+      <p>レイヤ上のオブジェクトの表示例（下記サンプルコード）。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/OLObjectSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var objCircle = new HuTime.Circle(
+        new HuTime.FigureStyle(&quot;blue&quot;),
+        new HuTime.TVPosition(100, 50),
+        50
+    );
+    lyr.appendObject(objCircle);
+
+    var objImage = new HuTime.Image(
+        new HuTime.FigureStyle(),
+        new HuTime.TVPosition(50, 30),
+        &quot;img/ImageSample.jpg&quot;,
+        100
+    );
+    lyr.appendObject(objImage);
+
+    var objString = new HuTime.String(
+        new HuTime.StringStyle(20, &quot;red&quot;),
+        new HuTime.TVPosition(120, 80),
+        &quot;Hello World!&quot;
+    );
+    lyr.appendObject(objString);
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2><a name="05">５．レイヤ上のオブジェクトのイベント処理</a></h2>
+    <p>
+      レイヤ上のオブジェクトでは、イベントを直接受け取り、それに対応する動作を定義することができる。イベントの動作は、addEventListenerメソッドにより追加する。下記のサンプルコードでは、レイヤ上のオブジェクトとして表示された灰色の矩形をクリックすると、円の色が変わる。
+    </p>
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/OLObjectSample05-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var objCircle = new HuTime.Circle(
+        new HuTime.FigureStyle(&quot;blue&quot;),
+        new HuTime.TVPosition(50, 50),
+        100
+    );
+    lyr.appendObject(objCircle);
+
+    var objButton = new HuTime.Rect(
+        new HuTime.FigureStyle(&quot;lightgray&quot;),
+        new HuTime.TVPosition(100, 40), new HuTime.TVPosition(140, 60)
+    );
+    lyr.appendObject(objButton);
+    objButton.addEventListener(&quot;click&quot;, function(ev) {
+        if (objCircle.style.fillColor == &quot;blue&quot;)
+            objCircle.style.fillColor = &quot;red&quot;;
+        else
+            objCircle.style.fillColor = &quot;blue&quot;;
+        objCircle.redraw();
+    });
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

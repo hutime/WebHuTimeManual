@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+  <div id="timeline"></div>
+  <script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(100, 200);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+
+    var pnl = new HuTime.TilePanel(100);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.Layer(100, 0, 0, 100, 0);
+    lyr.vForX = HuTime.VForX.bottomForLeft;
+    pnl.appendLayer(lyr);
+
+    var posTV = new HuTime.TVPosition(140, 20);
+    var posXY = new HuTime.XYPosition(40, 30);
+    var objTV = new HuTime.Circle(new HuTime.FigureStyle("blue"), posTV, 10);
+    lyr.appendObject(objTV);
+    var objXY = new HuTime.Circle(new HuTime.FigureStyle("red"), posXY, 10);
+    lyr.appendObject(objXY);
+
+    var posTVrTV = new HuTime.RelativeTVPosition(posTV, -10, 0);
+    var objTVrTV = new HuTime.Circle(new HuTime.FigureStyle(null, "blue", 2), posTVrTV, 10);
+    lyr.appendObject(objTVrTV);
+    var posTVrXY = new HuTime.RelativeXYPosition(posTV, 10, 0);
+    var objTVrXY = new HuTime.Circle(new HuTime.FigureStyle(null, "red", 2), posTVrXY, 10);
+    lyr.appendObject(objTVrXY);
+
+    var posXYrTV = new HuTime.RelativeTVPosition(posXY, -10, 0);
+    var objXYrTV = new HuTime.Circle(new HuTime.FigureStyle(null, "blue", 2), posXYrTV, 10);
+    lyr.appendObject(objXYrTV);
+    var posXYrXY = new HuTime.RelativeXYPosition(posXY, 10, 0);
+    var objXYrXY = new HuTime.Circle(new HuTime.FigureStyle(null, "red", 2), posXYrXY, 10);
+    lyr.appendObject(objXYrXY);
+
+    ht.redraw(100, 200);
+  </script>
+  <p>
+    <input type="radio" title="LtoR" name="displayMode" value="0" onClick="radioChange(event)" checked="checked" />Horizontal　
+    <input type="radio" title="TtoB" name="displayMode" value="2" onClick="radioChange(event)" />Vertical
+  </p>
+  <script type="text/javascript">
+    radioChange = function(ev) {
+        pnls.displayMode = parseInt(ev.target.value);
+        ht.redraw();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>基本構造 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>基本構造 - HuTime マニュアル</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      HuTimeは、Webページ内で年表やグラフなどを可視化したり解析したりするためのプラットフォームである。HuTime APIを介して、年表やグラフの表示に工夫を凝らしたり、新たなWebアプリケーションを開発したりすることができる。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．基本構造</h2>
+    <p>
+      HuTimeの基本構造は、<a href="PanelCollection.html">パネルコレクション</a>、<a href="Panel.html">パネル</a>、<a href="Layer.html">レイヤ</a>の3種類のコンテナと、これらを統括する<a href="HuTimeRoot.html">アプリケーションルート</a>で構成される。データ、図形、文字や画像などは、レイヤ上に表示されれ、これらのレイヤをパネル上で組み合わせて利用することもできる。レイヤは、目的に応じて、年表表示、グラフ表示、目盛表示など、さまざまな種類のクラスが定義されている。</p>
+    <table>
+      <tr>
+        <th style="width: 120px;">種類</th>
+        <th style="width: 150px;">代表的なクラス</th>
+        <th>機能</th>
+      </tr>
+      <tr>
+        <td>アプリケーションルート</td>
+        <td>HuTime</td>
+        <td>１つまたは複数のパネルコレクションを持ち、アプリケーション全体の動きを統括する。</td>
+      </tr>
+      <tr>
+        <td>パネルコレクション</td>
+        <td>HuTime.PanelCollection</td>
+        <td>１つまたは複数のパネルを収容するコンテナで、パネル間の協調動作を実現する。表示方向は、パネルコレクション単位で設定する。</td>
+      </tr>
+      <tr>
+        <td>パネル</td>
+        <td>HuTime.TilePanel</td>
+        <td>１つまたは複数のレイヤを収容するコンテナで、レイヤを表示する。</td>
+      </tr>
+      <tr>
+        <td>レイヤ</td>
+        <td>HuTime.Layer</td>
+        <td>図形や文字を表示するためのコンテナ。年表用、グラフ用など、機能に応じた複数の種類のレイヤクラスがある。</td>
+      </tr>
+    </table>
+    <div class="contentFigure">
+      <img src="/manual/img/HuTimeStructure.gif" alt="HuTime structure"/>
+    </div>
+  </div>
+
+
+  <div id="section03">
+    <h2>３．HuTimeの座標系（tv座標）</h2>
+    <p>
+      HuTimeでは、画面上のxy座標系以外に、独自のtv座標系を持つ。tv座標をxy座標に変換することで、<a href="#section04">ヨコ表示、タテ表示</a>を実現している。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/TAxisSample.gif" alt="t axis and v axis in holizontal display mode"/>
+      <p>ヨコ表示の場合のt軸とv軸</p>
+    </div>
+
+    <h3>（１）t軸</h3>
+    <p>
+      t軸は、データ、図形、文字や画像などの配置の基準となる軸で、時間や距離などの直線的な事象を表現する。t座標は、JavaScriptが扱える範囲の実数値が指定でき、その一部分を切り取った範囲がHuTime上に表示される。ただし、有効数字の桁数が規定（通常12桁）を超えると、移動および拡大・縮小が制限される。また、t座標の値のとる範囲を、APIを通じて制限することも可能である。t座標の値は、レイヤ上でレコードや図形などを表示するための座標値として用いられる。また、時間や日付など、実数でないものは、何らかの形で実数に置き換えられ、t座標の値として用いられる。
+    </p>
+    <p>
+      t軸は、ヨコ表示の場合は、x軸、タテ表示の場合はy軸と平行である。t軸の方向は、APIの設定により、xy軸に対して順方向、または、逆方向に設定できる。Webページに複数のパネルコレクションがある場合は、あるパネルコレクションでのt値の表示範囲の移動、および、拡大・縮小する操作が他のパネルコレクションの表示範囲と連動する。
+    </p>
+
+    <h3>（２）v軸</h3>
+    <p>
+      v軸は、t軸に直交する軸で、ヨコ表示の場合は、y軸、タテ表示の場合はx軸と平行である。t値と同様に、v座標の値は、データ、図形、文字や画像などを表示する位置を決める座標値として用いられる。v軸の範囲と向きはレイヤごとに異なり、レイヤオブジェクト（およびその派生オブジェクト）が生成される際に、コンストラクタの引数に基づいて設定される。
+    </p>
+  </div>
+
+
+  <div id="section04">
+    <h2>４．表示方向（ヨコ表示・タテ表示）の指定とxy座標－tv座標間の対応</h2>
+    <p>
+      タテ表示とヨコ表示、および、t軸の進む方向は、パネルコレクションごとに、displayModeプロパティにより指定する。たとえば、displayMode =
+      0では、t軸の向きがx軸と平行で順方向（ヨコ表示で、t軸は左から右）、displayMode
+      = 3では、t軸の向きがy軸と平行で逆方向（タテ表示で、t軸は下から上）となる。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/DisplayMode.gif" alt="display mode"/>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>５．コンテナの階層構造とDOM要素との関係</h2>
+    <p>
+      コンテナとなるパネルコレクション、パネル、レイヤは、それぞれ、HuTime.PanelCollection、HuTime.TilePanel、HuTime.Layer、HuTime.OverlayPanel、の各クラスのオブジェクトに相当する。それぞれには、表示用のDOM要素（div要素）がelementプロパティにより紐付いる。オブジェクト同士の包含関係に基づいて、各クラスのオブジェクトが階層化されされるとともに、各オブジェクトに紐づいたDOM要素も、ユーザにより用意されたWebページ内のDOM要素に階層化された形で追加される。
+    </p>
+    <p>
+      HuTime.PanelCollectionクラスには、マウスイベントの取得やカーソル形状を制御するためのcanvas要素があり、他のすべてのDOM要素の上に表示される。このcanvas要素は、各クラスのcaptureElementプロパティにより参照できる。また、HuTime.Layerクラスには、描画用のcanvas要素が紐づいており、レイヤ上に表示される図形、文字、画像などが描画される。
+    </p>
+    <p>
+      オブジェクトツリーの最上位に位置するアプリケーションルーツ（HuTimeオブジェクト）は、1つ以上のパネルコレクションを収容し、表示範囲の管理など、アプリケーション全体動きを統括する。パネルコレクション以下の各オブジェクトからは、hutimeRootプロパティにより、自身が属するHuTimeオブジェクトを参照できる。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/ObjectTree.gif" alt="object tree"/>
+    </div>
+  </div>
+
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

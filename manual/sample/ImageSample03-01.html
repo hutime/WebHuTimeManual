@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+  <div id="timeline"></div>
+  <script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+    pnl.appendLayer(lyr);
+
+    posW = new HuTime.TVPosition(25, 75);
+    pos = new HuTime.TVPosition(100, 50);
+    posH = new HuTime.TVPosition(175, 25);
+    sty0 = new HuTime.FigureStyle();
+    sty1 = new HuTime.FigureStyle(null, "red", 5);
+    lyr.processAfterRedraw = function processAfterRedraw(layer) {
+        HuTime.Drawing.drawImage(sty0, layer, posW, "img/ImageSample.jpg", 80);
+        HuTime.Drawing.drawImage(sty1, layer, pos, "img/ImageSample.jpg");
+        HuTime.Drawing.drawImage(sty0, layer, posH, "img/ImageSample.jpg", null, 60);
+    };
+
+    ht.redraw(0, 200);
+  </script>
+</body>
+</html>

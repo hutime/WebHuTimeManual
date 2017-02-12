@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>図形の描画 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>図形の描画</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      HuTimeでは、全ての図形は、<a href="Layer.html">Layerオブジェクト</a>が持つcanvas要素に描画される。一般に、canvas要素への図形の描画は、おおよそ、以下の手順で進められる。
+    </p>
+    <ol>
+      <li>canvas要素のgetContextメソッドによりコンテキストを取得</li>
+      <li>コンテキストが持つメソッド（beginPath, moveTo, lineTo など）を使って図形のパスを描画</li>
+      <li>コンテキストが持つメソッド（stroke, fill など）を使って図形を表示</li>
+    </ol>
+    <p style="text-indent: 0;">
+      HuTimeにおいては、基本的な図形について、1から3までの全ての手順、および、1から2までの途中までの手順を実施するメソッドが用意されている。これらのメソッドはHuTime.Drawingクラスに属しており、円を描く場合を例にすれば、1から3までの図形を表示する手順はHuTime.Drawing.drawCircleメソッドで、1から2までのパスを描画する手順はHuTime.Drawing.pathCircleメソッドでそれぞれ実施される。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．図形の描画</h2>
+    <p>それぞれの図形について、HuTime.Drawingクラスでレイヤに図形を表示するメソッドとパスを描画するメソッドが定義されており、通常は図形を表示するメソッドを使用する。
+    </p>
+    <h3>図形の表示</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.<span class="val">method</span>(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">位置指定</span>, <span class="val">大きさ・形状指定</span> [, <span class="val">rotate</span>
+        [, <span class="val">canvas</span>]])</h4>
+      <p>
+        ここで、<span class="val">method</span>は、"draw"から始まり、図形ごとに異なるメソッド名である（例：drawCircle）。また、位置指定、大きさ・形状指定の引数も、図形ごとに異なる。これらの引数の詳細は、<a href="#section03">各図形の解説</a>で示す。一方、そのほかの引数は、すべての図形で共通で、詳細は下記のとおりである。
+      </p>
+      <dl>
+        <dt class="val">style</dt>
+        <dd>型：<a href="FigureStyle.html">HuTime.FigureStyle</a></dd>
+        <dd>図形の書式（色、線の太さなど）を指定する。</dd>
+        <dt class="val">layer</dt>
+        <dd>型：<a href="Layer.html">HuTime.Layer</a></dd>
+        <dd>図形を描画するレイヤ。</dd>
+        <dt class="val">rotate</dt>
+        <dd>型：数値</dd>
+        <dd>図形を回転させる角度（単位:度）。指定は任意で、省略した場合は、0が指定される。回転の中心は、その図形の中心となる。線、円など、いくつかの図形では指定できない。</dd>
+        <dt class="val">canvas</dt>
+        <dd>型：canvas要素</dd>
+        <dd>
+          図形を描画するcanvas。指定は任意で、省略した場合は、<span class="val">layer</span>.canvasが指定される。<a href="TLineLayer.html">年表レイヤ</a>や<a href="ChartLayer.html">グラフレイヤ</a>など、複数のcanvas要素を持つLayerオブジェクトが対象の場合に使用。
+        </dd>
+      </dl>
+    </div>
+
+    <h3>パスの描画</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.<span class="val">method</span>(<span class="val">layer</span>,
+        <span class="val">位置指定</span>, <span class="val">大きさ・形状指定</span> [, <span class="val">rotate</span>
+        [, <span class="val">canvas</span>]])</h4>
+
+      <p>
+        パスを描画するメソッドは、canvas上にパスを設定するのみで、図形は表示されない。図形の領域を取得する場合などに使用する。ここで、<span class="val">method</span>は、"path"から始まり、図形ごとに異なるメソッド名である（例：pathCircle）。図形を表示するメソッドと異なり、図形の書式を指定するための引数はない。ほかの引数は、図形を表示するメソッドと同様である。
+      </p>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．図形の種類</h2>
+    <p>
+      HuTimeでは、複数の種類の基本図形について、レイヤ上に描画するためのしくみをサポートしている。各図形において、図形を表示するメソッドとパスを描画するメソッド、および、描画位置や大きさ・形状を指定する方法の詳細を以下に示す。
+    </p>
+
+    <h3>線（ポリライン）</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawLine(<span class="val">style</span> , <span class="val">layer</span>,
+        <span class="val">positions</span> [, <span class="val">canvas</span>])</h4>
+      <h4>HuTime.Drawing.pathLine(<span class="val">layer</span>,
+        <span class="val">positions</span> [, <span class="val">canvas</span>])</h4>
+      <p>
+        線のノードの位置を<a href="Position.html">Positionオブジェクト</a>の配列として指定する。ポリゴンとは異なり、パスを閉じない。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">positions</dt>
+        <dd>型：HuTime.Positionの配列</dd>
+        <dd>線のノードの位置の集合。</dd>
+      </dl>
+    </div>
+
+    <h3>多角形（ポリゴン）</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawPolygon(<span class="val">style</span> , <span class="val">layer</span>,
+        <span class="val">positions</span> [, <span class="val">canvas</span>])</h4>
+      <h4>HuTime.Drawing.pathPolygon(<span class="val">layer</span>,
+        <span class="val">positions</span> [, <span class="val">canvas</span>])</h4>
+      <p>
+        多角形の頂点の位置を<a href="Position.html">Positionオブジェクト</a>の配列として指定する。配列の最後の位置と最初の位置を接続し、パスを閉じる。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">positions</dt>
+        <dd>型：HuTime.Positionの配列</dd>
+        <dd>多角形の頂点の位置の集合。</dd>
+      </dl>
+    </div>
+
+    <h3>正方形</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawSquare(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">rotate</span> [, <span class="val">canvas</span>]])</h4>
+      <h4>HuTime.Drawing.pathSquare(<span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">rotate</span> [, <span class="val">canvas</span>]])</h4>
+      <p>
+        位置は正方形の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（辺の長さ）をpx単位で指定する。回転（<span class="val">rotate</span>）に45を指定すると、ひし形になる。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>正方形の中心位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>正方形の幅（単位：px）。辺の長さに相当。</dd>
+      </dl>
+    </div>
+
+    <h3>矩形</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawRect(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position1</span>, <span class="val">position2</span> [, <span class="val">rotate</span>
+        [, <span class="val">canvas</span>]])</h4>
+      <h4>HuTime.Drawing.pathRect(<span class="val">layer</span>,
+        <span class="val">position1</span>, <span class="val">position2</span> [, <span class="val">rotate</span>
+        [, <span class="val">canvas</span>]])</h4>
+      <p>
+        位置と大きさは、矩形の対角線をなす2つの頂点の位置を<a href="Position.html">Positionオブジェクト</a>で指定する。
+      </p>
+      <dl>
+        <dt class="val">position1</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>矩形の対角線をなす一方の頂点の位置。</dd>
+        <dt class="val">position2</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>矩形の対角線をなす他方の頂点の位置。</dd>
+      </dl>
+    </div>
+
+    <h3>円</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawCircle(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">canvas</span>])</h4>
+      <h4>HuTime.Drawing.pathCircle(<span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">canvas</span>])</h4>
+      <p>
+        位置は円の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（直径）をpx単位で指定する。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>円の中心位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>図形の幅（単位：px）。円の直径に相当。</dd>
+      </dl>
+    </div>
+
+    <h3>円弧</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawArc(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">radius</span>,
+        <span class="val">startAngle</span>, <span class="val">endAngle</span>
+        [, <span class="val">canvas</span>])</h4>
+      <h4>HuTime.Drawing.pathArc(<span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">radius</span>,
+        <span class="val">startAngle</span>, <span class="val">endAngle</span>
+        [, <span class="val">canvas</span>])</h4>
+      <p>
+        位置は円弧を含む円の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさと形状は、その円の半径（単位：px）、および、開始・終了位置の角度（単位：度）で指定する。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>円弧を含む円の中心位置。</dd>
+        <dt class="val">radius</dt>
+        <dd>型：数値</dd>
+        <dd>円弧を含む円の半径（単位：px）。</dd>
+        <dt class="val">startAngle</dt>
+        <dd>型：数値</dd>
+        <dd>円弧の開始角度（単位：度）。</dd>
+        <dt class="val">endAngle</dt>
+        <dd>型：数値</dd>
+        <dd>円弧の終了角度（単位：度）。</dd>
+      </dl>
+    </div>
+
+    <h3>扇形</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawPie(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">radius</span>,
+        <span class="val">startAngle</span>, <span class="val">endAngle</span>
+        [, <span class="val">canvas</span>])</h4>
+      <h4>HuTime.Drawing.pathPie(<span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">radius</span>,
+        <span class="val">startAngle</span>, <span class="val">endAngle</span>
+        [, <span class="val">canvas</span>])</h4>
+      <p>
+        位置は扇形を含む円の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさと形状は、その円の半径（単位：px）、および、開始・終了位置の角度（単位：度）で指定する。回転(<span class="val">rotate</span>)は指定できない。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>型：HuTime.Position</dd>
+        <dt class="val">radius</dt>
+        <dd>型：数値</dd>
+        <dd>扇形を含む円の半径（単位：px）。</dd>
+        <dt class="val">startAngle</dt>
+        <dd>型：数値</dd>
+        <dd>扇形の開始角度（単位：度）。</dd>
+        <dt class="val">endAngle</dt>
+        <dd>型：数値</dd>
+        <dd>扇形の終了角度（単位：度）。</dd>
+      </dl>
+    </div>
+
+    <h3>三角形</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawTriangle(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">rotate</span> [, <span class="val">canvas</span>]])</h4>
+      <h4>HuTime.Drawing.pathTriangle(<span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">rotate</span> [, <span class="val">canvas</span>]])</h4>
+      <p>
+        位置は三角形の中心（重心）を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（底辺の長さ）をpx単位で指定する。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>三角形の中心（重心）位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>三角形の幅（単位：px）。底辺の長さに相当。</dd>
+      </dl>
+    </div>
+
+    <h3>プラス記号</h3>
+    <div class="method">
+      <h4>HuTime.Drawing.drawPlusMark(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+          [, <span class="val">rotate</span> [, <span class="val">canvas</span>]])</h4>
+      <h4>HuTime.Drawing.pathPlusMark(<span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">width</span>
+        [, <span class="val">rotate</span> [, <span class="val">canvas</span>]])</h4>
+      <p>
+        位置は記号の中心を<a href="Position.html">Positionオブジェクト</a>で指定し、大きさは幅（線分の長さ）をpx単位で指定する。回転（<span class="val">rotate</span>）に45を指定すると、X記号になる。
+      </p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.Position</dd>
+        <dd>記号の中心位置。</dd>
+        <dt class="val">width</dt>
+        <dd>型：数値</dd>
+        <dd>記号の幅（単位：px）。記号を構成する線分の長さに相当。</dd>
+      </dl>
+    </div>
+  </div>
+
+
+  <h2><a name="04">４．描画のタイミング</a></h2>
+  <p>
+    HuTime.Drawingの各メソッドを用いで描画した図形は、レイヤが再描画されると消えてしまう。このため、レイヤの再描画に合わせてHuTime.Drawingの各メソッドが実施されるよう工夫する必要がある。実際には、レイヤの再描画に合わせた動作を追加できる<a
+          href="Layer.html#section06">HuTime.Layer.processBeforeRedrawメソッド</a>（再描画の前）、または、<a href="Layer.html#section06">HuTime.Layer.processAfterRedrawメソッド</a>（再描画の後）の中に記述する。processBeforeRedrawメソッドを利用した場合は、<a href="TLineLayer.html">年表レイヤ</a>のレコード、<a href="ChartLayer.html">グラフレイヤ</a>のプロット、<a href="OLObject.html">レイヤ上のオブジェクト</a>などの下に図形が描画される。反対に、processAfterRedrawメソッドを利用した場合は、これらの上に図形が描画される。
+  </p>
+
+  <div class="contentFigure">
+    <img src="/manual/img/Figure04-01.png" alt="figure drawing example"/>
+    <p>
+      図形描画の例（下記サンプルコード）。円はprocessBeforeRedrawメソッド内で描画されたので、グラフの下に表示されている。一方、三角形は、processAfterRedrawメソッド内で描画されたので、グラフの上に表示されている。</p>
+  </div>
+
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset(&quot;Weather201507.csv&quot;, &quot;Date&quot;, &quot;Date&quot;, &quot;Temperature&quot;));
+    pnl.appendLayer(lyr);
+
+    var posCircle = new HuTime.TVPosition(HuTime.timeToJd(2015, 7, 10), 25);
+    var styCircle = new HuTime.FigureStyle(&quot;lime&quot;);
+    lyr.processBeforeRedraw = function (layer) {
+        HuTime.Drawing.drawCircle(styCircle, layer, posCircle, 120);
+    };
+    var posTriangle = new HuTime.TVPosition(HuTime.timeToJd(2015, 7, 25), 30);
+    var styTriangle = new HuTime.FigureStyle(&quot;aqua&quot;);
+    lyr.processAfterRedraw = function (layer) {
+        HuTime.Drawing.drawTriangle(styTriangle, layer, posTriangle, 120, 30);
+    };
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+  <h2><a name="Figure05">５．パスの利用</a></h2>
+  <p>
+    各図形で定義されているパスを描画するメソッドは、マウスが図形の中にあるかどうかを判断する場合などに利用できる。下記のサンプルコードでは、図形内にマウスが入ると、図形の色が変化する。
+  </p>
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureSample05-01.html" target="_blank">実行例はこちら</a>）。</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="timeline"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+  var ht = new HuTime();
+  var pnls = new HuTime.PanelCollection(200, 400);
+  ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+  var pnl = new HuTime.TilePanel(200);
+  pnls.appendPanel(pnl);
+  var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+  pnl.appendLayer(lyr);
+
+  pos = new HuTime.TVPosition(100, 50);
+  styOut = new HuTime.FigureStyle(3, "red", "white");
+  styIn = new HuTime.FigureStyle(3, "red", "green");
+  lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+    HuTime.Drawing.drawCircle(styOut, layer, pos, 100);
+  };
+
+  lyr.mouseEventCapture = HuTime.EventCapture.All;
+  lyr.addEventListener("mousemove",
+          function(ev) {
+            var ctx = HuTime.Drawing.pathCircle(ev.target, pos, 100);
+            if (ctx.isPointInPath(ev.offsetX, ev.offsetY))
+              HuTime.Drawing.drawCircle(styIn, ev.target, pos, 100);
+            else
+              HuTime.Drawing.drawCircle(styOut, ev.target, pos, 100);
+          }
+  );
+
+  ht.redraw(50, 150);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+  </pre>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

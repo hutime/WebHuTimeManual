@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>イベント処理 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>イベント処理</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      HuTime内の多くのオブジェクトがマウス操作などのイベントを処理することができる。イベントの扱い方は、基本的に、DOM要素の場合と同じである。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．イベントの種類</h2>
+    <p>
+      HuTimeで扱うイベントは、マウスイベントとHuTime独自のイベントに分けられ、イベント伝播などで若干の違いがある。
+    </p>
+
+    <h3>（１）マウスイベント</h3>
+    <p>
+      発火条件は、DOM要素のマウスイベントと同様で、パネルコレクション、パネル、レイヤなどの基本構造、および、レイヤ上の図形オブジェクトなどが発火元となる。ただし、イベントオブジェクトはDOM要素のものとは異なり、HuTime独自のマウスイベントオブジェクト（HuTime.MouseEvent）が用いられる。以下のマウスイベントが対象である。
+    </p>
+    <p>
+      click, dblclick, mouseup, mousedown, mousemove, mouseover, mouseout, wheel
+    </p>
+
+    <h3>（２）HuTime独自のイベント</h3>
+    <p>
+      表示範囲の変更やパネルの表示状態が変化したときに発火する。
+    </p>
+    <ul>
+      <li><span style="font-weight:700;">tmoved:</span> t軸方向の表示範囲が変更された場合（移動および拡大・縮小）。</li>
+      <li><span style="font-weight:700;">tlengthchanged:</span> t軸方向の幅（タテ表示では高さ）が変更された場合。</li>
+      <li><span style="font-weight:700;">vscrolled:</span> v軸方向にタイルパネルが移動された場合。</li>
+      <li><span style="font-weight:700;">porderchanged:</span> タイルパネルの順序が変更された場合。</li>
+      <li><span style="font-weight:700;">pvbreadthchanged:</span> タイルパネルのv軸方向の高さ（タテ表示では幅）が変更された場合。</li>
+      <!--li><span style="font-weight:700;">plotclick:</span> レコードを表示するレイヤ（HuTime.TLineLayerなど）上で、レコードプロットがクリックされた場合。</li-->
+    </ul>
+  </div>
+
+  <div id="section03">
+    <h2>３．イベントの伝播</h2>
+    <p>
+      マウスイベントとHuTime独自のイベントでイベントの伝播の仕方が異なる。
+    </p>
+
+    <h3>（１）マウスイベント</h3>
+    <p>
+      canvas上に描画された図形などのマウス操作を捉えるため、いったん、パネルコレクションオブジェクトのcaptureElement（canvas要素）でマウスイベントを受け取る。DOMツリーから見た場合は、captureElementが発火元で、HuTime内の処理は同イベントのTarget
+      Phaseとなる。イベントが発火すると、captureElementからHuTimeオブジェクトに処理が渡され、オブジェクトツリーを辿って、発火元のオブジェクトとイベントの種類を抽出する処理が行われる。次に、発火元のオブジェクトへ至るCapture
+      Phase、発火元でのTarget Phase、さらに、発火元からのBubbling
+      Phaseを経て、HuTimeオブジェクトに処理が返される。オブジェクトツリー内の処理が終了すると、HuTimeオブジェクトは処理をcaptureElementに返すが、意図しない動作を防止するため、それ以降のDOMツリーでのBubbling
+      Phaseは抑止されている。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/EventFlow.gif" alt="mouse event"/>
+    </div>
+
+    <h3>（２）HuTime独自のイベント</h3>
+    <p>
+      HuTime独自のイベントが発火すると、発火元からHuTimeオブジェクトに処理が渡される。以降は、発火元のオブジェクトへ至るCapture Phase、発火元でのTarget Phase、さらに、発火元からのBubbling
+      Phaseを経て、HuTimeオブジェクトに処理が返され、処理が終了する。HuTime独自のイベントは、DOMツリーへは伝播しない。
+    </p>
+  </div>
+
+
+  <div id="section04">
+    <h2>４．ユーザ定義のイベント処理の追加</h2>
+    <p>
+      マウスイベントおよびHuTime独自のイベントは、アプリケーションルート、パネルコレクション、パネル、レイヤ、および、レイヤ上の図形オブジェクトにイベント処理（リスナ）をaddEventListenerメソッドにより追加できる。イベントタイプやリスナーの指定、および、イベントフェーズの指定方法は、DOM要素にユーザイベント処理を追加するaddEventListenerと同様である。
+    </p>
+
+    <div class="method">
+      <h4><span class="val">obj</span>.addEventListener(<span class="val">type</span>, <span class="val">handler</span> [, <span class="val">useCapture</span>])
+      </h4>
+      <p>イベント処理の追加。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし。</dd>
+
+        <dt class="val">obj</dt>
+        <dd>型：HuTime, HuTime.ContainerBase, HuTime.OnLayerObjectBase</dd>
+        <dd>イベントを定義するオブジェクト。</dd>
+
+        <dt class="val">type</dt>
+        <dd>型：文字列</dd>
+        <dd>イベントの種類を示す文字列。</dd>
+
+        <dt class="val">handler</dt>
+        <dd>型：関数（function(<span class="val">ev</span>)）</dd>
+        <dd>イベント処理を行う関数。引数<span class="val">ev</span>はイベントオブジェクト（型：HuTime.Event）</dd>
+
+        <dt class="val">useCapture</dt>
+        <dd>型：真偽値</dd>
+        <dd>イベントのどのフェーズを利用するかを設定。trueの場合はキャプチャフェーズ、falseの場合はバブリングフェーズ。省略された場合は、false（バブリングフェーズ）が設定される。</dd>
+      </dl>
+    </div>
+
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

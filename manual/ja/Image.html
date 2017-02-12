@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>画像の表示 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>画像の表示</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <h2>１．概要</h2>
+  <p>
+    画像は、<a href="#">Layerオブジェクト</a>が持つcanvas要素に描画される。<a href="Figure.html">図形の表示</a>と同様に、画像を表示するメソッドと、画像の輪郭を示すパスを描画するメソッドがある。
+  </p>
+
+  <h2><a name="02">２．画像の表示</a></h2>
+  <p>
+    画像を表示するためのメソッドは、図形と同様に、HuTime.Drawingクラスで定義されている。drawImageが画像の表示、pathImageが画像の輪郭を示すパスを描画するメソッドである。
+  </p>
+
+  <div class="method">
+    <h4>HuTime.Drawing.drawImage(<span class="val">style</span>, <span class="val">layer</span>,
+      <span class="val">position</span>, <span class="val">src</span>
+      [, <span class="val">width</span> [, <span class="val">height</span>
+      [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]]]])</h4>
+    <h4>HuTime.Drawing.pathImage(<span class="val">layer</span>,
+      <span class="val">position</span>, <span class="val">src</span>
+      [, <span class="val">width</span> [, <span class="val">height</span>
+      [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]]]])</h4>
+    <p>
+      画像の中心の位置を<a href="#">Positionオブジェクト</a>で指定し、必要に応じて、幅と高さをpx単位で指定する。他の図形と同様に、回転させることも可能である。
+    </p>
+
+    <dl>
+      <dt class="val">style</dt>
+      <dd>型：<a href="FigureStyle.html">HuTime.FigureStyle</a></dd>
+      <dd>画像の枠線の書式（色、線の太さなど）を指定する。</dd>
+
+      <dt class="val">layer</dt>
+      <dd>型：<a href="Layer.html">HuTime.Layer</a></dd>
+      <dd>画像を表示するレイヤ。</dd>
+
+      <dt class="val">position</dt>
+      <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+      <dd>画像の中心の位置。</dd>
+
+      <dt class="val">src</dt>
+      <dd>型：文字列</dd>
+      <dd>画像のソースのURLを示す文字列。相対パスでの指定も可能。</dd>
+
+      <dt class="val">width</dt>
+      <dd>型：数値</dd>
+      <dd>画像を表示する幅（単位：px）。指定は任意で、省略した場合や無効な値（nullや負値など）が設定されており、かつ、高さ（<span class="val">height</span>）として有効な値が指定されている場合は、同じ比率で幅が設定される。高さ（<span class="val">height</span>）も省略または無効な値である場合は、元の画像の大きさで表示される。</dd>
+
+      <dt class="val">height</dt>
+      <dd>型：数値</dd>
+      <dd>画像を表示する高さ（単位：px）。指定は任意で、省略した場合や無効な値（nullや負値など）が設定されており、かつ、幅（<span class="val">width</span>）として有効な値が指定されている場合は、同じ比率で幅が設定される。幅（<span class="val">width</span>）も省略または無効な値である場合は、元の画像の大きさで表示される。</dd>
+
+      <dt class="val">rotate</dt>
+      <dd>型：数値</dd>
+      <dd>図形を回転させる角度（単位:度）。指定は任意で、省略した場合は、0が指定される。</dd>
+
+      <dt class="val">canvas</dt>
+      <dd>型：canvas要素</dd>
+      <dd>
+        図形を描画するcanvas。指定は任意で、省略した場合は、<span class="val">layer</span>.canvasが指定される。<a href="TLineLayer.html">年表レイヤ</a>や<a href="ChartLayer.html">グラフレイヤ</a>など、複数のcanvas要素を持つLayerオブジェクトが対象の場合に使用。
+      </dd>
+    </dl>
+  </div>
+
+  <h2><a name="03">３．表示のタイミング</a></h2>
+  <p>
+    <a href="Figure.html#04">HuTime.Drawingの他のメソッドと同様に、</a>レイヤの再描画に合わせて、<a href="http://web.hutime.org/manual/Layer.html#section06">HuTime.Layer.processBeforeRedrawメソッド</a>（再描画の前）、または、<a href="http://web.hutime.org/manual/Layer.html#section06">HuTime.Layer.processAfterRedrawメソッド</a>（再描画の後）の中に表示の処理を記述する。表示の順序に関する<a href="TLineLayer.html">年表レイヤ</a>のレコード、<a href="ChartLayer.html">グラフレイヤ</a>のプロット、<a href="OLObject.html">レイヤ上のオブジェクト</a>などとの関係も、他の図形と同様である。
+  </p>
+
+  <div class="contentFigure">
+    <img src="/manual/img/Image03-01.png" alt="Image drawing example"/>
+    <p>画像表示の例（下記サンプルコード）。</p>
+  </div>
+
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ImageSample03-01.html" target="_blank">実行例はこちら</a>）。</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+    pnl.appendLayer(lyr);
+
+    posW = new HuTime.TVPosition(25, 75);
+    pos = new HuTime.TVPosition(100, 50);
+    posH = new HuTime.TVPosition(175, 25);
+    sty0 = new HuTime.FigureStyle();
+    sty1 = new HuTime.FigureStyle(null, &quot;red&quot;, 5);
+    lyr.processAfterRedraw = function processAfterRedraw(layer) {
+        HuTime.Drawing.drawImage(sty0, layer, posW, &quot;img/ImageSample.jpg&quot;, 80);
+        HuTime.Drawing.drawImage(sty1, layer, pos, &quot;img/ImageSample.jpg&quot;);
+        HuTime.Drawing.drawImage(sty0, layer, posH, &quot;img/ImageSample.jpg&quot;, null, 60);
+    };
+
+    ht.redraw(0, 200);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+
+  <h2><a name="04">４．パスの利用</a></h2>
+  <p>
+    他の図形と同様に、パスを描画するメソッドを、マウスが図形の中にあるかどうかを判断する場合などに利用できる。下記のサンプルコードでは、図形内にマウスが入ると、画像が180度回転する。
+  </p>
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/ImageSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+    pnl.appendLayer(lyr);
+
+    pos = new HuTime.TVPosition(100, 50);
+    sty = new HuTime.FigureStyle();
+    lyr.processAfterRedraw = function processAfterRedraw(layer) {
+        HuTime.Drawing.drawImage(sty, layer, pos, &quot;img/ImageSample.jpg&quot;);
+    };
+
+    lyr.mouseEventCapture = HuTime.EventCapture.All;
+    lyr.addEventListener(&quot;mousemove&quot;,
+        function(ev) {
+            var ctx = HuTime.Drawing.pathImage(ev.target, pos, &quot;img/ImageSample.jpg&quot;);
+            if (ctx.isPointInPath(ev.offsetX, ev.offsetY))
+                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;img/ImageSample.jpg&quot;, null, null, 180);
+            else
+                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;img/ImageSample.jpg&quot;);
+        }
+    );
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

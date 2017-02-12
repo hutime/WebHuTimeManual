@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>文字列の書式 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>文字列の書式</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <h2>１．概要</h2>
+  <p>
+    文字の色、大きさ、書体フォントの種類や書体などの書式は、HuTime.StringStyleで設定する。また、HuTime.StringStyle.applyStyleを再定義することにより、標準ではサポートされていない独自の書式を指定することができる。
+  </p>
+
+  <h2><a name="02">２．標準の書式指定</a></h2>
+  <p>HuTime.StringStyleでは、以下の書式が指定できる。</p>
+
+  <dl>
+    <dt>fontSize</dt>
+    <dd>型：文字列</dd>
+    <dd>既定値："10px"</dd>
+    <dd>文字の大きさ（高さ）（単位：px）。数値のみを入力した場合は、自動的に単位（"px"）が付加される。nullを入力した場合は、既定値に戻る。</dd>
+
+    <dt>fontStyle</dt>
+    <dd>型：文字列</dd>
+    <dd>既定値："normal"</dd>
+    <dd>文字の書体。"normal"（標準）、"italic"（斜体）、 "oblique"（斜体フォント） のいずれかが指定可能。nullを入力した場合は、既定値に戻る。</dd>
+
+    <dt>fontWeight</dt>
+    <dd>型：数値</dd>
+    <dd>既定値：400</dd>
+    <dd>
+      文字の太さ。100から900までの値が入力可能。10の桁以下は切り捨てられる。100未満または900を超える値を入力した場合は、それぞれ、100または900に置き換えられる。文字列"bold"を入力した場合は、700に置き換えられる。nullを入力した場合は、既定値に戻る。
+    </dd>
+
+    <dt>fontFamily</dt>
+    <dd>型：文字列</dd>
+    <dd>既定値："sans-serif"</dd>
+    <dd>フォントの種類。nullが入力された場合は、既定値に戻る。</dd>
+
+    <dt>lineHeight</dt>
+    <dd>型：数値または文字列</dd>
+    <dd>既定値：1</dd>
+    <dd>
+      改行した場合の改行幅。文字の大きさ（fontSize）に対する倍率を指定する場合は、数値が入力する（単位：emと同じ）。px単位で指定する場合は、単位を付した文字列として入力する（例:"10px"）。負の値を指定すると、逆方向に改行する（CSSとは異なる仕様）。nullが入力された場合は、既定値に戻る。
+    </dd>
+
+    <dt>textAlign</dt>
+    <dd>型：文字列</dd>
+    <dd>既定値："start"</dd>
+    <dd>テキスト横方向の整列位置。"start"（開始位置）、"end"（終了位置）、"left"（左）、"right"（右）、 "center"（中央）のいずれかが指定可能。nullが指定された場合は、既定値に戻る。</dd>
+
+    <dt>textBaseline</dt>
+    <dd>型：数値の配列</dd>
+    <dd>既定値："alphabetic"</dd>
+    <dd>テキスト縦方向の整列位置。"top", "hanging", "middle", "alphabetic", "ideographic", "bottom"のいずれかが指定可能。nullが指定された場合は、既定値に戻る。</dd>
+
+    <dt>fillColor</dt>
+    <dd>型：文字列</dd>
+    <dd>既定値："black"</dd>
+    <dd>文字の色。CSSでの色指定と同様の方法で指定する。色名、カラーコード、rgb()、rgba()が利用可能。nullの場合は、文字の色は処理されない（透明になる）。</dd>
+
+    <dt>lineWidth</dt>
+    <dd>型：数値</dd>
+    <dd>既定値：0</dd>
+    <dd>文字の輪郭の幅（単位：px）。0以下の場合、文字の輪郭は描画されない。</dd>
+
+    <dt>lineColor</dt>
+    <dd>型：文字列</dd>
+    <dd>既定値：null</dd>
+    <dd>文字の輪郭の色。CSSでの色指定と同様の方法で指定する。色名、カラーコード、rgb()、rgba()が利用可能。nullの場合は、文字の輪郭は描画されない。</dd>
+
+    <dt>alpha</dt>
+    <dd>型：数値</dd>
+    <dd>既定値：1.0</dd>
+    <dd>透過率。0.0で完全に透明、1.0で完全に不透明になる。文字全体（文字の中身および輪郭）が対象。</dd>
+  </dl>
+
+  <p style="text-indent:0; margin-top:10px;">
+    上記のうち、StringStyleのコンストラクタでは、フォントサイズ、色、書体、および、フォントの種類を指定することができる。指定が省略された場合は、既定値が適用される。
+  </p>
+  <h3>コンストラクタ</h3>
+  <div class="method">
+    <h4>HuTime.Style([<span class="val">fontSize</span> [, <span class="val">fillColor</span> [,
+      <span class="val">fontWeight</span> [, <span class="val">fontStyle</span> [, <span class="val">fontFamily</span>]]]]])</h4>
+    <dl>
+      <dt class="val">fontSize</dt>
+      <dd>型：数値</dd>
+      <dd>文字の大きさ（単位：px）</dd>
+      <dt class="val">fillColor</dt>
+      <dd>型：文字列</dd>
+      <dd>塗り（図形内部）の色。CSSでの色指定と同様の方法で指定する。</dd>
+      <dt class="val">fontWeight</dt>
+      <dd>型：数値</dd>
+      <dd>文字の太さ。</dd>
+      <dt class="val">fontStyle</dt>
+      <dd>型：文字列</dd>
+      <dd>文字の書体。</dd>
+      <dt class="val">fontFamily</dt>
+      <dd>型：文字列</dd>
+      <dd>文字のフォントの種類。</dd>
+    </dl>
+  </div>
+
+  <div class="contentFigure">
+    <img src="/manual/img/StringStyle02-01.png" alt="string style example"/>
+    <p>文字列の書式指定の例（下記サンプルコード）。一番上は、既定の書式。その下の赤い文字列は、文字サイズ、文字の色、文字の太さ、書体を設定した例。青い文字列は、改行を含む文字列の表示例。一番下は、フォントの種類と文字の輪郭を設定した例。</p>
+  </div>
+
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/StringStyleSample02-01.html" target="_blank">実行例はこちら</a>）。</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var pos = new HuTime.TVPosition(10, 10);
+    var pos1 = new HuTime.TVPosition(10, 25);
+    var pos2 = new HuTime.TVPosition(10, 40);
+    var pos3 = new HuTime.TVPosition(10, 75);
+
+    var sty = new HuTime.StringStyle();
+    var sty1 = new HuTime.StringStyle(20, &quot;red&quot;, 700, &quot;italic&quot;);
+    var sty2 = new HuTime.StringStyle(18, &quot;blue&quot;);
+    var sty3 = new HuTime.StringStyle(20, &quot;yellow&quot;);
+    sty3.fontFamily = &quot;serif&quot;;
+    sty3.lineWidth = 3;
+    sty3.lineColor = &quot;green&quot;;
+
+    var text = &quot;Default&quot;;
+    var text1 = &quot;Size: 20px Weight:700 Style:italic&quot;;
+    var text2 = &quot;Line 1\nLine 2\nLine 3&quot;;
+    var text3 = &quot;Font Family: serif&quot;;
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawString(sty, layer, pos, text);
+        HuTime.Drawing.drawString(sty1, layer, pos1, text1);
+        HuTime.Drawing.drawString(sty2, layer, pos2, text2);
+        HuTime.Drawing.drawString(sty3, layer, pos3, text3);
+    };
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+  <h2><a name="03">３．独自の書式設定</a></h2>
+  <p>
+    以下のHuTime.StringStyleの書式適用のメソッドを再定義することにより、独自の書式を設定することができる。図形の書式とは異なり、塗りと輪郭の書式適用を個別に再定義はできない。独自に設定した書式を元に戻す場合は、既定のメソッドで再定義する（nullで再定義した場合も既定のメソッドに置き換わる）。</p>
+
+  <div class="method">
+    <h4>applyStyle(<span class="val">ctx</span>, <span class="val">text</span>)</h4>
+    <p>
+      HuTime.StringStyle.prototype.defaultApplyStyle</p>
+    <p>文字列全体（塗りおよび輪郭）の書式の適用。再定義することにより、独自の書式を定義できる。既定の処理に戻す場合は、HuTime.FigureStyle.prototype.defaultApplyStyleを設定する。</p>
+    <dl>
+      <dt><span class="val">ctx</span></dt>
+      <dd>型：CanvasRenderingContext2D</dd>
+      <dd>対象となる文字列のパスを含むcanvas要素のコンテキスト。</dd>
+      <dt><span class="val">text</span></dt>
+      <dd>型：文字列</dd>
+      <dd>表示するテキスト。</dd>
+    </dl>
+  </div>
+
+
+
+  <div class="contentFigure">
+    <img src="/manual/img/StringStyle03-01.png" alt="string style example"/>
+    <p>
+      独自の書式設定を使った文字列表示の例（下記サンプルコード）。applyStyleメソッドを再定義することにより、StringStyleではサポートされていない図形の重ね合わせに関する指定（globalCompositeOperation）を使って、図形から文字を切り抜く表現を実現している。</p>
+  </div>
+  <div>
+    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/StringStyleSample03-01.html" target="_blank">実行例はこちら</a>）。</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var pos = new HuTime.TVPosition(100, 50);
+    var sty = new HuTime.StringStyle(40, &quot;red&quot;, 700);
+    sty.textAlign = &quot;center&quot;;
+    sty.textBaseline = &quot;middle&quot;;
+    sty.applyStyle = function applyStyle(ctx, text) {
+        ctx.globalCompositeOperation = &quot;xor&quot;;
+        HuTime.StringStyle.prototype.defaultApplyStyle.apply(sty, [ctx, text]);
+        ctx.globalCompositeOperation = &quot;source-over&quot;;
+    };
+    var styBk = new HuTime.FigureStyle(&quot;blue&quot;);
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(styBk, layer, pos, 150);
+        HuTime.Drawing.drawString(sty, layer, pos, &quot;Hello World!&quot;);
+    };
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

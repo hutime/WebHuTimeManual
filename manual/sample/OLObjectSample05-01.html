@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+<div id="timeline"></div>
+<script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var objCircle = new HuTime.Circle(
+        new HuTime.FigureStyle("blue"),
+        new HuTime.TVPosition(50, 50),
+        100
+    );
+    lyr.appendObject(objCircle);
+
+    var objButton = new HuTime.Rect(
+        new HuTime.FigureStyle("lightgray"),
+        new HuTime.TVPosition(100, 40), new HuTime.TVPosition(140, 60)
+    );
+    lyr.appendObject(objButton);
+    objButton.addEventListener("click", function(ev) {
+        if (objCircle.style.fillColor == "blue")
+            objCircle.style.fillColor = "red";
+        else
+            objCircle.style.fillColor = "blue";
+        objCircle.redraw();
+    });
+
+    ht.redraw(0, 200);
+</script>
+</body>
+</html>

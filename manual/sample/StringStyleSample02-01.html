@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+<div id="timeline"></div>
+<script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var pos = new HuTime.TVPosition(10, 10);
+    var pos1 = new HuTime.TVPosition(10, 25);
+    var pos2 = new HuTime.TVPosition(10, 40);
+    var pos3 = new HuTime.TVPosition(10, 75);
+
+    var sty = new HuTime.StringStyle();
+    var sty1 = new HuTime.StringStyle(20, "red", 700, "italic");
+    var sty2 = new HuTime.StringStyle(18, "blue");
+    var sty3 = new HuTime.StringStyle(20, "yellow");
+    sty3.fontFamily = "serif";
+    sty3.lineWidth = 3;
+    sty3.lineColor = "green";
+
+    var text = "Default";
+    var text1 = "Size: 20px Weight:700 Style:italic";
+    var text2 = "Line 1\nLine 2\nLine 3";
+    var text3 = "Font Family: serif";
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawString(sty, layer, pos, text);
+        HuTime.Drawing.drawString(sty1, layer, pos1, text1);
+        HuTime.Drawing.drawString(sty2, layer, pos2, text2);
+        HuTime.Drawing.drawString(sty3, layer, pos3, text3);
+    };
+
+    ht.redraw(0, 200);
+</script>
+</body>
+</html>

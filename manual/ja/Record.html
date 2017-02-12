@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>レコードとレコード内のデータ - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>レコードとレコード内のデータ</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>年表やグラフのレコードは、HuTime.TRangeオブジェクトによる範囲と複数のデータを持つ。これらのレコード内のデータは、型などの情報と合わせて、HuTime.RecordDataオブジェクトとして収容されている。レコード内のデータは、年表とグラフで共通である。</p>
+  </div>
+
+  <div id="section02">
+    <h2>２．レコード内のデータの生成</h2>
+    <p>レコード内のデータは、コンストラクタによる直接的な方法と、年表またはグラフ用のレコードのappendDataメソッドにより生成・追加する方法により生成される。</p>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.RecordData([<span class="val">content</span> [, <span class="val">type</span>]])</h4>
+      <dl>
+        <dt class="val">content</dt>
+        <dd>型：文字列または数値</dd>
+        <dd>データの内容。文字列は、空文字、空白のみを含む。また数値は、NaNおよび無限大を含む。省略した場合や無効な値を入力した場合は、既定値（空文字）となる。</dd>
+        <dt class="val">type</dt>
+        <dd>型：文字列</dd>
+        <dd>データの型。文字列は、空文字、空白のみを含む。HTMLとして出力する際などに、参照される。省略した場合や無効な値を入力した場合は、既定値（空文字）となる。</dd>
+      </dl>
+    </div>
+
+    <h3>レコードオブジェクトによる生成・追加</h3>
+    <div class="method">
+      <h4><span class="val">record</span>.appendData(<span class="val">itemName</span>, [<span class="val">content</span> [, <span class="val">type</span>]])</h4>
+      <dl>
+        <dt>返値</dt>
+        <dd>型：なし</dd>
+        <dt class="val">record</dt>
+        <dd>型：HuTime.RecordBase</dd>
+        <dd>生成したデータを追加するレコードオブジェクト。</dd>
+        <dt class="val">itemName</dt>
+        <dd>型：文字列または数値</dd>
+        <dd>データの項目名。空文字および空白のみの文字列、NaNおよび無限大は不可。文字列の前後の空白は削除される。既に同じ項目名のデータがある場合は、上書きれる。</dd>
+        <dt class="val">content</dt>
+        <dd>型：文字列または数値、もしくは、HuTime.RecordData</dd>
+        <dd>データの内容。省略した場合や無効な値を入力した場合は、新たなHuTime.RecordDataオブジェクトが生成され、その内容がHuTime.RecordDataオブジェクトの既定値（空文字）となる。
+          <ul>
+            <li>文字列または数値 － 新たに生成されるHuTime.RecordDataオブジェクトのデータの内容。文字列は、空文字、空白のみを含む。また数値は、NaNおよび無限大を含む。</li>
+            <li>HuTime.RecordData － 指定されたデータオブジェクトが項目名を付されてレコードに追加される。この場合、後ろの引数<span class="val">type</span>は無視される。</li>
+          </ul>
+        </dd>
+        <dt class="val">type</dt>
+        <dd>型：文字列</dd>
+        <dd>データの型。文字列は、空文字、空白のみを含む。HTMLとして出力する際などに、参照される。省略した場合や無効な値を入力した場合は、既定値（空文字）となる。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．プロパティ</h2>
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>content</dt>
+        <dd>型：文字列または数値（NaNを含む）</dd>
+        <dd>既定値：""</dd>
+        <dd>レコードデータの内容。無効な値は無視される。</dd>
+
+        <dt>type</dt>
+        <dd>型：文字列</dd>
+        <dd>既定値：""</dd>
+        <dd>
+          htmlで出力する際のレコードデータのタイプをHTML要素名やMIMEなどで指定する。文字列以外の値を入力した場合は無視される。指定可能なタイプは下記のとおり。下記以外の文字列が入力された場合は、テキストとして処理される。
+          <ul>
+            <li>生のhtml： html, text/html</li>
+            <li>テキスト： text, text/plain</li>
+            <li>画像： image, img, image/jpeg, image/png, image/gif</li>
+            <li>リンク： link, a</li>
+          </ul>
+        </dd>
+
+        <dt>html</dt>
+        <dd>型：文字列</dd>
+        <dd>読み取り専用</dd>
+        <dd>レコードデータをtypeに基づいてhtmlで出力。</dd>
+
+        <dt>getHtml</dt>
+        <dd>型:関数（function ()、返値：文字列）</dd>
+        <dd>htmlを出力するための処理（既定の処理以外の処理を再定義する）。nullを設定すると、既定の処理に戻る。</dd>
+
+        <dt>text</dt>
+        <dd>読み取り専用</dd>
+        <dd>レコードデータを文字列として出力。</dd>
+
+        <dt>getText</dt>
+        <dd>型:関数（function ()、返値：文字列）</dd>
+        <dd>文字列をを出力するための処理（既定の処理以外の処理を再定義する）。nullを設定すると、既定の処理に戻る。</dd>
+      </dl>
+    </div>
+
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

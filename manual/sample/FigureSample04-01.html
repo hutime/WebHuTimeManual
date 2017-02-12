@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+  <div id="timeline"></div>
+  <script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset("Weather201507.csv", "Date", "Date", "Temperature"));
+    pnl.appendLayer(lyr);
+
+    var posCircle = new HuTime.TVPosition(HuTime.timeToJd(2015, 7, 10), 25);
+    var styCircle = new HuTime.FigureStyle("lime");
+    lyr.processBeforeRedraw = function (layer) {
+        HuTime.Drawing.drawCircle(styCircle, layer, posCircle, 120);
+    };
+    var posTriangle = new HuTime.TVPosition(HuTime.timeToJd(2015, 7, 25), 30);
+    var styTriangle = new HuTime.FigureStyle("aqua");
+    lyr.processAfterRedraw = function (layer) {
+        HuTime.Drawing.drawTriangle(styTriangle, layer, posTriangle, 120, 30);
+    };
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+  </script>
+</body>
+</html>

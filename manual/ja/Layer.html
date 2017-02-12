@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>レイヤ - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>レイヤ</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      データ、図形、文字や画像などは、レイヤ上に表示される。また、<a href="OLObject.html">図形などのオブジェクト</a>をオブジェクトツリーの一部としてレイヤに収容することもできる。タイムライン表示、グラフ表示、目盛表示など、目的に応じて、さまざまな種類のレイヤがある。パネル上では、複数のレイヤを組み合わせて利用することができる。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．オブジェクトの生成</h2>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.Layer([<span class="val">vBreadth</span> [, <span class="val">vMarginTop</span> [, <span class="val">vMarginBottom</span>
+        [, <span class="val">vTop</span>, <span class="val">vBottom</span>]]]])</h4>
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：null</dd>
+        <dd>v軸方向の長さ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginTop</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：null</dd>
+        <dd>v軸方向の上（タテ表示の場合は左）の余白（単位：px）。</dd>
+
+        <dt><span class="val">vMarginBottom</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：null</dd>
+        <dd>v軸方向の下（タテ表示の場合は右）の余白（単位：px）。</dd>
+
+        <dt><span class="val">vTop</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：0</dd>
+        <dd>v軸方向の上端（タテ表示の場合は左端）のv値。</dd>
+
+        <dt><span class="val">vBottom</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：100</dd>
+        <dd>v軸方向の下端（タテ表示の場合は右端）のv値。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．レイヤの追加</h2>
+    <p>
+      レイヤは、パネルオブジェクトのappendPanelメソッドにより追加される。
+    </p>
+    <div class="method">
+      <h4><span class="val">pnl</span>.appendPanelCollection(<span class="val">layer</span>)</h4>
+      <dl>
+        <dt><span class="val">pnl</span></dt>
+        <dd>型：HuTime</dd>
+        <dd>レイヤを追加するパネルオブジェクト。</dd>
+
+        <dt><span class="val">layer</span></dt>
+        <dd>型：HuTime.PanelBase</dd>
+        <dd>パネルに追加するレイヤ。</dd>
+      </dl>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/LayerSample03-01.html" target="_blank">実行例はこちら</a>）。パネルオブジェクト（変数pnl）に２つのレイヤを（変数lyr1およびlyr2）を追加している。後述の<a href="#section05">書式の設定</a>により、レイヤの背景としグラデーションや写真が設定されている。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(250);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr1 = new HuTime.Layer(150);
+    var lyr2 = new HuTime.Layer(150, null, 0);
+    pnl.appendLayer(lyr1);
+    pnl.appendLayer(lyr2);
+
+    pnls.style.backgroundColor = &quot;pink&quot;;
+    pnl.style.backgroundColor = &quot;lightyellow&quot;;
+    lyr1.style.backgroundImage = &quot;url(&apos;img/bkSample.jpg&apos;)&quot;;
+    lyr2.style.background = &quot;linear-gradient(to bottom, Azure 0%, SkyBlue 100%)&quot;;
+
+        ht.redraw();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．表示位置とサイズの設定</h2>
+    <p>
+      レイヤのt軸方向の表示幅は、パネルコレクションに合わせて設定される。v軸方向の表示位置と表示幅は、vBreadth, vMarginTop,
+      vMarginBottomの各プロパティにより設定する。各プロパティの詳細は、コンストラクタの引数と同様である。<a href="#section03">「３．パネルコレクションの追加」</a>で示した例では、lyr1（背景が写真）はvBreadthのみを設定しているため、パネルの上端に寄せられて表示されている。一方lyr2（背景が青のグラデーション）は、vBreadthを設定し、vMarginBottomを0としている。このため、下端に寄せられて表示されている。結果として、２つのレイヤの一部が重なり、写真を背景とするレイヤの上部が、グラデーションを背景とするレイヤから見えている状態になっている。
+    </p>
+
+    <h3>ヨコ表示の場合の表示位置</h3>
+    <div class="contentFigure">
+      <img src="/manual/img/VBreadthSample.gif" alt="v axis for holizontal display mode"/>
+    </div>
+    <p>
+      ヨコ表示では、v軸は高さ方向となり、表示位置とサイズは高さに方向について設定することになる。基本的に、3つプロパティのうち2つを指定し、残りをnull（またはundefined）にする。nullに設定されたプロパティは、パネルの高さ（currentVBreadth）に応じて、自動的に設定される。
+    </p>
+    <p>
+      vMarginBottomとvBreadthに値を設定し、vMarginTopをnullとした場合は、上の余白がパネルの高さ（currentVBreadth）に応じて伸び縮みする。vMarginBottomを0に設定した場合は、パネルのの下端に張り付いた表示になる。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/VBreadthSample_TopNull.gif" alt="v axis for holizontal display mode"/>
+    </div>
+    <p>
+      vMarginTopとvBreadthに値を設定し、vMarginBottomをnullとした場合は、下の余白がパネルの高さ（currentVBreadth）に応じて伸び縮みする。vMarginTopを0に設定した場合は、パネルの上端に張り付いた表示になる。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/VBreadthSample_BottomNull.gif" alt="v axis for holizontal display mode"/>
+    </div>
+    <p>
+      vMarginTopとvMarginBottomに値を設定し、vBreadthをnullとした場合は、レイヤの高さがパネルの高さ（currentVBreadth）に応じて伸び縮みする。vMarginTopとvMarginBottomを両方とも0に設定した場合は、レイヤが常にパネルの全面に表示される。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/VBreadthSample_BreadthNull.gif" alt="v axis for holizontal display mode"/>
+    </div>
+    <p>
+      基本的に、3つプロパティのうち2つを指定し、残りをnull（またはundefined）にするが、それ以外の設定をした場合の各プロパティの値は下記のとおりとなる。
+    </p>
+
+    <table>
+      <tr>
+        <th>設定されているプロパティ</th>
+        <th>vMarginTop</th>
+        <th>vBreadth</th>
+        <th>vMarginBottom</th>
+      </tr>
+      <tr>
+        <td>3つとも設定なし</td>
+        <td>0</td>
+        <td>null</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>vMarginTopのみ</td>
+        <td>設定値</td>
+        <td>null</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>vBredthのみ</td>
+        <td>0</td>
+        <td>設定値</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>vMarginBottomのみ</td>
+        <td>0</td>
+        <td>null</td>
+        <td>設定値</td>
+      </tr>
+      <tr>
+        <td>vMarginTopとvBredth</td>
+        <td>設定値</td>
+        <td>設定値</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>vBredthとvMarginBottom</td>
+        <td>null</td>
+        <td>設定値</td>
+        <td>設定値</td>
+      </tr>
+      <tr>
+        <td>vMarginTopとvMarginBottom</td>
+        <td>設定値</td>
+        <td>null</td>
+        <td>設定値</td>
+      </tr>
+      <tr>
+        <td>3つとも設定</td>
+        <td>設定値</td>
+        <td>null</td>
+        <td>設定値</td>
+      </tr>
+    </table>
+
+    <h3>タテ表示の場合の表示位置</h3>
+    <p>
+      vMarginTopを右余白、vMarginBottomを左余白と読み替えて使用する以外は、タテ方向の場合と同じである。ただし、vMarginForXを設定することで、上記の読み替えを逆にすることができる。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/VBreadthSample_VerticalMode.gif" alt="v axis for vertical display mode"/>
+    </div>
+
+
+    <h3>レイヤの重ね順</h3>
+    <p>
+      パネル内でのレイヤの重ね順は、各レイヤのzIndexプロパティにより設定し、値が大きいほど上に表示される。
+    </p>
+    <dl>
+      <dt>zIndex</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：0</dd>
+      <dd>パネル内でのレイヤの重ね順の設定。値が大きいほど、上（前面）に表示される。</dd>
+    </dl>
+
+  </div>
+
+  <div id="section05">
+    <h2>５．書式設定</h2>
+    <p>
+      styleプロパティにより、レイヤの書式を設定することができる。styleプロパティの設定内容は、レイヤが持つ表示用のDOM要素（div要素）のstyle属性に反映される。<a href="#section03">「３．レイヤの追加」</a>で示した例では、lyr1の背景画像として写真を、また、lyr2の背景として青のグラデーションを指定している。なお、既定では、レイヤの背景は設定されていない。このため、パネルの背景が透けて表示される。
+    </p>
+  </div>
+
+  <div id="section06">
+    <h2>６．その他の主要なプロパティとメソッド</h2>
+    <p>
+      パネルコレクションでは、パネルコレクション内のパネルの動作を統括するためのプロパティがある。
+    </p>
+    <h3>プロパティ</h3>
+    <dl>
+      <dt>id</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>オブジェクトを一意に識別するためのID。</dd>
+
+      <dt>name</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>オブジェクトの名称。</dd>
+
+      <dt>visible</dt>
+      <dd>型：真偽値</dd>
+      <dd>既定値：true</dd>
+      <dd>オブジェクトの可視/不可視の設定。trueの場合に可視。</dd>
+
+      <dt>mouseEventCapture</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：3</dd>
+      <dd>マウスイベントをキャプチャする範囲。0:なし, 1:子を除く, 2:子のみ, 3:全て。</dd>
+
+      <dt>fixedLayer</dt>
+      <dd>型：真偽値</dd>
+      <dd>既定値：false</dd>
+      <dd>固定レイヤとして扱うかどうかを設定する。trueの場合、固定レイヤとなり、マウスのドラッグやホイール操作で移動や拡大・縮小されない。</dd>
+
+      <dt>vFotX</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：0</dd>
+      <dd>v軸がヨコの時の値の適用（0: vTopが左の値, 1: vBottomが左の値）。タテ・ヨコを切り替えて使う場合以外は設定不要。</dd>
+    </dl>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>レイヤの再描画。図形などの<a href="OLObject.html">レイヤ上のオブジェクト</a>を含む場合は、それらも再帰的に再描画される。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>clear()</h4>
+      <p>レイヤの表示内容の消去。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>processBeforeRedraw(<span class="val">layer</span>)</h4>
+      <p>再描画の前に行われる処理。既定では空の関数が定義されている。再定義することにより、<a href="Figure.html">図形の描画</a>など、レイヤの内容が再描画される前に何らかの処理を行うことができる。</p>
+      <dl>
+        <dt class="val">layer</dt>
+        <dd>型：HuTime.Layer</dd>
+        <dd>再描画が行われるレイヤオブジェクト。</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>processAfterRedraw(<span class="val">layer</span>)</h4>
+      <p>再描画の後に行われる処理。既定では空の関数が定義されている。再定義することにより、<a href="Figure.html">図形の描画</a>など、レイヤの内容が再描画される後に何らかの処理を行うことができる。</p>
+      <dl>
+        <dt class="val">layer</dt>
+        <dd>型：HuTime.Layer</dd>
+        <dd>再描画が行われるレイヤオブジェクト。</dd>
+      </dl>
+    </div>
+
+
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

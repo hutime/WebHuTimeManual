@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+<div id="timeline"></div>
+<script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.LineChartLayer(
+        new HuTime.CalendarChartRecordset("Weather201507.csv", "Date", "Date", "Temperature"));
+    lyr.appendRecordset(new HuTime.CalendarChartRecordset(
+        "Weather201507Tokyo.csv", "Date", "Date", "Temperature", null,
+        new HuTime.FigureStyle("green")));
+
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 7, 1), HuTime.timeToJd(2015, 8, 1));
+</script>
+</body>
+</html>

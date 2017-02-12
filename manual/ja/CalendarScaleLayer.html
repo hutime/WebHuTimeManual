@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>暦目盛レイヤ - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>暦目盛レイヤ</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      暦目盛を表示するには、暦目盛レイヤ（HuTime.CalendarScaleLayer）を利用する。暦目盛レイヤは<a href="Layer.html">Layerクラス</a>から派生ており、パネルへの配置など、その基本的な使用方法は他のレイヤと同じである。暦データはHuTimeプロジェクトの暦データサービスとの連携により、Web経由で取得される。このため、暦の種類を示す暦IDや日付等の書式指定の方法は、HuTimeプロジェクトの他の暦データサービスと同じである。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2><a name="02">２．レイヤオブジェクトの生成</a></h2>
+    <p>
+      オブジェクトの生成時に、表示する目盛の暦IDを指定することができる。レイヤの高さや上下の余白の設定は、他のレイヤと同じである。
+    </p>
+
+    <div class="method">
+      <h3>コンストラクタ</h3>
+      <h4>
+        HuTime.CalendarScaleLayer([<span class="val">vBreadth</span> [, <span class="val">vMarginTop</span>
+        [, <span class="val">vMarginBottom</span> [, <span class="val">calendarId</span>]]]])
+      </h4>
+
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの高さ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginTop</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの上側の余白の大きさ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginBottom</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの下側の余白の大きさ（単位：px）。</dd>
+
+        <dt><span class="val">calendarId</span></dt>
+        <dd>型：文字列</dd>
+        <dd>表示する目盛の暦ID。暦IDの一覧は、<a href="http://datetime.hutime.org/calendar/">http://datetime.hutime.org/calendar/</a>から閲覧可能。省略した場合は、calendarIdはnullとなり、グレゴリオ暦（暦データをクライアント上で計算）が設定される。
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．パネルへの追加と表示</h2>
+    <p>
+      他のレイヤと同様に、暦目盛レイヤもPanelオブジェクトのappendLayerメソッドでパネルに追加する。描画はredrawメソッドのフローに沿って行われるが、暦データをWeb経由で取得するため、表示に時間差が生じる。ただし、calendarId=nullの場合とユリウス通日（calendarId="1.1"）は、クライアント上で暦データが計算されるため、表示の時間差は生じない。
+    </p>
+
+    <div class="contentFigure">
+      <img src="/manual/img/CalendarScaleLayer03-01.png" alt="calendar scale layer example"/>
+      <p>暦目盛レイヤの表示の例（下記サンプルコード）。上段はグレゴリオ暦（calendarIdは省略）、中段はヒジュラ暦（イスラム暦）（calendarId = "103.1"）、下段は和暦（calendarId =
+        "1001.1"）。図のように、１つのパネルに複数の暦目盛を配置することも可能である。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/CalendarScaleLayerSample03-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr0 = new HuTime.CalendarScaleLayer(70, 0, null);
+    pnl.appendLayer(lyr0);
+    var lyr1 = new HuTime.CalendarScaleLayer(70, 70, null, &quot;103.1&quot;);
+    pnl.appendLayer(lyr1);
+    var lyr2 = new HuTime.CalendarScaleLayer(80, null, 0, &quot;1001.1&quot;);
+    pnl.appendLayer(lyr2);
+
+    ht.redraw(HuTime.timeToJd(2016, 7, 1), HuTime.timeToJd(2017, 6, 30));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2><a name="04">４．ラベルの書式設定</a></h2>
+    <p>
+      暦目盛のラベルの書式を、labelFormatプロパティにより変更することができる（calendarIdをnullまたは"1.1"に設定した場合を除く）。labelFormatプロパティは、年、月、日のどのラベルを設定するかで、下記のとおり細分化されている。組み合わせの書式は、暦や文化による年号、年、月、日を記す順序の違いを反映させるためのものである。年号が存在しない暦では、各書式に年号を含む必要はない。
+    </p>
+    <table>
+      <tr>
+        <th>設定対象</th>
+        <th>プロパティ</th>
+      </tr>
+      <tr>
+        <td>年号</td>
+        <td>era</td>
+      </tr>
+      <tr>
+        <td>年</td>
+        <td>year</td>
+      </tr>
+      <tr>
+        <td>月</td>
+        <td>month</td>
+      </tr>
+      <tr>
+        <td>日</td>
+        <td>day</td>
+      </tr>
+      <tr>
+        <td>年号-年の組み合わせ</td>
+        <td>toYear</td>
+      </tr>
+      <tr>
+        <td>年号-月の組み合わせ</td>
+        <td>toMonrh</td>
+      </tr>
+      <tr>
+        <td>年号-日の組み合わせ</td>
+        <td>toDay</td>
+      </tr>
+    </table>
+    <p>
+      書式指定の方法は、HuTimeプロジェクトの他の暦データサービスと同様である。詳細は、<a href="http://www.hutime.jp/basicdata/calendar/format.html">http://www.hutime.jp/basicdata/calendar/format.html</a>から参照できる。年、月、日のラベルの書式が省略された場合は、組み合わせによる書式の差分が設定される。
+    </p>
+
+    <div class="contentFigure">
+      <img src="/manual/img/CalendarScaleLayer04-01.png" alt="label format of calendar scale layer example"/>
+      <p>暦目盛レイヤのラベル書式の設定例（下記サンプルコード）。上段は既定の書式、中段は漢数字による表現である。下段は中段の設定をコピーしたものであるが、月の書式を別途設定している。中段では月ラベルの書式が省略されているため、年号-月の書式（"ggyK1年MK1月"）と年号-年の書式（"ggyK1年"）の差分（"MK1月"）が月ラベルの書式として設定される。この結果、月ラベルは、漢数字で表現される。一方、下段では、別途設定された書式（"MMM月"）に従って、月ラベルが表現される。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/CalendarScaleLayerSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr0 = new HuTime.CalendarScaleLayer(70, 0, null, &quot;1001.1&quot;);
+    pnl.appendLayer(lyr0);
+    var lyr1 = new HuTime.CalendarScaleLayer(70, 70, null, &quot;1001.1&quot;);
+    lyr1.labelFormat.toYear = &quot;ggyK1年&quot;;
+    lyr1.labelFormat.toMonth = &quot;ggyK1年MK1月&quot;;
+    lyr1.labelFormat.toDay = &quot;ggyK1年MK1月dK1日&quot;;
+    pnl.appendLayer(lyr1);
+    var lyr2 = new HuTime.CalendarScaleLayer(80, null, 0, &quot;1001.1&quot;);
+    lyr2.labelFormat.toYear = lyr1.labelFormat.toYear;
+    lyr2.labelFormat.toMonth = lyr1.labelFormat.toMonth;
+    lyr2.labelFormat.toDay = lyr1.labelFormat.toDay;
+    lyr2.labelFormat.month = &quot;MMM月&quot;;
+    pnl.appendLayer(lyr2);
+
+    ht.redraw(HuTime.timeToJd(2016, 7, 1), HuTime.timeToJd(2017, 6, 30));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>パネルコレクション - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>パネルコレクション</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      パネルコレクションは、1つ以上のパネルを収容し、それらを並べて配置する機能を担う。WebページのDOM要素（div要素など）に紐づけらることで、ページ上にHuTimeが表示される。また、複数のパネルコレクションを、それぞれWebページ内の別々の要素に紐づけることで、1つのWebページ内に複数のパネルコレクションを置くこともできる。この場合、1つのパネルコレクションでユーザが表示範囲を変更すると、他のパネルコレクションの表示範囲も連動して同様に変更される。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．オブジェクトの生成</h2>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.PanelCollection([<span class="val">vBreadth</span> [, <span class="val">tLength</span>]])</h4>
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：null</dd>
+        <dd>v軸方向の長さ（単位：px）。vBreadthの設定値は、<a href="#section05">vBreadthModeなどの他の設定値と関連して</a>、v軸の長さに反映される。</dd>
+
+        <dt><span class="val">tLength</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：600</dd>
+        <dd>t軸方向の長さ（単位：px）。tLengthの設定値は、<a href="#section05">tLengthModeなどの他の設定値と関連して</a>、t軸の長さに反映される。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．パネルコレクションの追加</h2>
+    <p>
+      パネルコレクションは、アプリケーションルートオブジェクトのappendPanelCollectionメソッドにより追加される。
+    </p>
+    <div class="method">
+      <h4><span class="val">ht</span>.appendPanelCollection(<span class="val">panelCollection</span>,
+        <span class="val">targetElement</span>)</h4>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+
+        <dt><span class="val">ht</span></dt>
+        <dd>型：HuTime</dd>
+        <dd>パネルコレクションを追加するHuTimeルートオブジェクト。</dd>
+
+        <dt><span class="val">panelCollection</span></dt>
+        <dd>型：HuTime.PanelCollection</dd>
+        <dd>HuTimeルートオブジェクトに追加するパネルコレクション。</dd>
+
+        <dt><span class="val">targetElement</span></dt>
+        <dd>型：HTMLElement</dd>
+        <dd>パネルコレクションを紐づけるページ内のDOM要素。</dd>
+      </dl>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/PanelCollectionSample03-01.html" target="_blank">実行例はこちら</a>）。アプリケーションルートオブジェクト（変数ht）にパネルコレクション（変数pnls）を追加している。この過程で、id=&quot;timeline&quot;であるdiv要素がパネルコレクションを紐付けるページ内のDOM要素として指定されている。後述の<a
+              href="#section06">書式指定</a>により、パネルコレクションの背景をピンク色にしている。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection();
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    pnls.style.backgroundColor = &quot;pink&quot;;
+    ht.redraw();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+
+  </div>
+
+  <div id="section04">
+    <h2>４．表示方向の設定</h2>
+    <p>
+      <a href="Structure.html#section04">表示方向</a>は、パネルコレクションのdisplayModeプロパティにより指定する。
+    </p>
+    <div>
+      <dl>
+        <dt>displayMode</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：0</dd>
+        <dd>反映：再描画後</dd>
+        <dd>
+          <table>
+            <tr>
+              <th>displayModeの値</th>
+              <th>t軸の方向</th>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>左から右</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>右から左</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>上から下</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>下から上</td>
+            </tr>
+          </table>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>５．サイズの設定</h2>
+    <p>
+      パネルコレクションの表示サイズは、パネルコレクションがアプリケーションルートに追加される過程で紐づけられたDOM要素(以下、「親要素」）の位置と大きさ、および、以下のプロパティが関連する。また、表示方向により、各プロパティの反映のされ方が異なる。
+    </p>
+
+    <div>
+      <h3>プロパティ</h3>
+      <dl>
+        <dt>tLengthMode</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：1</dd>
+        <dd>
+          t軸方向の表示幅（px）の決定方法。
+          <table>
+            <tr>
+              <td>0</td>
+              <td>設定された値。</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>紐づけられたDOM要素の幅に合わせる。</td>
+            </tr>
+          </table>
+        </dd>
+
+        <dt>vBreadthMode</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：2</dd>
+        <dd>
+          v軸方向の表示幅（px）の決定方法。
+          <table>
+            <tr>
+              <td>0</td>
+              <td>設定された値。</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>紐づけられたDOM要素の幅に合わせる。</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>内包しているパネルに合わせる。</td>
+            </tr>
+          </table>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
+      <h3>ヨコ表示の場合</h3>
+      <h4>t軸の幅(px)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">tLengthMode</th>
+          <th style="width:80px;">tLength</th>
+          <th style="width:130px;">親要素の幅設定</th>
+          <th>t軸の幅</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>既定値（600）</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（600）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>tLengthの値</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>tLengthの値</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>親要素の幅</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>親要素の幅（ウィンドウサイズの変更による親要素の幅の変化に連動）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>親要素の幅</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>親要素の幅（ウィンドウサイズの変更による親要素の幅の変化に連動）</td>
+        </tr>
+      </table>
+
+      <h4>v軸の幅(px)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">vBreadthMode</th>
+          <th style="width:80px;">vBreadth</th>
+          <th style="width:130px;">親要素の高さ設定</th>
+          <th>v軸の幅</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>既定値（150）</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（150）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>vBreadthの値</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>vBreadthの値</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>親要素の高さ</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（150）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>親要素の高さ</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（150）</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">2</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>内包するパネルの高さ*</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>内包するパネルの高さ*</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>内包するパネルの高さ*</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>内包するパネルの高さ*</td>
+        </tr>
+      </table>
+      <p>*内包するパネルが無い場合は、既定値（150）となる。</p>
+
+    </div>
+
+    <div>
+      <h3>タテ表示の場合</h3>
+      <h4>t軸の幅(px)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">tLengthMode</th>
+          <th style="width:80px;">tLength</th>
+          <th style="width:130px">親要素の高さ設定</th>
+          <th>t軸の幅</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>既定値（600）</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（600）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>tLengthの値</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>tLengthの値</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>親要素の高さ</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（600）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>親要素の高さ</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（600）</td>
+        </tr>
+      </table>
+
+      <h4>v軸の幅(px)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">vBreadthMode</th>
+          <th style="width:80px;">vBreadth</th>
+          <th style="width:130px;">親要素の幅設定</th>
+          <th>v軸の幅</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>既定値（150）</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>既定値（150）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>vBreadthの値</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>vBreadthの値</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>親要素の幅</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>親要素の幅（ウィンドウサイズの変更による親要素の幅の変化に連動）</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>親要素の幅</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>親要素の幅（ウィンドウサイズの変更による親要素の幅の変化に連動）</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">2</td>
+          <td rowspan="2">null</td>
+          <td>あり</td>
+          <td>内包するパネルの幅*</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>内包するパネルの幅*</td>
+        </tr>
+        <tr>
+          <td rowspan="2">値</td>
+          <td>あり</td>
+          <td>内包するパネルの幅*</td>
+        </tr>
+        <tr>
+          <td>なし</td>
+          <td>内包するパネルの幅*</td>
+        </tr>
+      </table>
+      <p>*内包するパネルが無い場合は、既定値（150）となる。</p>
+    </div>
+
+  </div>
+
+  <div id="section06">
+    <h2>６．書式設定</h2>
+    <p>
+      styleプロパティにより、パネルコレクションの書式を設定することができる。styleプロパティの設定内容は、パネルコレクションが持つDOM要素（div要素）のstyle属性に反映される。<a href="#section03">「３．パネルコレクションの追加」</a>で示した例では、背景色（style.backgroundColor）にピンク色を指定している。通常は、パネルコレクションの上にパネルが表示されるため、パネルコレクションの書式は見えない。パネルが配置されてない部分がある場合のみ、パネルコレクションの書式を確認することができる（サンプルコードはパネルが配置されていないため、全面が確認できる）。
+    </p>
+  </div>
+
+  <div class="section07">
+    <h2>７．その他の主要なプロパティとメソッド</h2>
+    <p>
+      パネルコレクションでは、パネルコレクション内のパネルの動作を統括するためのプロパティがある。
+    </p>
+    <div class="property">
+      <h3>プロパティ</h3>
+      <dl>
+        <dt>id</dt>
+        <dd>型：文字列</dd>
+        <dd>既定値：null</dd>
+        <dd>パネルコレクションを一意に識別するためのID。</dd>
+
+        <dt>name</dt>
+        <dd>型：文字列</dd>
+        <dd>既定値：null</dd>
+        <dd>パネルコレクションの名称。</dd>
+
+        <dt>visible</dt>
+        <dd>型：真偽値</dd>
+        <dd>既定値：true</dd>
+        <dd>反映：再描画後</dd>
+        <dd>パネルコレクションの可視/不可視の設定。trueの場合に可視。</dd>
+
+        <dt>mouseEventCapture</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：3</dd>
+        <dd>マウスイベントをキャプチャする範囲。0:なし, 1:パネルコレクション本体のみ, 2:収容されたパネルのみ, 3:パネルコレクション本体と収容されたパネルの両方。</dd>
+
+        <dt>dragSensitivity</dt>
+        <dd>型：5</dd>
+        <dd>既定値：true</dd>
+        <dd>ドラッグされたと判断するためのマウスの最小移動量（単位:px）。</dd>
+
+        <dt>vScrollable</dt>
+        <dd>型：真偽値</dd>
+        <dd>既定値：true</dd>
+        <dd>反映：即時</dd>
+        <dd>パネルのv軸方向へのスクロールの可否。trueの場合にスクロール可能。</dd>
+
+        <dt>wheelZoomRatio</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：0.02</dd>
+        <dd>ホイール操作1カウントあたりのt軸の拡大/縮小率。0以下の値を設定すると、ホイールの回転方向と拡大・縮小操作との関係が逆になる。</dd>
+      </dl>
+    </div>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>パネルコレクションの再描画。収容されているパネルも再帰的に再描画される。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>clear()</h4>
+      <p>パネルコレクションの表示内容の消去。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

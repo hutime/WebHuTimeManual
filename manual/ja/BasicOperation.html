@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>HuTime マニュアル - 基本操作</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>&nbsp;</h2>
+    <h1>HuTimeの基本操作</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30px" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      HuTimeは、時間などの直線的な事象に沿って、文字、数値、画像などのさまざまな情報を表示する機能をWebページ、（もしくは、Webアプリケーション）に提供する。ここでは、HuTimeを利用したWebページやアプリケーションの利用者に必要な、基本的な操作を紹介する。表示や機能のカスタマイズなど、開発者向けの情報は<a
+            href="index.html">目次</a>の「APIの概要」以下の各ドキュメントに掲載されている。
+    </p>
+
+    <h3>各部の名称</h3>
+    <div class="contentFigure">
+      <img src="/manual/img/PartsName.gif" alt="HuTime snapshot"/>
+    </div>
+    <ul>
+      <li><span style="font-weight:700;">パネル</span>： データなどを表示するための基本的な構造で、パネル単位で表示位置や高さ（タテ表示の場合は幅）を変更することができる。</li>
+      <li><span style="font-weight:700;">パネルコレクション</span>：
+        1つ以上のパネルをまとめた表示単位。複数のパネルが表示される場合は、パネルが積み重ねられる形で表示される。
+      </li>
+    </ul>
+  </div>
+
+  <div id="section02">
+    <h2>２．ヨコ表示とタテ表示</h2>
+    <p>
+      データなどの各種情報を表示するための基準となる事象（時間など）の表示方向は、画面に対して水平（ヨコ表示）の場合と、鉛直（タテ表示）の場合がある。また、ヨコ表示では、基準の事象が左から右、または、右から左に進む場合がある。同様に、タテ表示では、上から下、または、下から上に進む場合がある。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/HolizontalDisplayMode.gif" alt="HuTime horizontal display mode"/>
+      <img src="/manual/img/VerticalDisplayMode.gif" alt="HuTime vertical display mode" style="margin-left:10px;"/>
+      <p>図：ヨコ表示（左）とタテ表示（右）</p>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．表示範囲の移動と拡大・縮小</h2>
+    <h3>表示範囲の移動</h3>
+    <p>
+      画面をドラッグすることで、表示範囲を移動できる。ヨコ表示の場合は画面に対して水平方向に、タテ表示の場合は、鉛直方向にドラッグする。移動中は、移動により新たに表示される範囲は省略されるが、ドラッグを終了する（マウスボタンを離す）、もしくは、ドラッグを止める（マウスボタンを押した状態のまま、マウスの動きを止める）ことにより、省略された部分が描画される。
+    </p>
+    <p>
+      表示範囲の拡大と縮小は、マウスのホイール操作により行う。マウスカーソルがある場所を中心に、表示範囲が拡大または縮小される。操作中は、新たに表示される範囲や表示内容が省略されるが、操作を止めることにより、全体が再描画される。拡大・縮小操作により、表示範囲の有効数字の桁数が規定を超えた場合は、それ以上の拡大・縮小操作ができなくなる。
+    </p>
+
+    <h3>表示範囲の拡大と縮小</h3>
+    <p>
+      表示範囲の拡大と縮小は、マウスのホイール操作により行う。マウスカーソルがある場所を中心に、表示範囲が拡大または縮小される。操作中は、新たに表示される範囲や表示内容が省略されるが、操作を止めることにより、全体が再描画される。拡大・縮小操作により、表示範囲の有効数字の桁数が規定を超えた場合は、それ以上の拡大・縮小操作ができなくなる。
+    </p>
+  </div>
+
+  <div id="section04">
+    <h2>４．パネルの表示位置の調整</h2>
+    <h3>スクロール</h3>
+    <p>
+      全てのパネルが表示されていない場合や、一部のパネルが見切れている場合は、パネルをドラッグ（ヨコ表示の場合は上下、タテ表示の場合は左右）することにより、パネルコレクション全体をスクロールすることができる。
+    </p>
+
+    <h3>パネルの高さの変更</h3>
+    <p>
+      パネルの高さ（タテ表示の場合は幅）は、パネルの下端（タテ表示の場合は右端）をドラッグすることにより、変更できる。パネルの高さを変更できる位置にマウスカーソルが来ると、カーソルの形状が変化し、変更可能であることを知らせる。
+    </p>
+
+    <h3>パネルの入れ替え</h3>
+    <p>
+      マウスとキーボードの操作により、積み重ねられたパネルの順序を入れ換えることができる。shiftキーを押しながらパネルをドラッグすると、パネルが半透明になり、自由に移動できる状態になる。入れ換え先のパネルの上にドロップすると、その位置にパネルが挿入される。
+    </p>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

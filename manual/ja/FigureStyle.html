@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>図形の書式 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>図形の書式</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      図形の色や線の太さなどの書式は、HuTime.FigureStyleで設定する。また、HuTime.FigureStyle.applyStyleを再定義することにより、標準ではサポートされていない独自の書式を指定することができる。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．標準の書式指定</h2>
+    <p>HuTime.FigureStyleでは、以下の書式が指定できる。</p>
+
+    <dl>
+      <dt>lineWidth</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：1</dd>
+      <dd>線の幅（単位：px）。0以下の場合、線は描画されない。最大値は999。</dd>
+
+      <dt>lineColor</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>線の色。CSSでの色指定と同様の方法で指定する。色名、カラーコード、rgb()、rgba()が利用可能。nullの場合は、線は描画されない。</dd>
+
+      <dt>lineDash</dt>
+      <dd>型：数値の配列</dd>
+      <dd>既定値：[]（空の配列）</dd>
+      <dd>破線の設定。破線の線と空白の長さ（単位：px）を配列として指定する。各要素の最大値は999。</dd>
+
+      <dt>fillColor</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>塗りの色。CSSでの色指定と同様の方法で指定する。色名、カラーコード、rgb()、rgba()が利用可能。nullの場合は、塗りは処理されない（透明になる）。</dd>
+
+      <dt>alpha</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：1.0</dd>
+      <dd>透過率。0.0で完全に透明、1.0で完全に不透明になる。図形全体（塗りおよび線）が対象。</dd>
+    </dl>
+
+    <div>
+      <p style="text-indent:0; margin-top:10px;">
+        上記のうち、FigureStyleのコンストラクタでは、塗りの色、および、線の幅と色を指定することができる。指定が省略された場合は、既定値が適用される。
+      </p>
+      <h3>コンストラクタ</h3>
+      <div class="method">
+        <h4>HuTime.FigureStyle([<span class="val">fillColor</span> [,
+          <span class="val">lineColor</span> [, <span class="val">lineWidth</span>]]])</h4>
+        <dl>
+          <dt class="val">fillColor</dt>
+          <dd>型：文字列</dd>
+          <dd>塗り（図形内部）の色。CSSでの色指定と同様の方法で指定する。</dd>
+          <dt class="val">lineColor</dt>
+          <dd>型：文字列</dd>
+          <dd>線（図形の縁）の色。CSSでの色指定と同様の方法で指定する。</dd>
+          <dt class="val">lineWidth</dt>
+          <dd>型：数値</dd>
+          <dd>線（図形の縁）の幅（単位：px）。</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/FigureStyle02-01.png" alt="figure style example"/>
+      <p>図形描画の例（下記サンプルコード）。円の縁は破線として描画されている。三角形はalphaの設定により半透明にされている。また正方形は、縁は不透明であるが、内部はfillColorをrgba()で指定したことにより半透明になっている。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureStyleSample02-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="timeline"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    posCircle = new HuTime.TVPosition(50, 50);
+    posSquare = new HuTime.TVPosition(65, 70);
+    posTriangle = new HuTime.TVPosition(35, 30);
+    styCircle = new HuTime.FigureStyle("#00ffff", "red", 2);
+    styCircle.lineDash = [10, 3];
+    stySquare = new HuTime.FigureStyle("rgba(255,255,0,0.5)", "rgb(0,0,255)", 5);
+    styTriangle = new HuTime.FigureStyle("#0000ff");
+    styTriangle.alpha = 0.3;
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(styCircle, layer, posCircle, 100);
+        HuTime.Drawing.drawSquare(stySquare, layer, posSquare, 100);
+        HuTime.Drawing.drawTriangle(styTriangle, layer, posTriangle, 100);
+    };
+
+    ht.redraw(0, 100);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．独自の書式設定</h2>
+    <p>
+      以下のHuTime.FigureStyleの書式適用のメソッドを再定義することにより、独自の書式を設定することができる。alphaプロパティは図形全体に対して適用されるため、塗り（applyFillStyle）および線(applyLineStyle）の書式適用のメソッドを再定義しても、既定の処理が適用される。alphaプロパティの処理も含め、図形全体について独自の書式を設定するには、applyStyleを再定義する。独自に設定した書式を元に戻す場合は、それぞれ、既定のメソッドで再定義する（nullで再定義した場合も既定のメソッドに置き換わる）。</p>
+    <div class="method">
+      <h4>applyFillStyle(<span class="val">ctx</span>)</h4>
+      <p>塗り（図形の内部）の書式の適用。再定義することにより、独自の書式を定義できる。既定の処理に戻す場合は、HuTime.FigureStyle.prototype.defaultFillApplyStyleを設定する。</p>
+      <dl>
+        <dt class="val">ctx</dt>
+        <dd>型：CanvasRenderingContext2D</dd>
+        <dd>対象となる図形のパスを含むcanvas要素のコンテキスト。</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>applyLineStyle(<span class="val">ctx</span>)</h4>
+      <p>線（図形の縁）の書式の適用。再定義することにより、独自の書式を定義できる。既定の処理に戻す場合は、HuTime.FigureStyle.prototype.defaultLineApplyStyleを設定する。</p>
+      <dl>
+        <dt class="val">ctx</dt>
+        <dd>型：CanvasRenderingContext2D</dd>
+        <dd>対象となる図形のパスを含むcanvas要素のコンテキスト。</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>applyStyle(<span class="val">ctx</span>)</h4>
+      <p>塗りと線、および透過率を含む、全ての書式の適用。再定義することにより、独自の書式を定義できる。既定の処理に戻す場合は、HuTime.FigureStyle.prototype.defaultApplyStyleを設定する。</p>
+      <dl>
+        <dt class="val">ctx</dt>
+        <dd>型：CanvasRenderingContext2D</dd>
+        <dd>対象となる図形のパスを含むcanvas要素のコンテキスト。</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/FigureStyle03-01.png" alt="figure style example"/>
+      <p>独自の書式設定を使った図形描画の例（下記サンプルコード）。FigureStyleではサポートされていないグラデーションをapplyFillStyleメソッドを再定義することにより実現している。</p>
+    </div>
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureStyleSample03-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="timeline"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    pos = new HuTime.TVPosition(50, 50);
+    sty = new HuTime.FigureStyle(null, "red", 2);
+    sty.applyFillStyle = function applyFillStyle(ctx) {
+        var x = pos.cnvX(lyr);
+        var y = pos.cnvY(lyr);
+        ctx.fillStyle = ctx.createRadialGradient(x, y, 0, x, y, 50);
+        ctx.fillStyle.addColorStop(0, "aqua");
+        ctx.fillStyle.addColorStop(1.0, "yellow");
+        ctx.fill();
+    };
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(sty, layer, pos, 100);
+    };
+
+    ht.redraw(0, 100);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="/manual/ja/contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>パネル - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>パネル - HuTime マニュアル</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      パネルは、1つ以上のレイヤを収容し、各種情報を表現する基本単位である。たとえば、データを表示するレイヤ、目盛を表示するレイヤ、タイトルを表示するレイヤを1つのパネル上で組み合わせることにより、データおよび必要な情報をまとめた表現が可能となる。一般に用いるパネルは、パネルコレクション内で積み重ねて表示するタイルパネル（HuTime.TilePanel）である。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．オブジェクトの生成</h2>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.TilePanel([<span class="val">vBreadth</span>])</h4>
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>型：数値</dd>
+        <dd>既定値：150</dd>
+        <dd>v軸方向の長さ（単位：px）。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．パネルの追加</h2>
+    <p>
+      パネルは、パネルコレクションオブジェクトのappendPanelメソッドにより追加される。
+    </p>
+    <div class="method">
+      <h4><span class="val">pnls</span>.appendPanelCollection(<span class="val">panel</span>)</h4>
+      <dl>
+        <dt><span class="val">pnls</span></dt>
+        <dd>型：HuTime</dd>
+        <dd>パネルを追加するパネルコレクションオブジェクト。</dd>
+
+        <dt><span class="val">panel</span></dt>
+        <dd>型：HuTime.PanelBase</dd>
+        <dd>パネルコレクションオブジェクトに追加するパネル。</dd>
+      </dl>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/PanelSample03-01.html" target="_blank">実行例はこちら</a>）。パネルコレクションオブジェクト（変数pnls）に２つのパネル（変数pnl1およびpnl2）を追加している。後述の<a
+              href="#section05">書式の設定</a>により、それぞれ、パネルの背景を水色と黄色にしている。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(250);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl1 = new HuTime.TilePanel(100);
+    var pnl2 = new HuTime.TilePanel(100);
+    pnls.appendPanel(pnl1);
+    pnls.appendPanel(pnl2);
+    pnls.style.backgroundColor = &quot;pink&quot;;
+    pnl1.style.backgroundColor = &quot;aqua&quot;;
+    pnl1.zIndex = 10;
+    pnl2.style.backgroundColor = &quot;lightyellow&quot;;
+    pnl1.zIndex = 20;
+    ht.redraw();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．表示位置とサイズの設定</h2>
+    <p>
+      パネルのt軸方向の表示幅は、パネルコレクションに合わせて設定される。v軸方向の表示幅はvBreadthプロパティにより設定する。タイルパネルの表示位置は、パネルコレクション内での積み重ね順に従って、自動的に設定される。積み重ね順は各タイルパネルのzIndexプロパティにより設定し、値が大きいほど上に表示される（タテ表示の場合は左）。<a
+            href="#section03">「３．パネルコレクションの追加」</a>で示した例では、pnl1およびpnl2のzIndexをそれぞれ10と20に設定しているため、黄色のpnl2が上に表示されている。
+    </p>
+    <div class="property">
+      <dl>
+        <dt>zIndex</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：0</dd>
+        <dd>パネルコレクション内でのパネルの上下位置（タテ表示では左右位置）の設定。値が大きいほど、上（タテ表示では左）に表示される。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>５．書式設定</h2>
+    <p>
+      styleプロパティにより、パネルコレクションの書式を設定することができる。styleプロパティの設定内容は、パネルコレクションが持つ表示用のDOM要素（div要素）のstyle属性に反映される。<a href="#section03">「３．パネルコレクションの追加」</a>で示した例では、背景色（style.backgroundColor）に水色と黄色を指定している。
+    </p>
+  </div>
+
+  <div class="section06">
+    <h2>６．その他の主要なプロパティとメソッド</h2>
+    <p>
+      パネルコでは、パネルコレクション内でのパネルの挙動を設定するためのプロパティがある。
+    </p>
+    <h3>プロパティ</h3>
+    <dl>
+      <dt>id</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>パネルを一意に識別するためのID。</dd>
+
+      <dt>name</dt>
+      <dd>型：文字列</dd>
+      <dd>既定値：null</dd>
+      <dd>パネルの名称。</dd>
+
+      <dt>visible</dt>
+      <dd>型：真偽値</dd>
+      <dd>既定値：true</dd>
+      <dd>パネルの可視/不可視の設定。trueの場合に可視。</dd>
+
+      <dt>mouseEventCapture</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：3</dd>
+      <dd>マウスイベントをキャプチャする範囲。0:なし, 1:パネル本体のみ, 2:パネル内のレイヤのみ, 3:パネル本体とパネル内レイヤ両方。</dd>
+
+      <dt>tRatio</dt>
+      <dd>型：数値</dd>
+      <dd>既定値：1.0</dd>
+      <dd>t軸の表示幅の拡大率。HuTimeルートが保持しているt軸の表示範囲に対する拡大率を設定する。拡大または縮小表示を行うパネルを設置する場合に値を設定する。</dd>
+
+      <dt>repositionable</dt>
+      <dd>型：真偽値</dd>
+      <dd>既定値：true</dd>
+      <dd>パネルの位置変更の可否を設定。trueの場合、パネルの位置変更が可能。</dd>
+
+      <dt>resizable</dt>
+      <dd>型：真偽値</dd>
+      <dd>既定値：true</dd>
+      <dd>パネルのv軸方向の幅の変更可否を設定。trueの場合、パネルの幅の変更が可能。</dd>
+    </dl>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>パネルの再描画。パネル内のレイヤも再帰的に再描画される。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>clear()</h4>
+      <p>パネルの表示内容の消去。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

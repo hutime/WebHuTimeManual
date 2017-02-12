@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+<div id="timeline"></div>
+<script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+    pnl.appendLayer(lyr);
+
+    var pos = new HuTime.TVPosition(100, 50);
+    var styOut = new HuTime.FigureStyle("white", "red", 3);
+    var styIn = new HuTime.FigureStyle("green", "red", 3);
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(styOut, layer, pos, 100);
+    };
+
+    lyr.mouseEventCapture = HuTime.EventCapture.All;
+    lyr.addEventListener("mousemove",
+        function(ev) {
+            var ctx = HuTime.Drawing.pathCircle(ev.target, pos, 100);
+            if (ctx.isPointInPath(ev.offsetX, ev.offsetY))
+                HuTime.Drawing.drawCircle(styIn, ev.target, pos, 100);
+            else
+                HuTime.Drawing.drawCircle(styOut, ev.target, pos, 100);
+        }
+    );
+
+    ht.redraw(50, 150);
+</script>
+</body>
+</html>

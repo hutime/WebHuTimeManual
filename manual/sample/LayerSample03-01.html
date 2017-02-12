@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code (Calendar Scale Layer)</title>
+</head>
+<body>
+<div id="timeline"></div>
+<script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(250);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr1 = new HuTime.Layer(150);
+    var lyr2 = new HuTime.Layer(150, null, 0);
+    pnl.appendLayer(lyr1);
+    pnl.appendLayer(lyr2);
+    pnls.style.backgroundColor = "pink";
+    pnl.style.backgroundColor = "lightyellow";
+    lyr1.style.backgroundImage = "url('img/bkSample.jpg')";
+    lyr2.style.background = "linear-gradient(to bottom, Azure 0%, SkyBlue 100%)";
+    ht.redraw();
+</script>
+</body>
+</html>

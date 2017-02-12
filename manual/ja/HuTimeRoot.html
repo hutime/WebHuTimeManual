@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>アプリケーションルート - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>アプリケーションルート</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      アプリケーションルートは、１つまたは複数のパネルコレクションを持ち、アプリケーション全体の動きを統括する。これらの機能には、アプリケーションが表示するt軸の範囲の管理や、<a href="Event.html">イベントの制御</a>なども含まれる。アプリケーションルートで再描画（redrawメソッド）を実行することにより、アプリケーション全体が再帰的に再描画される。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．オブジェクトの生成</h2>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime()</h4>
+      <p>引数なし。</p>
+    </div>
+  </div>
+
+  <div class="section03">
+    <h2>３．主要なプロパティとメソッド</h2>
+    <p>
+      HuTimeアプリケーション全体に関する情報や操作がHuTimeルートに集まっている。
+    </p>
+    <h3>プロパティ</h3>
+    <div class="property">
+      <dl>
+        <dt>id</dt>
+        <dd>型：文字列</dd>
+        <dd>既定値：null</dd>
+        <dd>アプリケーションルートを一意に識別するためのID。</dd>
+
+        <dt>name</dt>
+        <dd>型：文字列</dd>
+        <dd>既定値：null</dd>
+        <dd>アプリケーションルートの名称。</dd>
+
+        <dt>mouseTimeOut</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：300</dd>
+        <dd>マウス操作が止まってから、再描画がはじまるまでの時間を設定する（単位：ミリ秒）。値を小さく過ぎると、再描画が頻繁に起こり、処理が追い付かなくなる。</dd>
+
+        <dt>minT</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：0</dd>
+        <dd>反映：再描画後</dd>
+        <dd>HuTimeアプリケーションのt軸の表示範囲の下端。</dd>
+
+        <dt>maxT</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：200</dd>
+        <dd>反映：再描画後</dd>
+        <dd>HuTimeアプリケーションのt軸の表示範囲の上端。</dd>
+
+        <dt>currentMinT</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：0</dd>
+        <dd>読み取り専用</dd>
+        <dd>HuTimeアプリケーションを最後に再描画した後のt軸の表示範囲の下端。</dd>
+
+        <dt>currentMaxT</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：200</dd>
+        <dd>読み取り専用</dd>
+        <dd>HuTimeアプリケーションを最後に再描画した後のt軸の表示範囲の上端。</dd>
+
+        <dt>minTLimit</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：Number.NEGATIVE_INFINITY</dd>
+        <dd>HuTimeアプリケーションで表示可能なt軸の下限。値を設定すると、その値以下には表示範囲を移動できなくなる。</dd>
+
+        <dt>maxTLimit</dt>
+        <dd>型：数値</dd>
+        <dd>既定値：Number.POSITIVE_INFINITY</dd>
+        <dd>HuTimeアプリケーションで表示可能なt軸の下限。値を設定すると、その値以上には表示範囲を移動できなくなる。</dd>
+      </dl>
+    </div>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>redraw([<span class="val">minT</span>, <span class="val">maxT</span>])</h4>
+      <p>レイヤの再描画。引数が省略された場合は、現在の表示範囲のまま、再描画する。再描画されたアプリケーションルートに属するすべてのパネルコレクションを再帰的に再描画する。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+
+        <dt><span class="val">minT</span></dt>
+        <dd>型：数値</dd>
+        <dd>再描画により新たに表示するｔ軸の下端。</dd>
+
+        <dt><span class="val">maxT</span></dt>
+        <dd>型：数値</dd>
+        <dd>再描画により新たに表示するｔ軸の上端。</dd>
+      </dl>
+    </div>
+
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>年表レイヤ - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>年表レイヤ</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+            style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      年表は、年表レイヤ（HuTime.TLineLayer）を使って表示する。年表レイヤは<a href="Layer.html">Layerクラス</a>から派生したクラスで、パネルへの配置など、その基本的な使用方法は他のレイヤと同じである。年表の元データは、CSVファイルなどの形で別途与える。元データのどの項目（列）が開始、終了時間で、その項目を表示するかは、年表用のレコードセット（HuTime.TLineRecordset）の中で行う。
+    </p>
+  </div>
+
+  <div id="section02">
+    <h2>２．年表の元データ</h2>
+    <p>
+      csv（カンマ区切りテキスト）やtsv（タブ区切りテキスト）の場合、先頭行がタイトル行となっているファイルを用いるのが容易である。以下は、元データの例で、2015年の台風の一覧である（冒頭部分のみ）。
+    </p>
+
+    <div>
+      <pre class="code">
+Number,From,To,Name,PeakWS,PeakAP,Category
+1,2015-01-14,2015-01-19,Mekkhala,110,975,1
+2,2015-02-08,2015-02-11,Higos,165,940,4
+3,2015-03-11,2015-03-17,Bavi,85,990,0
+4,2015-03-28,2015-04-05,Maysak,195,910,5
+5,2015-04-04,2015-04-04,Haishen,65,998,0
+      </pre>
+    </div>
+
+  </div>
+
+  <div id="section03">
+    <h2>３．レイヤオブジェクトの生成</h2>
+    <p>
+      オブジェクトの生成時に、グラフの元データのURLを指定する。レイヤの高さや上下の余白の設定は、他のレイヤと同じである。
+    </p>
+
+    <div class="method">
+      <h3>コンストラクタ</h3>
+      <h4>
+        HuTime.TLineLayer([<span class="val">recordset</span> [, <span class="val">vBreadth</span> [,
+        <span class="val">vMarginTop</span>
+        [, <span class="val">vMarginBottom</span>]]]])
+      </h4>
+
+      <dl>
+        <dt><span class="val">recordset</span></dt>
+        <dd>型：HuTime.TLineRecordset</dd>
+        <dd>元データを収容したレコードセット。コンストラクタで設定されたレコードセットは、recordsetsプロパティの先頭の配列要素としてアクセスできる（<span class="val">layer</span>.recordsets[0]）。省略した場合は、別途appendRecordsetメソッドによりレコードセットを追加する必要がある。
+        </dd>
+
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの高さ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginTop</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの上側の余白の大きさ（単位：px）。</dd>
+
+        <dt><span class="val">vMarginBottom</span></dt>
+        <dd>型：数値</dd>
+        <dd>レイヤの下側の余白の大きさ（単位：px）。</dd>
+
+      </dl>
+    </div>
+
+    <div>
+      <h3>レコードセットの概要</h3>
+      <p>
+        年表用のレコードセットを用いる。
+      </p>
+      <div class="method">
+        <h4>
+          HuTime.CalendarTLineRecordset(<span class="val">source</span>,
+          <span class="val">tBegin</span>, <span class="val">tEnd</span>,
+          <span class="val">label</span> [, <span class="val">calendarId</span>,
+          [, <span class="val">rangeStyle</span> [, <span class="val">labelStyle</span>]]])
+        </h4>
+        <dl>
+          <dt><span class="val">source</span></dt>
+          <dd>型：文字列またはHuTime.StreamReaderBase</dd>
+          <dd>文字列が入力された場合は、レコードセットの元データのURLとして解釈し、新たなStreamReaderオブジェクトを生成し、データを読み込む。</dd>
+
+          <dt><span class="val">tBegin</span></dt>
+          <dd>型：文字列または数値</dd>
+          <dd>レコード中の開始日時の項目名または列番号。</dd>
+
+          <dt><span class="val">tEnd</span></dt>
+          <dd>型：文字列または数値</dd>
+          <dd>レコード中の終了日時の項目名または列番号。</dd>
+
+          <dt><span class="val">label</span></dt>
+          <dd>型：文字列または数値</dd>
+          <dd>レコード中の年表に表示する文字列の項目名または列番号。</dd>
+
+          <dt><span class="val">calendarId</span></dt>
+          <dd>型：文字列</dd>
+          <dd>開始・終了日時の暦ID。省略した場合は、グレゴリオ暦が設定される。</dd>
+
+          <dt><span class="val">rangeStyle</span></dt>
+          <dd>型：HuTime.FigureStyle</dd>
+          <dd>年表上のレコードの期間を示す帯の書式。省略した場合は、年表レイヤの既定の書式が設定される。</dd>
+
+          <dt><span class="val">labelStyle</span></dt>
+          <dd>型：HuTime.StringStyle</dd>
+          <dd>年表上のレコードのラベルの書式。省略した場合は、年表レイヤの既定の書式が設定される。</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．パネルへの追加と表示</h2>
+    <p>
+      他のレイヤと同様に、年表レイヤもPanelオブジェクトのappendLayerメソッドでパネルに追加する。描画はredrawメソッドのフローに沿って行われるが、元データの取得が完了していない場合は、表示が遅れる。
+    </p>
+
+    <div class="contentFigure">
+      <img src="/manual/img/TLineLayer04-01.png" alt="TLine layer example"/>
+      <p>年表レイヤの表示の例（下記サンプルコード）。元データは<a href="#section02">「２．年表の元データ」</a>で示した2015年の台風の一覧である。</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/TLineLayerSample04-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.TLineLayer(
+        new HuTime.CalendarTLineRecordset(&quot;Typhoon2015.csv&quot;, &quot;From&quot;, &quot;To&quot;, &quot;Name&quot;));
+    pnl.appendLayer(lyr);
+
+    ht.redraw(HuTime.timeToJd(2015, 1, 1), HuTime.timeToJd(2016, 1, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>５．書式設定</h2>
+    <p>
+      年表では、期間を示す帯と、ラベルの書式を設定することができる。年表内の書式はレコードセットごとに設定し、レコードセットのコンストラクタの引数として設定した書式は、そのレコードセット既定の書式となる。以下は、<a href="#section04">「４．パネルへの追加と表示」</a>のサンプルコードに書式を設定した例である。
+    </p>
+
+    <div class="contentFigure">
+      <img src="/manual/img/TLineLayer05-01.png" alt="TLine layer example"/>
+      <p>年表レイヤの書式設定の例（下記サンプルコード）。<a href="#section04">「４．年表の元データ」</a>「４．パネルへの追加と表示」のサンプルコードで、HuTime.CalendarTLineRecordsetのコンストラクタの引数で書式を設定した例。
+      </p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/TLineLayerSample05-01.html" target="_blank">実行例はこちら</a>）。HuTime.CalendarTLineRecordsetのコンストラクタの引数calendarIdにはnullが指定されている。また、<a href="CalendarScaleLayer.html">暦目盛レイヤ</a>（変数：scl）が追加されている。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.TLineLayer(
+        new HuTime.CalendarTLineRecordset(&quot;Typhoon2015.csv&quot;, &quot;From&quot;, &quot;To&quot;, &quot;Name&quot;, null,
+            new HuTime.FigureStyle(&quot;lime&quot;), new HuTime.StringStyle(20, &quot;red&quot;)));
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 1, 1), HuTime.timeToJd(2016, 1, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+
+  </div>
+
+  <div id="section06">
+    <h2>６．複数のデータセットの表示</h2>
+    <p>
+      appendRecordsetプロパティを用いることにより、年表レイヤにレコードセットを複数設定することができる。各レコードセットで異なる書式を設定することにより、レコードセットの違いを年表上で表現することができる。
+    </p>
+    <div class="method">
+      <h4>appendRecordset(<span class="val">recordset</span>)</h4>
+      <p>年表レイヤにレコードセットを追加する。</p>
+      <dl>
+        <dt class="val">recordset</dt>
+        <dd>型：HuTime.TLineRecordset</dd>
+        <dd>追加するレコードセット。</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure">
+      <img src="/manual/img/TLineLayer06-01.png" alt="TLine layer example"/>
+      <p>年表レイヤに複数のレコードセットを設定した例（下記サンプルコード）。新たに、元データとして、Hurricane2015.csv（2015年のハリケーン一覧）をappendRecordsetメソッドにより追加し、書式（期間の帯は水色、ラベルは赤色）を設定している。</p>
+    </div>
+
+    <div>
+      <p>
+        <span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/TLineLayerSample06-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code (TLine Layer Style Setting)&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.TLineLayer(
+        new HuTime.CalendarTLineRecordset(&quot;Typhoon2015.csv&quot;, &quot;From&quot;, &quot;To&quot;, &quot;Name&quot;));
+    pnl.appendLayer(lyr);
+
+    lyr.appendRecordset(
+        new HuTime.CalendarTLineRecordset(&quot;Hurricane2015.csv&quot;, &quot;From&quot;, &quot;To&quot;, &quot;Name&quot;, null,
+            new HuTime.FigureStyle(&quot;cyan&quot;), new HuTime.StringStyle(14, &quot;red&quot;)));
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 1, 1), HuTime.timeToJd(2016, 1, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+
+
+  </div>
+
+  <div id="section07">
+    <h2>７．レコードごとの書式設定</h2>
+    <p>
+      年表内のデータを、同一レコードセット内の何らかの項目にしたがって色分けするには、レコードセットオブジェクトのrangeStyleプロパティに色分けのための処理を関数として設定する。設定した関数には、引数としてHuTime.TLineRecordオブジェクトが渡されるので、その内容を使ってHuTime.FigureStyleオブジェクトを返す。
+    </p>
+    <p>
+      図およびサンプルコードでは、元データにあるデータ項目Categoryが4以上の場合は黄色、3以下の場合は水色で表示する。まず２つの書式をそれぞれ定義する（styleStrongおよびstyleWeak）。次に、レコードセットオブジェクトを別途生成し、データ項目Categoryを読み込むための設定をレコードセットに追加する。最後に、生成したレコードセットのrangeStyleプロパティに書式を出力するための処理を記述する。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/TLineLayer07-01.png" alt="TLine layer example"/>
+      <p>レコードごとの書式を設定した例（下記サンプルコード）。台風のカテゴリが4以上の場合は黄色、3以下の場合は水色で表示している。</p>
+    </div>
+
+    <div>
+      <p>
+        <span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/TLineLayerSample07-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var styleStrong = new HuTime.FigureStyle(&quot;yellow&quot;);
+    var styleWeak = new HuTime.FigureStyle(&quot;cyan&quot;);
+    var recordset = new HuTime.CalendarTLineRecordset(&quot;Typhoon2015.csv&quot;, &quot;From&quot;, &quot;To&quot;, &quot;Name&quot;);
+    recordset.recordSettings.appendDataSetting(new HuTime.RecordDataSetting(&quot;Category&quot;));
+    recordset.rangeStyle = function(record) {
+        if (!record.data[&quot;Category&quot;])
+            return defaultRecordStyle;
+        if (record.data[&quot;Category&quot;].text &gt;= 4)
+            return styleStrong;
+        else
+            return styleWeak;
+    };
+
+    var lyr = new HuTime.TLineLayer(recordset);
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 1, 1), HuTime.timeToJd(2016, 1, 1));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    </div>
+  </div>
+
+  <div id="section08">
+    <h2>８．レコードに対するイベントの処理</h2>
+    <p>
+      年表上のレコードに対する以下の動作を年表レイヤのイベントとして補足することができる。クリックされたレコードは、イベントオブジェクトのrecordsに配列として収容される。複数のレコードが重なって表示されている場合は、該当するレコード全てがrecordsに収容される。イベントハンドラは、他のイベントと同様にaddEventListenerで追加かする。
+    </p>
+
+    <table>
+      <tr>
+        <th>動作</th>
+        <th>イベントタイプ</th>
+      </tr>
+      <tr>
+        <td>クリック</td>
+        <td>plotclick</td>
+      </tr>
+      <tr>
+        <td>ダブルクリック</td>
+        <td>plotdblclick</td>
+      </tr>
+    </table>
+
+    <p>
+      以下の例では、年表レイヤにplotclickイベントの処理としてrecordClickを追加している。recordClickをでは、クリックされたレコードのラベルを連結し、ポップアップボックス内に表示する。
+    </p>
+
+    <div>
+      <p>
+        <span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/TLineLayerSample08-01.html" target="_blank">実行例はこちら</a>）。
+      </p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code (TLine Layer Style Setting)&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr = new HuTime.TLineLayer(
+        new HuTime.CalendarTLineRecordset(&quot;Typhoon2015.csv&quot;, &quot;From&quot;, &quot;To&quot;, &quot;Name&quot;));
+    lyr.addEventListener(&quot;plotclick&quot;, recordClick);
+    pnl.appendLayer(lyr);
+
+    var scl = new HuTime.CalendarScaleLayer(50, null, 0);
+    pnl.appendLayer(scl);
+
+    ht.redraw(HuTime.timeToJd(2015, 1, 1), HuTime.timeToJd(2016, 1, 1));
+
+    function recordClick(ev) {
+        var text = &quot;&quot;;
+        for (var i = 0; i &lt; ev.records.length; ++i) {
+            text += ev.records[i].record.data[&quot;Name&quot;].text + &quot; &quot;;
+        }
+        alert(text);
+    }
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://web.hutime.org/js/HuTime.min.js"></script>
+  <title>Sample Code</title>
+</head>
+<body>
+<div id="timeline"></div>
+<script type="text/javascript">
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById("timeline"));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr0 = new HuTime.CalendarScaleLayer(70, 0, null);
+    pnl.appendLayer(lyr0);
+    var lyr1 = new HuTime.CalendarScaleLayer(70, 70, null, "103.1");
+    pnl.appendLayer(lyr1);
+    var lyr2 = new HuTime.CalendarScaleLayer(80, null, 0, "1001.1");
+    pnl.appendLayer(lyr2);
+
+    ht.redraw(HuTime.timeToJd(2016, 7, 1), HuTime.timeToJd(2017, 6, 30));
+</script>
+</body>
+</html>
