@@ -66,17 +66,17 @@
   <div id="section03">
     <h2>３．レイヤの追加</h2>
     <p>
-      レイヤは、パネルオブジェクトのappendPanelメソッドにより追加される。
+      レイヤは、パネルオブジェクトのappendLayerメソッドにより追加される。
     </p>
     <div class="method">
-      <h4><span class="val">pnl</span>.appendPanelCollection(<span class="val">layer</span>)</h4>
+      <h4><span class="val">pnl</span>.appendLayer(<span class="val">layer</span>)</h4>
       <dl>
         <dt><span class="val">pnl</span></dt>
-        <dd>型：HuTime</dd>
+        <dd>型：HuTime.PanelBase</dd>
         <dd>レイヤを追加するパネルオブジェクト。</dd>
 
         <dt><span class="val">layer</span></dt>
-        <dd>型：HuTime.PanelBase</dd>
+        <dd>型：HuTime.Layer</dd>
         <dd>パネルに追加するレイヤ。</dd>
       </dl>
     </div>
@@ -123,7 +123,7 @@
     <h2>４．表示位置とサイズの設定</h2>
     <p>
       レイヤのt軸方向の表示幅は、パネルコレクションに合わせて設定される。v軸方向の表示位置と表示幅は、vBreadth, vMarginTop,
-      vMarginBottomの各プロパティにより設定する。各プロパティの詳細は、コンストラクタの引数と同様である。<a href="#section03">「３．パネルコレクションの追加」</a>で示した例では、lyr1（背景が写真）はvBreadthのみを設定しているため、パネルの上端に寄せられて表示されている。一方lyr2（背景が青のグラデーション）は、vBreadthを設定し、vMarginBottomを0としている。このため、下端に寄せられて表示されている。結果として、２つのレイヤの一部が重なり、写真を背景とするレイヤの上部が、グラデーションを背景とするレイヤから見えている状態になっている。
+      vMarginBottomの各プロパティにより設定する。各プロパティの詳細は、コンストラクタの引数と同様である。<a href="#section03">「３．レイヤの追加」</a>で示した例では、lyr1（背景が写真）はvBreadthのみを設定しているため、パネルの上端に寄せられて表示されている。一方lyr2（背景が青のグラデーション）は、vBreadthを設定し、vMarginBottomを0としている。このため、下端に寄せられて表示されている。結果として、２つのレイヤの一部が重なり、写真を背景とするレイヤの上部が、グラデーションを背景とするレイヤから見えている状態になっている。
     </p>
 
     <h3>ヨコ表示の場合の表示位置</h3>
@@ -214,7 +214,7 @@
 
     <h3>タテ表示の場合の表示位置</h3>
     <p>
-      vMarginTopを右余白、vMarginBottomを左余白と読み替えて使用する以外は、タテ方向の場合と同じである。ただし、vMarginForXを設定することで、上記の読み替えを逆にすることができる。
+      vMarginTopを右余白、vMarginBottomを左余白と読み替えて使用する以外は、ヨコ方向の場合と同じである。ただし、vMarginForXを設定することで、上記の読み替えを逆にすることができる。
     </p>
     <div class="contentFigure">
       <img src="/manual/img/VBreadthSample_VerticalMode.gif" alt="v axis for vertical display mode"/>
@@ -244,7 +244,7 @@
   <div id="section06">
     <h2>６．その他の主要なプロパティとメソッド</h2>
     <p>
-      パネルコレクションでは、パネルコレクション内のパネルの動作を統括するためのプロパティがある。
+      レイヤでは、パネル内でのレイヤの挙動を設定するためのプロパティがある。
     </p>
     <h3>プロパティ</h3>
     <dl>
