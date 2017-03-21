@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Application Root - HuTime API Manual</title>
+  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Application Root</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>An application root has one or more panel collections and provides control over how the entire application works. These functions also include managing the range of the t axis displayed on the application, and <a href="Event.html">event control</a>. When you redraw the application root (using the redraw method), the entire application is redrawn recursively.</p>
+  </div>
+
+  <div id="section02">
+    <h2>2. Creating an Object</h2>
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime()</h4>
+      <p>No arguments.</p>
+    </div>
+  </div>
+
+  <div class="section03">
+    <h2>3. Key Properties and Methods</h2>
+    <p>The HuTime root has a collection of information and operations for an entire HuTime application.</p>
+    <h3>Properties</h3>
+    <div class="property">
+      <dl>
+        <dt>id</dt>
+        <dd>Type: String</dd>
+        <dd>Default value: null</dd>
+        <dd>The ID for uniquely identifying the application root.</dd>
+
+        <dt>name</dt>
+        <dd>Type: String</dd>
+        <dd>Default value: null</dd>
+        <dd>The name of the application root.</dd>
+
+        <dt>mouseTimeOut</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 300</dd>
+        <dd>Specifies the time to wait before redrawing starts after the mouse operation stops (in milliseconds). A too small value results in frequent redrawing, leading to slowed-down performance of the application.</dd>
+
+        <dt>minT</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 0</dd>
+        <dd>Reflected: After redrawing</dd>
+        <dd>The lower limit of the displayed range for the t axis on the HuTime application.</dd>
+
+        <dt>maxT</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 200</dd>
+        <dd>Reflected: After redrawing</dd>
+        <dd>The upper limit of the displayed range for the t axis on the HuTime application.</dd>
+
+        <dt>currentMinT</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 0</dd>
+        <dd>Read only</dd>
+        <dd>The lower limit of the displayed range for the t axis after the last time the HuTime application was redrawn.</dd>
+
+        <dt>currentMaxT</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 200</dd>
+        <dd>Read only</dd>
+        <dd>The upper limit of the displayed range for the t axis after the last time the HuTime application was redrawn.</dd>
+
+        <dt>minTLimit</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: Number.NEGATIVE_INFINITY</dd>
+        <dd>The lower limit of the t axis viewable in the HuTime application. When a value is specified, the displayed range cannot go below it.</dd>
+
+        <dt>maxTLimit</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: Number.POSITIVE_INFINITY</dd>
+        <dd>The upper limit of the t axis viewable in the HuTime application. When a value is specified, the displayed range cannot go above it.</dd>
+      </dl>
+    </div>
+
+    <h3>Methods</h3>
+    <div class="method">
+      <h4>redraw([<span class="val">minT</span>, <span class="val">maxT</span>])</h4>
+      <p>Redraws the layers. When you omit the arguments, they are redrawn with the current displayed range maintained. The panel collections belonging to the redrawn application root are all redrawn recursively.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+
+        <dt><span class="val">minT</span></dt>
+        <dd>Type: Number</dd>
+        <dd>The lower limit of the new t axis after redrawing.</dd>
+
+        <dt><span class="val">maxT</span></dt>
+        <dd>Type: Number</dd>
+        <dd>The upper limit of the new t axis after redrawing.</dd>
+      </dl>
+    </div>
+
+  </div>
+
+  <div id="contentBottom">
+    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
+
+  </div>
+</div>
+
+<div id="footer">
+  
+  <table>
+    <tr>
+      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
+      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
+               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
+              resource="http://www.w3.org/TR/rdfa-syntax"
+              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

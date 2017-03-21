@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>String Formats - HuTime API Manual</title>
+  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>String Formats</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <h2>1. Overview</h2>
+  <p>You can format text by specifying fonts, font colors, sizes, etc. through HuTime.StringStyle. You can also specify your own formats that are not supported by default, by redefining HuTime.StringStyle.applyStyle.</p>
+
+  <h2><a name="02">2. Formats by Default</a></h2>
+  <p>In HuTime.StringStyle, the following formats are available:</p>
+
+  <dl>
+    <dt>fontSize</dt>
+    <dd>Type: String</dd>
+    <dd>Default value: &quot;10px&quot;</dd>
+    <dd>The size (height) of text (in pixels). If you enter a number only, the unit (&quot;px&quot;) is appended automatically. If null is entered, it is set back to the default value.</dd>
+
+    <dt>fontStyle</dt>
+    <dd>Type: String</dd>
+    <dd>Default value: &quot;normal&quot;</dd>
+    <dd>The typeface of the text. You can specify one of the following values: &quot;normal,&quot; &quot;italic,&quot; or &quot;oblique.&quot; If null is entered, it is set back to the default value.</dd>
+
+    <dt>fontWeight</dt>
+    <dd>Type: Number</dd>
+    <dd>Default value: 400</dd>
+    <dd>The thickness of the text. You can enter a value between 100 and 900. It is rounded down to the nearest hundredths place. Any value less than 100 is replaced with 100, and any value more than 900 with 900. When the string &quot;bold&quot; is entered, it is replaced with 700. If null is entered, it is set back to the default value.</dd>
+
+    <dt>fontFamily</dt>
+    <dd>Type: String</dd>
+    <dd>Default value: &quot;sans-serif&quot;</dd>
+    <dd>The type of the font. If null is entered, it is set back to the default value.</dd>
+
+    <dt>lineHeight</dt>
+    <dd>Type: Number or string</dd>
+    <dd>Default value: 1</dd>
+    <dd>The linefeed width after starting a new line. If you specify a scaling factor to the size of the text (fontSize), enter a number (in the same units of em). If you specify in pixels, enter it as a string followed by the unit (e.g., &quot;10px&quot;). If you specify a negative value, new lines are started in the opposite direction (and this is different from the CSS specifications). If null is entered, it is set back to the default value.</dd>
+
+    <dt>textAlign</dt>
+    <dd>Type: String</dd>
+    <dd>Default value: &quot;start&quot;</dd>
+    <dd>The horizontal alignment of text. You can specify one of the following values: &quot;start&quot; (start position), &quot;end&quot; (end position), &quot;left&quot; (left-aligned), &quot;right&quot; (right-aligned), &quot;center&quot; (centering). If null is entered, it is set back to the default value.</dd>
+
+    <dt>textBaseline</dt>
+    <dd>Type: Number array</dd>
+    <dd>Default value: &quot;alphabetic&quot;</dd>
+    <dd>The vertical alignment of text. You can specify one of the following values: &quot;top,&quot; &quot;hanging,&quot; &quot;middle,&quot; &quot;alphabetic,&quot; &quot;ideographic,&quot; &quot;bottom.&quot; If null is entered, it is set back to the default value.</dd>
+
+    <dt>fillColor</dt>
+    <dd>Type: String</dd>
+    <dd>Default value: &quot;black&quot;</dd>
+    <dd>The color of text. It can be specified in the same way a color is specified in CSS. The color name, color code, rgb(), and rgba() are available. If it is set to null, the text color is not applied (and is transparent).</dd>
+
+    <dt>lineWidth</dt>
+    <dd>Type: Number</dd>
+    <dd>Default value: 0</dd>
+    <dd>The width of the outline of text (in pixels). If it is 0 or less, the outline of the text is not drawn.</dd>
+
+    <dt>lineColor</dt>
+    <dd>Type: String</dd>
+    <dd>Default value: null</dd>
+    <dd>The color of the outline of text. It can be specified in the same way a color is specified in CSS. The color name, color code, rgb(), and rgba() are available. If it is set to null, the outline of the text is not drawn.</dd>
+
+    <dt>alpha</dt>
+    <dd>Type: Number</dd>
+    <dd>Default value: 1.0</dd>
+    <dd>Transmittance. A value of 0.0 makes it completely transparent, and a value of 1.0 completely opaque. The entire text (the outline and inside of the text) is affected.</dd>
+  </dl>
+
+  <p style="text-indent:0; margin-top:10px;">Among the formats above, you can specify the font size, color, typeface, and font type with the constructor of StringStyle. When you omit these styles, they are set to the default values.</p>
+  <h3>Constructor</h3>
+  <div class="method">
+    <h4>HuTime.Style([<span class="val">fontSize</span> [, <span class="val">fillColor</span> [, <span class="val">fontWeight</span> [, <span class="val">fontStyle</span> [, <span class="val">fontFamily</span>]]]]])</h4>
+    <dl>
+      <dt class="val">fontSize</dt>
+      <dd>Type: Number</dd>
+      <dd>The size of the text (in pixels).</dd>
+      <dt class="val">fillColor</dt>
+      <dd>Type: String</dd>
+      <dd>The fill color (inside the figure). It can be specified in the same way a color is specified in CSS.</dd>
+      <dt class="val">fontWeight</dt>
+      <dd>Type: Number</dd>
+      <dd>The thickness of the text.</dd>
+      <dt class="val">fontStyle</dt>
+      <dd>Type: String</dd>
+      <dd>The typeface of the text.</dd>
+      <dt class="val">fontFamily</dt>
+      <dd>Type: String</dd>
+      <dd>The font type of the text.</dd>
+    </dl>
+  </div>
+
+  <div class="contentFigure"><img src="img/StringStyle02-01.png" alt="string style example"/><p>An example of formatting strings (see the sample code below). The string at the top has the default format. The red string below is an example of adding the size, color, weight, and typeface formats to the text. The blue strings are an example of text with linefeed characters. The bottom shows an example in which the font type and outline are specified.</p>
+  </div>
+
+  <div>
+    <p><span style="font-weight:700;">Sample code </span>(<a href="StringStyleSample02-01.html" target="_blank">click here for a running example</a>):</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var pos = new HuTime.TVPosition(10, 10);
+    var pos1 = new HuTime.TVPosition(10, 25);
+    var pos2 = new HuTime.TVPosition(10, 40);
+    var pos3 = new HuTime.TVPosition(10, 75);
+
+    var sty = new HuTime.StringStyle();
+    var sty1 = new HuTime.StringStyle(20, &quot;red&quot;, 700, &quot;italic&quot;);
+    var sty2 = new HuTime.StringStyle(18, &quot;blue&quot;);
+    var sty3 = new HuTime.StringStyle(20, &quot;yellow&quot;);
+    sty3.fontFamily = &quot;serif&quot;;
+    sty3.lineWidth = 3;
+    sty3.lineColor = &quot;green&quot;;
+
+    var text = &quot;Default&quot;;
+    var text1 = &quot;Size: 20px Weight:700 Style:italic&quot;;
+    var text2 = &quot;Line 1\nLine 2\nLine 3&quot;;
+    var text3 = &quot;Font Family: serif&quot;;
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawString(sty, layer, pos, text);
+        HuTime.Drawing.drawString(sty1, layer, pos1, text1);
+        HuTime.Drawing.drawString(sty2, layer, pos2, text2);
+        HuTime.Drawing.drawString(sty3, layer, pos3, text3);
+    };
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+  <h2><a name="03">3. Your Own Formats</a></h2>
+  <p>You can specify your own formats by redefining the formatting methods of HuTime.StringStyle listed below. Unlike when figures are formatted, the fill and outline formats cannot be redefined separately. To restore your own format to the original one, use the default method to redefine your own method. (If the format is redefined to null, it is also replaced back with the default method.)</p>
+
+  <div class="method">
+    <h4>applyStyle(<span class="val">ctx</span>, <span class="val">text</span>)</h4>
+    <p>HuTime.StringStyle.prototype.defaultApplyStyle</p>
+    <p>Applies the formats of the entire string (the fill and outline). When you redefine it, you can define your own format. To restore it to its default action, use HuTime.StringStyle.prototype.defaultApplyStyle.</p>
+    <dl>
+      <dt><span class="val">ctx</span></dt>
+      <dd>Type: CanvasRenderingContext2D</dd>
+      <dd>The context of the canvas element that contains the path to the string to be formatted.</dd>
+      <dt><span class="val">text</span></dt>
+      <dd>Type: String</dd>
+      <dd>Text in the string to be displayed.</dd>
+    </dl>
+  </div>
+
+
+
+  <div class="contentFigure"><img src="img/StringStyle03-01.png" alt="string style example"/><p>An example of displaying a string with your own format (see the sample code below). By redefining the applyStyle method, the text is clipped out from the figure through specifying an item regarding overlapping figures (globalCompositeOperation), which is not supported by StringStyle.</p>
+  </div>
+  <div>
+    <p><span style="font-weight:700;">Sample code </span>(<a href="StringStyleSample03-01.html" target="_blank">click here for a running example</a>):</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var pos = new HuTime.TVPosition(100, 50);
+    var sty = new HuTime.StringStyle(40, &quot;red&quot;, 700);
+    sty.textAlign = &quot;center&quot;;
+    sty.textBaseline = &quot;middle&quot;;
+    sty.applyStyle = function applyStyle(ctx, text) {
+        ctx.globalCompositeOperation = &quot;xor&quot;;
+        HuTime.StringStyle.prototype.defaultApplyStyle.apply(sty, [ctx, text]);
+        ctx.globalCompositeOperation = &quot;source-over&quot;;
+    };
+    var styBk = new HuTime.FigureStyle(&quot;blue&quot;);
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(styBk, layer, pos, 150);
+        HuTime.Drawing.drawString(sty, layer, pos, &quot;Hello World!&quot;);
+    };
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+
+  <div id="contentBottom">
+    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
+
+  </div>
+
+</div>
+
+<div id="footer">
+  
+  <table>
+    <tr>
+      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
+      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
+               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
+              resource="http://www.w3.org/TR/rdfa-syntax"
+              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

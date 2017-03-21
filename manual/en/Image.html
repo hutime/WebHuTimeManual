@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Displaying Images - HuTime API Manual</title>
+  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Displaying Images</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <h2>1. Overview</h2>
+  <p>Images are drawn on the canvas element of a <a href="Image.html#">Layer object</a>. Just like <a href="Figure.html">displaying figures</a>, one method for displaying an image and another for drawing the path of the outline of the image are available.</p>
+
+  <h2><a name="02">2. Displaying Images</a></h2>
+  <p>The method for displaying an image is defined in the HuTime.Drawing class, just like figures. drawImage is the method for displaying the image, and pathImage is the method for drawing the path of the outline of the image.</p>
+
+  <div class="method">
+    <h4>HuTime.Drawing.drawImage(<span class="val">style</span>, <span class="val">layer</span>, <span class="val">position</span>, <span class="val">src</span> [, <span class="val">width</span> [, <span class="val">height</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]]]])</h4>
+    <h4>HuTime.Drawing.pathImage(<span class="val">layer</span>, <span class="val">position</span>, <span class="val">src</span> [, <span class="val">width</span> [, <span class="val">height</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]]]])</h4>
+    <p>Specify the center position of the image using a <a href="Image.html#">Position object</a>, and if necessary, the width and height in pixels. Similar to other figures, you can also rotate the image.</p>
+
+    <dl>
+      <dt class="val">style</dt>
+      <dd>Type: <a href="FigureStyle.html">HuTime.FigureStyle</a></dd>
+      <dd>Specifies the format (e.g., the color, the width of the line) of the border of the image.</dd>
+
+      <dt class="val">layer</dt>
+      <dd>Type: <a href="Layer.html">HuTime.Layer</a></dd>
+      <dd>The layer on which the image is displayed.</dd>
+
+      <dt class="val">position</dt>
+      <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+      <dd>The position of the center of the image.</dd>
+
+      <dt class="val">src</dt>
+      <dd>Type: String</dd>
+      <dd>The string that represents the URL of the image source. It can be specified by a relative path.</dd>
+
+      <dt class="val">width</dt>
+      <dd>Type: Number</dd>
+      <dd>The width in which the image is displayed (in pixels). This can be optionally specified. If it is omitted or has an invalid value (such as the null value or a negative value), and if a valid height value (<span class="val">height</span>) is specified, the same ratio is maintained. If the height value (<span class="val">height</span>) is also omitted or invalid, the image is displayed with its original size.</dd>
+
+      <dt class="val">height</dt>
+      <dd>Type: Number</dd>
+      <dd>The height in which the image is displayed (in pixels). This can be optionally specified. If it is omitted or has an invalid value (such as the null value or a negative value), and if a valid width value (<span class="val">width</span>) is specified, the same ratio is maintained. If the width value (<span class="val">width</span>) is also omitted or invalid, the image is displayed with its original size.</dd>
+
+      <dt class="val">rotate</dt>
+      <dd>Type: Number</dd>
+      <dd>The angle of rotation of the figure (in degrees). This can be optionally specified. If omitted, it is set to 0.</dd>
+
+      <dt class="val">canvas</dt>
+      <dd>Type: canvas element</dd>
+      <dd>The canvas on which the figure is drawn. This can be optionally specified. If omitted, it is set to <span class="val">layer</span>.canvas. It is used when you want to draw a image on a Layer object with multiple canvas elements, such as <a href="TLineLayer.html">chronological table layer</a> or <a href="ChartLayer.html">chart layer</a>.</dd>
+    </dl>
+  </div>
+
+  <h2><a name="03">3. When Images are Displayed</a></h2>
+  <p><a href="Figure.html#04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the image is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">chronological table layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures.</p>
+
+  <div class="contentFigure"><img src="img/Image03-01.png" alt="Image drawing example"/><p>An example of displaying images (see the sample code below).</p>
+  </div>
+
+  <div>
+    <p><span style="font-weight:700;">Sample code </span>(<a href="ImageSample03-01.html" target="_blank">click here for a running example</a>):</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+    pnl.appendLayer(lyr);
+
+    posW = new HuTime.TVPosition(25, 75);
+    pos = new HuTime.TVPosition(100, 50);
+    posH = new HuTime.TVPosition(175, 25);
+    sty0 = new HuTime.FigureStyle();
+    sty1 = new HuTime.FigureStyle(null, &quot;red&quot;, 5);
+    lyr.processAfterRedraw = function processAfterRedraw(layer) {
+        HuTime.Drawing.drawImage(sty0, layer, posW, &quot;img/ImageSample.jpg&quot;, 80);
+        HuTime.Drawing.drawImage(sty1, layer, pos, &quot;img/ImageSample.jpg&quot;);
+        HuTime.Drawing.drawImage(sty0, layer, posH, &quot;img/ImageSample.jpg&quot;, null, 60);
+    };
+
+    ht.redraw(0, 200);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+
+  <h2><a name="04">4. Use of the Path</a></h2>
+  <p>As with other figures, you can use a path-drawing method for purposes such as determining whether the mouse cursor is inside a image. In the sample code below, the image rotates 180 degrees when the mouse cursor goes into the area of it.</p>
+  <div>
+    <p><span style="font-weight:700;">Sample code </span>(<a href="ImageSample04-01.html" target="_blank">click here for a running example</a>):</p>
+    <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200, 0, 0, 100, 0);
+    pnl.appendLayer(lyr);
+
+    pos = new HuTime.TVPosition(100, 50);
+    sty = new HuTime.FigureStyle();
+    lyr.processAfterRedraw = function processAfterRedraw(layer) {
+        HuTime.Drawing.drawImage(sty, layer, pos, &quot;img/ImageSample.jpg&quot;);
+    };
+
+    lyr.mouseEventCapture = HuTime.EventCapture.All;
+    lyr.addEventListener(&quot;mousemove&quot;,
+        function(ev) {
+            var ctx = HuTime.Drawing.pathImage(ev.target, pos, &quot;img/ImageSample.jpg&quot;);
+            if (ctx.isPointInPath(ev.offsetX, ev.offsetY))
+                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;img/ImageSample.jpg&quot;, null, null, 180);
+            else
+                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;img/ImageSample.jpg&quot;);
+        }
+    );
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+  </div>
+
+
+  <div id="contentBottom">
+    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
+
+  </div>
+
+</div>
+
+<div id="footer">
+  
+  <table>
+    <tr>
+      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
+      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
+               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
+              resource="http://www.w3.org/TR/rdfa-syntax"
+              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>
