@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Chronological Table Layer - HuTime API Manual</title>
-  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
   <meta property="dcterms:title" content="HuTime Manual" />
   <meta property="dcterms:description" content="User's manual about usage of HuTime." />
 </head>
@@ -113,11 +113,11 @@ Number,From,To,Name,PeakWS,PeakAP,Category
     <h2>4. Adding a Layer to the Panel and Displaying</h2>
     <p>Just like other layers, you can add a chronological table layer to a panel using the appendLayer method of a Panel object. The object is drawn according to the sequence of the redraw method, but if the source data has not been read completely, it takes time to show the object.</p>
 
-    <div class="contentFigure"><img src="img/TLineLayer04-01.png" alt="TLine layer example"/><p>An example of displaying a chronological table layer (see the sample code below). The source data is the list of typhoons in 2015, which is shown in <a href="TLineLayer.html#section02">&quot;2. Source Data for a Chronological Table.&quot;</a></p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer04-01.png" alt="TLine layer example"/><p>An example of displaying a chronological table layer (see the sample code below). The source data is the list of typhoons in 2015, which is shown in <a href="TLineLayer.html#section02">&quot;2. Source Data for a Chronological Table.&quot;</a></p>
     </div>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="TLineLayerSample04-01.html" target="_blank">click here for a running example</a>):</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/TLineLayerSample04-01.html" target="_blank">click here for a running example</a>):</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -151,11 +151,11 @@ Number,From,To,Name,PeakWS,PeakAP,Category
     <h2>5. Formatting</h2>
     <p>In a chronological table, you can format the band for duration, and labels. A chronological table can be formatted on a record-set basis. When a format value is passed to the constructor of a record set as an argument, it will be the default format of that record set. The following figure shows an example with some format set to the sample code in <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying.&quot;</a></p>
 
-    <div class="contentFigure"><img src="img/TLineLayer05-01.png" alt="TLine layer example"/><p>An example of formatting the chronological table layer (see the sample code below). <a href="TLineLayer.html#section04"></a>In the example above, the chronological table of the sample code in &quot;2. Source Data for a Chronological Table&rdquo; and <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying&rdquo;</a> is formatted by passing arguments to the constructor of HuTime.CalendarTLineRecordset.</p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer05-01.png" alt="TLine layer example"/><p>An example of formatting the chronological table layer (see the sample code below). <a href="TLineLayer.html#section04"></a>In the example above, the chronological table of the sample code in &quot;2. Source Data for a Chronological Table&rdquo; and <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying&rdquo;</a> is formatted by passing arguments to the constructor of HuTime.CalendarTLineRecordset.</p>
     </div>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="TLineLayerSample05-01.html" target="_blank">click here for a running example</a>). The null value is specified for the calendarId argument of the HuTime.CalendarTLineRecordset&apos;s constructor. A <a href="CalendarScaleLayer.html">calendar scale layer</a> (variable: scl) is also added.</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/TLineLayerSample05-01.html" target="_blank">click here for a running example</a>). The null value is specified for the calendarId argument of the HuTime.CalendarTLineRecordset&apos;s constructor. A <a href="CalendarScaleLayer.html">calendar scale layer</a> (variable: scl) is also added.</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -203,11 +203,11 @@ Number,From,To,Name,PeakWS,PeakAP,Category
       </dl>
     </div>
 
-    <div class="contentFigure"><img src="img/TLineLayer06-01.png" alt="TLine layer example"/><p>An example of the chronological table layer with multiple record sets added to it (see the sample code below). The Hurricane2015.csv file (the list of hurricanes in 2015) is added as new source data using the appendRecordset method, and the band for duration is formatted in light blue and the label in red.</p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer06-01.png" alt="TLine layer example"/><p>An example of the chronological table layer with multiple record sets added to it (see the sample code below). The Hurricane2015.csv file (the list of hurricanes in 2015) is added as new source data using the appendRecordset method, and the band for duration is formatted in light blue and the label in red.</p>
     </div>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="TLineLayerSample06-01.html" target="_blank">click here for a running example</a>):</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/TLineLayerSample06-01.html" target="_blank">click here for a running example</a>):</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -250,11 +250,11 @@ Number,From,To,Name,PeakWS,PeakAP,Category
     <h2>7. Formatting Individual Records</h2>
     <p>To color-code data in a chronological table based on a particular item in the same record set, set a color-coding function for the rangeStyle property of the record set object. A HuTime.TLineRecord object is passed to the set function as an argument, and return a HuTime.FigureStyle object based on its contents.</p>
     <p>In the figure and sample code below, if the data item Category in the source data has a value of 4 or more, the record is displayed in yellow, and it has a value of 3 or less, the record is displayed in light blue. First, two formats (styleStrong and styleWeak) are defined. Next, a record set object is created additionally, and the settings for reading the data item Category are added to that record set. Finally, a processing for outputting the formats to the rangeStyle property of the created record set is described.</p>
-    <div class="contentFigure"><img src="img/TLineLayer07-01.png" alt="TLine layer example"/><p>An example of formatting individual record (see the sample code below). Typhoons in category 4 or higher are displayed in yellow, and those in category 3 or lower in light blue.</p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer07-01.png" alt="TLine layer example"/><p>An example of formatting individual record (see the sample code below). Typhoons in category 4 or higher are displayed in yellow, and those in category 3 or lower in light blue.</p>
     </div>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="TLineLayerSample07-01.html" target="_blank">click here for a running example</a>):</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/TLineLayerSample07-01.html" target="_blank">click here for a running example</a>):</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -321,7 +321,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
     <p>In the example below, the recordClick function is added to the chronological table layer as plotclick event handling. The recordClick function concatenates the labels of clicked records and displays the combined label in the pop-up window.</p>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="TLineLayerSample08-01.html" target="_blank">click here for a running example</a>):</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/TLineLayerSample08-01.html" target="_blank">click here for a running example</a>):</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -365,24 +365,13 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
 
   <div id="contentBottom">
-    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
-
+    <!-- #include file="contentBottom.html" -->
   </div>
 
 </div>
 
 <div id="footer">
-  
-  <table>
-    <tr>
-      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
-      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
-               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
-              resource="http://www.w3.org/TR/rdfa-syntax"
-              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
-    </tr>
-  </table>
-
+  <!-- #include file="/manual/common/footer.html" -->
 </div>
 
 </body>

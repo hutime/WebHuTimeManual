@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Positioning on a Layer - HuTime API Manual</title>
-  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
   <meta property="dcterms:title" content="HuTime Manual" />
   <meta property="dcterms:description" content="User's manual about usage of HuTime." />
 </head>
@@ -23,7 +23,7 @@
     <h2>1. Overview</h2>
     <p>You specify a position on a layer using an object of the Position classes (classes derived from the HuTime.PositionBase class) to draw an on-layer object such as a figure, string, and image. HuTime provides the <a href="Structure.html#section03">TV coordinate system</a>, which is used to put data or others, and the XY coordinate system, which is used to indicate positions where objects are drawn on the screen. You can position your objects by using the combination of these coordinate systems. Positioning can be achieved by <a href="Position.html#Position02">specifying an absolute position</a> and <a href="Position.html#Position03">specifying a relative position</a>. You first specify the absolute position, and then, if necessary, specify relative positions in reference to the absolute position. HuTime also provides <a href="Position.html#Position04">constants to indicate particular coordinates</a> and <a href="Position.html#Position05">classes for conversion into an integer</a> for coordinate values on Canvas to be output.</p>
 
-    <div class="contentFigure"><img src="img/Position01-01.png" alt="Position classes"/><p>The list of Position classes (classes derived from the HuTime.PositionBase class). The PositionBase is defined as an abstract class, and is not used in practice.</p>
+    <div class="contentFigure"><img src="/manual/img/Position01-01.png" alt="Position classes"/><p>The list of Position classes (classes derived from the HuTime.PositionBase class). The PositionBase is defined as an abstract class, and is not used in practice.</p>
     </div>
   </div>
 
@@ -56,13 +56,13 @@
       </dl>
     </div>
 
-    <div class="contentFigure"><img src="img/Position02-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of absolute position)" width="600px"/><p>How the display position of the absolute positions on a layer depend on the display modes. The absolute position specified on the TV coordinate system (the blue circle) indicates the display position on the screen according to the display mode. On the other hand, the absolute position specified on the XY coordinate system (the red circle) indicates the same display positions on the screen independent of the display mode.</p>
+    <div class="contentFigure"><img src="/manual/img/Position02-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of absolute position)" width="600px"/><p>How the display position of the absolute positions on a layer depend on the display modes. The absolute position specified on the TV coordinate system (the blue circle) indicates the display position on the screen according to the display mode. On the other hand, the absolute position specified on the XY coordinate system (the red circle) indicates the same display positions on the screen independent of the display mode.</p>
     </div>
-    <div class="contentFigure"><img src="img/Position02-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of absolute position)" width="400px"/><p>How the display position changes as the displayed range of the t axis varies (changed and zoomed in or out). The absolute positions specified on the TV coordinate system (the blue circle) change their position on the screen according to the displayed range of the t axis. On the other hand, the absolute position specified on the XY coordinate system (the red circle) does not change its position on the screen even when the displayed range of the t axis varies (it returns to the original position upon redrawing).</p>
+    <div class="contentFigure"><img src="/manual/img/Position02-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of absolute position)" width="400px"/><p>How the display position changes as the displayed range of the t axis varies (changed and zoomed in or out). The absolute positions specified on the TV coordinate system (the blue circle) change their position on the screen according to the displayed range of the t axis. On the other hand, the absolute position specified on the XY coordinate system (the red circle) does not change its position on the screen even when the displayed range of the t axis varies (it returns to the original position upon redrawing).</p>
     </div>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="PositionSample02-01.html" target="_blank">click here for a running example</a>):</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/PositionSample02-01.html" target="_blank">click here for a running example</a>):</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -146,13 +146,13 @@
       </dl>
     </div>
 
-    <div class="contentFigure"><img src="img/Position03-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of relative position)" width="600px"/><p>How the display position of the relative positions depend on the display modes. The absolute position (the blue-filled circle) specified on the TV coordinate system being used as the reference, one relative position as the TV coordinates (the blue circle) and another as the XY coordinates (the red circle) are indicated. Also, the absolute position (the red-filled circle) specified on the XY coordinate system being used as the reference, one relative position as the TV coordinates (the blue circle) and another as the XY coordinates (the red circle) are indicated. The relative positions as the TV coordinates are displayed at different positions on the screen, in relation to the reference position in each display mode. On the other hand, the relative positions as the XY coordinates have the same positional relation with the reference positions, independent of the display mode.</p>
+    <div class="contentFigure"><img src="/manual/img/Position03-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of relative position)" width="600px"/><p>How the display position of the relative positions depend on the display modes. The absolute position (the blue-filled circle) specified on the TV coordinate system being used as the reference, one relative position as the TV coordinates (the blue circle) and another as the XY coordinates (the red circle) are indicated. Also, the absolute position (the red-filled circle) specified on the XY coordinate system being used as the reference, one relative position as the TV coordinates (the blue circle) and another as the XY coordinates (the red circle) are indicated. The relative positions as the TV coordinates are displayed at different positions on the screen, in relation to the reference position in each display mode. On the other hand, the relative positions as the XY coordinates have the same positional relation with the reference positions, independent of the display mode.</p>
     </div>
-    <div class="contentFigure"><img src="img/Position03-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of relative position)" width="400px"/><p>How the drawing position changes as the displayed range of the t axis varies (changed and zoomed in or out). The relative positions specified on the TV coordinate system (the blue circles) change their positional relation with the reference positions (distance from the reference positions), as the displayed range of the t axis is changed, or zoomed in or out. On the other hand, the relative positions specified on the XY coordinate system (the red circles) do not change their positional relation with the reference positions even when the displayed range of the t axis varies (they return to the original positions upon redrawing).</p>
+    <div class="contentFigure"><img src="/manual/img/Position03-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of relative position)" width="400px"/><p>How the drawing position changes as the displayed range of the t axis varies (changed and zoomed in or out). The relative positions specified on the TV coordinate system (the blue circles) change their positional relation with the reference positions (distance from the reference positions), as the displayed range of the t axis is changed, or zoomed in or out. On the other hand, the relative positions specified on the XY coordinate system (the red circles) do not change their positional relation with the reference positions even when the displayed range of the t axis varies (they return to the original positions upon redrawing).</p>
     </div>
 
     <div>
-      <p><span style="font-weight:700;">Sample code </span>(<a href="PositionSample03-01.html" target="_blank">click here for a running example</a>):</p>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/PositionSample03-01.html" target="_blank">click here for a running example</a>):</p>
       <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
@@ -265,7 +265,7 @@
       </tr>
     </table>
 
-    <div class="contentFigure"><img src="img/Position04-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of position constant)" width="600px"/><p>How the display positions of coordinates specified by the constants depend on the display mode. The positions specified on the TV coordinate system (the blue circles) are displayed at the positions on the screen according to the display mode. On the other hand, the positions specified on the XY coordinate system (the red circles) are displayed at the same positions on the screen, independent of the display mode.</p>
+    <div class="contentFigure"><img src="/manual/img/Position04-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of position constant)" width="600px"/><p>How the display positions of coordinates specified by the constants depend on the display mode. The positions specified on the TV coordinate system (the blue circles) are displayed at the positions on the screen according to the display mode. On the other hand, the positions specified on the XY coordinate system (the red circles) are displayed at the same positions on the screen, independent of the display mode.</p>
     </div>
 
     <div>
@@ -338,24 +338,14 @@ var pos2 = new HuTime.PositionCeil(new HuTime.RelativeTVPosition(new HuTime.XYPo
     </tr>
   </table>
 
-  <div>
-    <h3><a href="index.html">Back to the Contents of API Manual</a></h3>
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
   </div>
 
 </div>
 
 <div id="footer">
-  
-  <table>
-    <tr>
-      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
-      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
-               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
-              resource="http://www.w3.org/TR/rdfa-syntax"
-              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
-    </tr>
-  </table>
-
+  <!-- #include file="/manual/common/footer.html" -->
 </div>
 
 </body>

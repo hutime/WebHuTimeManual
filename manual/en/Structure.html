@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Basic Structure - HuTime API Manual</title>
-  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
   <meta property="dcterms:title" content="HuTime Manual" />
   <meta property="dcterms:description" content="User's manual about usage of HuTime." />
 </head>
@@ -55,14 +55,14 @@
         <td>Serves as a container that displays figures and text. Multiple types of layer classes are available depending on the functions, such as for chronological tables or for charts.</td>
       </tr>
     </table>
-    <div class="contentFigure"><img src="img/HuTimeStructure.gif" alt="HuTime structure"/></div>
+    <div class="contentFigure"><img src="/manual/img/HuTimeStructure.gif" alt="HuTime structure"/></div>
   </div>
 
 
   <div id="section03">
     <h2>3. HuTime&apos;s Coordinate System (TV Coordinates)</h2>
     <p>In addition to the XY coordinate system on the screen, HuTime has its own TV coordinate system. It can provide the <a href="Structure.html#section04">horizontal display mode and vertical display mode</a> by converting TV coordinates into XY coordinates.</p>
-    <div class="contentFigure"><img src="img/TAxisSample.gif" alt="t axis and v axis in holizontal display mode"/><p>t axis and v axis in horizontal display mode</p>
+    <div class="contentFigure"><img src="/manual/img/TAxisSample.gif" alt="t axis and v axis in holizontal display mode"/><p>t axis and v axis in horizontal display mode</p>
     </div>
 
     <h3>(1) t Axis</h3>
@@ -77,7 +77,7 @@
   <div id="section04">
     <h2>4. Specifying the Display Mode (Horizontal and Vertical) and the Relation between XY Coordinates and TV Coordinates</h2>
     <p>You specify the display mode (vertical or horizontal) and forward direction in the t axis by using the displayMode property on a panel collection basis. One example is that if displayMode = 0, then the direction of the t axis is parallel to the x axis and in the forward direction (the t axis from left to right in horizontal display mode). Another is that if displayMode = 3, then the direction of the t axis is parallel to the y axis and in the backward direction (the t axis from bottom to top in vertical display mode).</p>
-    <div class="contentFigure"><img src="img/DisplayMode.gif" alt="display mode"/></div>
+    <div class="contentFigure"><img src="/manual/img/DisplayMode.gif" alt="display mode"/></div>
   </div>
 
   <div id="section05">
@@ -85,29 +85,18 @@
     <p>As containers, a panel collection, panel, and layer correspond to objects of HuTime.PanelCollection, HuTime.TilePanel, HuTime.Layer and HuTime.OverlayPanel classes. Each of the classes is associated with a DOM element for display (div element) via the element property. Based on containment relationships between objects, objects for the classes are put into a hierarchy of objects, and at the same time, DOM elements associated with these objects are also added, in the form of hierarchy, to the DOM elements in a Web page prepared by a user.</p>
     <p>The HuTime.PanelCollection class has the canvas element, which is used to obtain mouse events and control the shape of the cursor, and is displayed on all of other DOM elements. This canvas element can be referenced through the captureElement property of each class. Furthermore, the HuTime.Layer class has the canvas element for drawing associated with it. Figures, text images, and others that are displayed on a layer are drawn.</p>
     <p>The application root (a HuTime object), located at the top of the object tree, accommodates one or more panel collections and provides control over how the entire application works, including managing the displayed range. Each object under the panel collection in the hierarchy can refer to the HuTime object to which the object itself belongs, through the hutimeRoot property.</p>
-    <div class="contentFigure"><img src="img/ObjectTree.gif" alt="object tree"/></div>
+    <div class="contentFigure"><img src="/manual/img/ObjectTree.gif" alt="object tree"/></div>
   </div>
 
 
   <div id="contentBottom">
-    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
-
+    <!-- #include file="contentBottom.html" -->
   </div>
 
 </div>
 
 <div id="footer">
-  
-  <table>
-    <tr>
-      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
-      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
-               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
-              resource="http://www.w3.org/TR/rdfa-syntax"
-              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
-    </tr>
-  </table>
-
+  <!-- #include file="/manual/common/footer.html" -->
 </div>
 
 </body>

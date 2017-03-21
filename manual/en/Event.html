@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Event Handling - HuTime API Manual</title>
-  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
   <meta property="dcterms:title" content="HuTime Manual" />
   <meta property="dcterms:description" content="User's manual about usage of HuTime." />
 </head>
@@ -49,7 +49,7 @@
 
     <h3>(1) Mouse Event</h3>
     <p>To capture a mouse operation on a figure or others that is drawn on canvas, captureElement (of the canvas element) of the panel collection object is used to receive the mouse event. From the perspective of the DOM tree, the trigger source is captureElement, and HuTime deals with it in the target phase of this event. When an event is triggered, captureElement passes control of it to the HuTime object, which traces back the object tree and tries to extract the trigger source object and the type of the event. Next, control is returned to the HuTime object via the capture phase in which the trigger source object is reached, to the target phase at the trigger source, to the bubbling phase from the trigger source. When event handling is finished in the object tree, the HuTime object returns control to captureElement. However, the bubbling phase will not occur afterward in the DOM tree because it is prevented in order to avoid unintended behavior.</p>
-    <div class="contentFigure"><img src="img/EventFlow.gif" alt="mouse event"/></div>
+    <div class="contentFigure"><img src="/manual/img/EventFlow.gif" alt="mouse event"/></div>
 
     <h3>(2) HuTime&apos;s own Events</h3>
     <p>When a HuTime&apos;s own event is triggered, the trigger source passes control to the HuTime object. After that, control is returned to the HuTime object via the capture phase in which the trigger source object is reached, to the target phase at the trigger source, to the bubbling phase from the trigger source, then causing the process to end. HuTime&apos;s own events are not propagated to the DOM tree.</p>
@@ -95,17 +95,7 @@
 </div>
 
 <div id="footer">
-  
-  <table>
-    <tr>
-      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
-      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
-               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
-              resource="http://www.w3.org/TR/rdfa-syntax"
-              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
-    </tr>
-  </table>
-
+  <!-- #include file="/manual/common/footer.html" -->
 </div>
 
 </body>
