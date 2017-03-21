@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Basic Structure - HuTime API Manual</title>
+  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Basic Structure</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>HuTime is a platform for visualizing and analyzing chronological tables and charts on a Web page. You can add new ideas to the view of your chronological table or chart or develop a new Web application, through HuTime APIs.</p>
+  </div>
+
+  <div id="section02">
+    <h2>2. Basic Structure</h2>
+    <p>HuTime consists primarily of three types of containers, a <a href="PanelCollection.html">panel collection</a>, <a href="Panel.html">panel</a>, and <a href="Layer.html">layer</a>, and of an <a href="HuTimeRoot.html">application root</a> that provides control over these containers. Data, figures, text, images, and others are displayed on layers. You can also combine these layers together on a panel for use. A wide variety of classes are defined for layers depending on their purposes, such as displaying chronological tables, charts or scales.</p>
+    <table>
+      <tr>
+        <th style="width: 120px;">Type</th>
+        <th style="width: 150px;">Typical Class</th>
+        <th>Function</th>
+      </tr>
+      <tr>
+        <td>Application root</td>
+        <td>HuTime</td>
+        <td>Has one or more panel collections and provides control over how the entire application works.</td>
+      </tr>
+      <tr>
+        <td>Panel collection</td>
+        <td>HuTime.PanelCollection</td>
+        <td>Serves as a container that accommodates one or more panels and provides cooperation among panels. You specify the display mode for each panel collection.</td>
+      </tr>
+      <tr>
+        <td>Panel</td>
+        <td>HuTime.TilePanel</td>
+        <td>Serves as a container that accommodates one or more layers and displays them.</td>
+      </tr>
+      <tr>
+        <td>Layer</td>
+        <td>HuTime.Layer</td>
+        <td>Serves as a container that displays figures and text. Multiple types of layer classes are available depending on the functions, such as for chronological tables or for charts.</td>
+      </tr>
+    </table>
+    <div class="contentFigure"><img src="img/HuTimeStructure.gif" alt="HuTime structure"/></div>
+  </div>
+
+
+  <div id="section03">
+    <h2>3. HuTime&apos;s Coordinate System (TV Coordinates)</h2>
+    <p>In addition to the XY coordinate system on the screen, HuTime has its own TV coordinate system. It can provide the <a href="Structure.html#section04">horizontal display mode and vertical display mode</a> by converting TV coordinates into XY coordinates.</p>
+    <div class="contentFigure"><img src="img/TAxisSample.gif" alt="t axis and v axis in holizontal display mode"/><p>t axis and v axis in horizontal display mode</p>
+    </div>
+
+    <h3>(1) t Axis</h3>
+    <p>The t axis serves as a basis for placing data, figures, text, images, and others and represents linear events, such as time or distance. The t coordinates can have real values falling within the range of numbers that can be handled in JavaScript. Part of the whole range is displayed in HuTime. However, if the number of digits exceeds the prescribed significant digit (usually 12 digits), you cannot change or zoom in or out the displayed range as you want. In addition, you can use the APIs to limit the range of values the t coordinate takes. Values of the t coordinate are used as coordinate values to display records, figures, and others on a layer. Also, non-real values, such as time and dates, are converted into real values somehow and used as t coordinate values.</p>
+    <p>The t axis is parallel to the x axis in horizontal display mode, and to the y axis in vertical display mode. Using the APIs, you can set the direction of the t axis to the forward or backward direction of the XY axes. If a Web page contains more than one panel collection, changing or zooming in or out the displayed range of the t values on one of the panel collections causes the displayed ranges of the other panel collections to be changed or zoomed in or out at the same time.</p>
+
+    <h3>(2) v Axis</h3>
+    <p>The v axis is orthogonal to the t axis, and is parallel to the y axis in horizontal display mode and to the x axis in vertical display mode. As with t values, values of the v coordinates are used as coordinate values to determine positions where data, figures, text, images and others are displayed. Each layer has a different range and direction for its v axis. They are determined based on the arguments passed to the constructor when a layer object (or its derived objects) is created.</p>
+  </div>
+
+
+  <div id="section04">
+    <h2>4. Specifying the Display Mode (Horizontal and Vertical) and the Relation between XY Coordinates and TV Coordinates</h2>
+    <p>You specify the display mode (vertical or horizontal) and forward direction in the t axis by using the displayMode property on a panel collection basis. One example is that if displayMode = 0, then the direction of the t axis is parallel to the x axis and in the forward direction (the t axis from left to right in horizontal display mode). Another is that if displayMode = 3, then the direction of the t axis is parallel to the y axis and in the backward direction (the t axis from bottom to top in vertical display mode).</p>
+    <div class="contentFigure"><img src="img/DisplayMode.gif" alt="display mode"/></div>
+  </div>
+
+  <div id="section05">
+    <h2>5. Hierarchical Structure of Containers and the Relationship between Containers and DOM Elements</h2>
+    <p>As containers, a panel collection, panel, and layer correspond to objects of HuTime.PanelCollection, HuTime.TilePanel, HuTime.Layer and HuTime.OverlayPanel classes. Each of the classes is associated with a DOM element for display (div element) via the element property. Based on containment relationships between objects, objects for the classes are put into a hierarchy of objects, and at the same time, DOM elements associated with these objects are also added, in the form of hierarchy, to the DOM elements in a Web page prepared by a user.</p>
+    <p>The HuTime.PanelCollection class has the canvas element, which is used to obtain mouse events and control the shape of the cursor, and is displayed on all of other DOM elements. This canvas element can be referenced through the captureElement property of each class. Furthermore, the HuTime.Layer class has the canvas element for drawing associated with it. Figures, text images, and others that are displayed on a layer are drawn.</p>
+    <p>The application root (a HuTime object), located at the top of the object tree, accommodates one or more panel collections and provides control over how the entire application works, including managing the displayed range. Each object under the panel collection in the hierarchy can refer to the HuTime object to which the object itself belongs, through the hutimeRoot property.</p>
+    <div class="contentFigure"><img src="img/ObjectTree.gif" alt="object tree"/></div>
+  </div>
+
+
+  <div id="contentBottom">
+    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
+
+  </div>
+
+</div>
+
+<div id="footer">
+  
+  <table>
+    <tr>
+      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
+      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
+               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
+              resource="http://www.w3.org/TR/rdfa-syntax"
+              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

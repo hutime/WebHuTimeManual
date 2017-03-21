@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Layer - HuTime API Manual</title>
+  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Layer</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>Data, figures, text, images, and others are displayed on layers. The layers can also accommodate <a href="OLObject.html">objects, including figures</a> as part of the object tree. HuTime provides a wide variety of layers depending on their purposes, for example, for displaying time lines, charts or scales. A combination of more than one layer is available on a panel.</p>
+  </div>
+
+  <div id="section02">
+    <h2>2. Creating an Object</h2>
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime.Layer([<span class="val">vBreadth</span> [, <span class="val">vMarginTop</span> [, <span class="val">vMarginBottom</span> [, <span class="val">vTop</span>, <span class="val">vBottom</span>]]]])</h4>
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: null</dd>
+        <dd>The length in the v-axis direction (in pixels).</dd>
+
+        <dt><span class="val">vMarginTop</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: null</dd>
+        <dd>The top margin in the v-axis direction (the left margin in vertical display mode) (in pixels).</dd>
+
+        <dt><span class="val">vMarginBottom</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: null</dd>
+        <dd>The bottom margin in the v-axis direction (the right margin in vertical display mode) (in pixels).</dd>
+
+        <dt><span class="val">vTop</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 0</dd>
+        <dd>The v value at the top edge (the leftmost end in vertical display mode) in the v-axis direction.</dd>
+
+        <dt><span class="val">vBottom</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 100</dd>
+        <dd>The v value at the bottom edge (the rightmost end in vertical display mode) in the v-axis direction.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>3. Adding a Layer</h2>
+    <p>You can add a layer using the appendPanel method of a panel object.</p>
+    <div class="method">
+      <h4><span class="val">pnl</span>.appendPanelCollection(<span class="val">layer</span>)</h4>
+      <dl>
+        <dt><span class="val">pnl</span></dt>
+        <dd>Type: HuTime</dd>
+        <dd>The panel object to which the layer is added.</dd>
+
+        <dt><span class="val">layer</span></dt>
+        <dd>Type: HuTime.PanelBase</dd>
+        <dd>The layer that is added to the panel.</dd>
+      </dl>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="Layer03-01.html" target="_blank">click here for a running example</a>). In this example, two layers (variables lyr1 and lyr2) are added to the panel object (variable pnl). By means of a property described later in <a href="Layer.html#section05">Formatting</a>, a gradient effect is applied and a photograph is attached to the background of the layer.</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(250);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr1 = new HuTime.Layer(150);
+    var lyr2 = new HuTime.Layer(150, null, 0);
+    pnl.appendLayer(lyr1);
+    pnl.appendLayer(lyr2);
+
+    pnls.style.backgroundColor = &quot;pink&quot;;
+    pnl.style.backgroundColor = &quot;lightyellow&quot;;
+    lyr1.style.backgroundImage = &quot;url(&apos;img/bkSample.jpg&apos;)&quot;;
+    lyr2.style.background = &quot;linear-gradient(to bottom, Azure 0%, SkyBlue 100%)&quot;;
+
+        ht.redraw();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>4. Specifying the Display Position and the Size</h2>
+    <p>In layers, the display width in the t-axis direction is adjusted to suit the width of the panel collection. You specify the display position and display width in the v-axis direction by using the vBreadth, vMarginTop, and vMarginBottom properties. Details about these properties are the same as the arguments of the constructor. <a href="Layer.html#section03"></a>In the example shown in <a href="Layer.html#section03">&quot;3. Adding a Layer,&quot;</a> lyr1 (which has a photograph background) with only the vBreadth property specified is displayed at the top edge of the panel. On the other hand, in lyr2 (with a blue gradient effect on the background), the vBreadth property is specified and the vMarginBottom is set to 0. It is thus displayed at the bottom edge. As a result, two layers are overlapped partially, and the upper half of the layer with the photograph background is visible behind the layer with the gradient effect.</p>
+
+    <h3>Display Position in Horizontal Display Mode</h3>
+    <div class="contentFigure"><img src="img/VBreadthSample.gif" alt="v axis for holizontal display mode"/></div>
+    <p>In horizontal display mode, the display position and size are specified in the v-axis direction, which represents height. Basically, you specify values for two properties out of three, and set the other to null (or undefined). The property with the null value is set automatically depending on the height of the panel (currentVBreadth).</p>
+    <p>If you specify values for vMarginBottom and vBreadth and set vMarginTop to null, the top margin expands and contracts according to the height of the panel (currentVBreadth). If you set vMarginBottom to 0, the layer object is displayed at the bottom edge of the panel with no margin.</p>
+    <div class="contentFigure"><img src="img/VBreadthSample_TopNull.gif" alt="v axis for holizontal display mode"/></div>
+    <p>If you specify values for vMarginTop and vBreadth and set vMarginBottom to null, the bottom margin expands and contracts according to the height of the panel (currentVBreadth). If you set vMarginTop to 0, the layer object is displayed at the top edge of the panel with no margin.</p>
+    <div class="contentFigure"><img src="img/VBreadthSample_BottomNull.gif" alt="v axis for holizontal display mode"/></div>
+    <p>If you specify values for vMarginTop and vMarginBottom and set vBreadth to null, the height of the layer expands and contracts according to the height of the panel (currentVBreadth) . If you set both vMarginTop and vMarginBottom to 0, the layer is always fully displayed over the panel.</p>
+    <div class="contentFigure"><img src="img/VBreadthSample_BreadthNull.gif" alt="v axis for holizontal display mode"/></div>
+    <p>Basically, you specify values for two properties out of three and set the other to null (or undefined). If, however, you use a different combination of settings, the property values are as follows:</p>
+
+    <table>
+      <tr>
+        <th>Properties Specified</th>
+        <th>vMarginTop</th>
+        <th>vBreadth</th>
+        <th>vMarginBottom</th>
+      </tr>
+      <tr>
+        <td>None of the three</td>
+        <td>0</td>
+        <td>null</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>vMarginTop only</td>
+        <td>Specified value</td>
+        <td>null</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>vBredth only</td>
+        <td>0</td>
+        <td>Specified value</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>vMarginBottom only</td>
+        <td>0</td>
+        <td>null</td>
+        <td>Specified value</td>
+      </tr>
+      <tr>
+        <td>vMarginTop and vBredth</td>
+        <td>Specified value</td>
+        <td>Specified value</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>vBredth and vMarginBottom</td>
+        <td>null</td>
+        <td>Specified value</td>
+        <td>Specified value</td>
+      </tr>
+      <tr>
+        <td>vMarginTop and vMarginBottom</td>
+        <td>Specified value</td>
+        <td>null</td>
+        <td>Specified value</td>
+      </tr>
+      <tr>
+        <td>All of the three</td>
+        <td>Specified value</td>
+        <td>null</td>
+        <td>Specified value</td>
+      </tr>
+    </table>
+
+    <h3>Display Position in Vertical Display Mode</h3>
+    <p>It is the same as the case in the horizontal display mode, except that you read the vMarginTop property as the right margin and the vMarginBottom property as the left margin. However, setting the vMarginForX property can reverse the readings above.</p>
+    <div class="contentFigure"><img src="img/VBreadthSample_VerticalMode.gif" alt="v axis for vertical display mode"/></div>
+
+
+    <h3>Stack Order of Layers</h3>
+    <p>The stack order of layers in a panel is determined by the zIndex property of each layer. A layer with a greater value will appear at an upper position than others with smaller values.</p>
+    <dl>
+      <dt>zIndex</dt>
+      <dd>Type: Number</dd>
+      <dd>Default value: 0</dd>
+      <dd>Stack order setting of layers in the panel. A layer with a greater value appears at an upper position (more to the front) than layers with smaller values.</dd>
+    </dl>
+
+  </div>
+
+  <div id="section05">
+    <h2>5. Formatting</h2>
+    <p>You can use the style property to format the layer. The value specified for the style property is reflected to the style attribute of the DOM element (div element) for display that the layer has. <a href="Layer.html#section03"></a>In the example shown in <a href="Layer.html#section03">&quot;3. Adding a Layer,&quot;</a> a photograph is specified as the background of lyr1 and a blue gradient effect is specified as that of lyr2. Note that no background format is specified for a layer by default. You can therefore see through the background of the panel.</p>
+  </div>
+
+  <div id="section06">
+    <h2>6. Other Key Properties and Methods</h2>
+    <p>A panel collection has properties for controlling the behavior of panels in it.</p>
+    <h3>Properties</h3>
+    <dl>
+      <dt>id</dt>
+      <dd>Type: String</dd>
+      <dd>Default value: null</dd>
+      <dd>The ID for uniquely identifying the object.</dd>
+
+      <dt>name</dt>
+      <dd>Type: String</dd>
+      <dd>Default value: null</dd>
+      <dd>The name of the object.</dd>
+
+      <dt>visible</dt>
+      <dd>Type: Boolean</dd>
+      <dd>Default value: true</dd>
+      <dd>Specify whether the object is visible or invisible. If true, it is visible.</dd>
+
+      <dt>mouseEventCapture</dt>
+      <dd>Type: Number</dd>
+      <dd>Default value: 3</dd>
+      <dd>The range to capture mouse events: 0: Not captured; 1: Except for children; 2: Children only; 3: All</dd>
+
+      <dt>fixedLayer</dt>
+      <dd>Type: Boolean</dd>
+      <dd>Default value: false</dd>
+      <dd>Specify whether the layer is handled as a fixed layer. If true, it will be a fixed layer and cannot be moved or zoomed in or out by dragging the mouse or using the wheel on the mouse.</dd>
+
+      <dt>vFotX</dt>
+      <dd>Type: Number</dd>
+      <dd>Default value: 0</dd>
+      <dd>How the property values are applied when the v axis represents the horizontal axis (0: vTop for the left, 1: vBottom for the left). No setting is required except when you switch the direction of the v axis.</dd>
+    </dl>
+
+    <h3>Methods</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>Redraws the layers. If the layer contains <a href="OLObject.html">on-layer objects</a>, such as figures, these objects are redrawn recursively.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>clear()</h4>
+      <p>Clears what is displayed on the layer.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>processBeforeRedraw(<span class="val">layer</span>)</h4>
+      <p>Pre-processing of redrawing the layer. By default, an empty function is defined. By redefining it, you can add some action, such as <a href="Figure.html">drawing a figure</a>, before the contents of the layer are redrawn.</p>
+      <dl>
+        <dt class="val">layer</dt>
+        <dd>Type: HuTime.Layer</dd>
+        <dd>The layer object to be redrawn.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>processAfterRedraw(<span class="val">layer</span>)</h4>
+      <p>Post-processing of redrawing the layer. By default, an empty function is defined. By redefining it, you can add some action, such as <a href="Figure.html">drawing a figure</a>, after the contents of the layer are redrawn.</p>
+      <dl>
+        <dt class="val">layer</dt>
+        <dd>Type: HuTime.Layer</dd>
+        <dd>The layer object to be redrawn.</dd>
+      </dl>
+    </div>
+
+
+  </div>
+
+  <div id="contentBottom">
+    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
+
+  </div>
+
+</div>
+
+<div id="footer">
+  
+  <table>
+    <tr>
+      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
+      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
+               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
+              resource="http://www.w3.org/TR/rdfa-syntax"
+              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

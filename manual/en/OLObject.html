@@ -1,0 +1,420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>On-layer Object - HuTime API Manual</title>
+  <link href="manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>On-layer Object</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>Figures, images and strings can be treated as on-layer objects. An on-layer object is created from a class derived from the HuTime.OnLayerObjectBase class. Unlike cases where figures, images and strings are displayed using a method of HuTime.Drawing, an on-layer object behaves as one object and therefore can receive events, etc. The on-layer object is useful for small numbers. However, you should preferably use methods of HuTime.Drawing if you want to use a large number of figures, images and strings, in terms of resource consumption.</p>
+
+    <table>
+      <tr>
+        <th style="width:150px;">Function</th>
+        <th style="width:300px;">On-layer Object</th>
+        <th style="width:300px;">Object Drawn by HuTime.Drawing</th>
+      </tr>
+      <tr>
+        <td>Redrawing</td>
+        <td>Is redrawn by the redraw method on an object basis.</td>
+        <td>Is redrawn by executing the display method of HuTime.Drawing again. Alternatively, execute the redraw method of the layer.</td>
+      </tr>
+      <tr>
+        <td>Redraw timing</td>
+        <td>Redrawing is specified automatically if it is added to a layer. You can also define processBeforeRedraw or processAfterRedraw for the object.</td>
+        <td>Is manually specified on processBeforeRedraw or processAfterRedraw of the layer.</td>
+      </tr>
+      <tr>
+        <td>Stack order on the screen</td>
+        <td>Specifies it with the zIndex property.</td>
+        <td>Specifies it with the order of drawing.</td>
+      </tr>
+      <tr>
+        <td>Visible/invisible control</td>
+        <td>Specifies it with the visible property.</td>
+        <td>Has no control mechanism by default. You should provide some form of control over the action for displaying the object that is described in processBeforeRedraw or processAfterRedraw of the layer.</td>
+      </tr>
+      <tr>
+        <td>Event reception</td>
+        <td>Can receive events directly. They are incorporated into the entire event flow process.</td>
+        <td>Cannot receive events directly. They are received by layers and then determined.</td>
+      </tr>
+      <tr>
+        <td>Resource consumption</td>
+        <td>Consumes a certain amount of resources as a single object.</td>
+        <td>Consumes a few resources.</td>
+      </tr>
+    </table>
+
+    <div class="contentFigure"><img src="img/OLObject01-01.png" alt="On Layer Object classes"/><p>List of on-layer objects (classes derived from the OnLayerObject class). The OnLayerObjectBase is defined as an abstract class, and is not used in practice.</p>
+    </div>
+  </div>
+
+  <div id="section02">
+    <h2>2. Types of On-layer Objects and Constructors</h2>
+    <p>Unlike when objects are drawn by the HuTime.Drawing method, the constructor is not used to specify the layer or canvas on which the object is drawn. This is performed when <a href="OLObject.html#section04">the object is added to the layer</a>. The constructor for each object has the following common arguments:</p>
+
+    <div>
+      <dl>
+        <dt class="val">style</dt>
+        <dd>Type: <a href="FigureStyle.html">FigureStyle object</a> (<a href="StringStyle.html">StringStyle object</a> in HuTime.String)</dd>
+        <dd>Specifies the format of the figure or string.</dd>
+        <dt class="val">rotate</dt>
+        <dd>Type: Number</dd>
+        <dd>The angle of rotation of the figure (in degrees). This can be optionally specified. If omitted, it is set to 0. The figure is rotated around the center of the figure itself. It cannot be specified for some figures, such as circle objects.</dd>
+      </dl>
+    </div>
+
+    <h3>Line (Polyline)</h3>
+    <div class="method">
+      <h4>HuTime.Line(<span class="val">style</span>, <span class="val">positions</span>)</h4>
+      <p>Specify the positions of nodes for the line as an array of <a href="Position.html">Position objects</a>. Unlike polygons, this method does not close the path. The rotation angle (<span class="val">rotate</span>) cannot be specified.</p>
+      <dl>
+        <dt class="val">positions</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a> array.</dd>
+        <dd>A collection of positions of nodes for the line.</dd>
+      </dl>
+    </div>
+
+    <h3>Polygon</h3>
+    <div class="method">
+      <h4>HuTime.Polygon(<span class="val">style</span>, <span class="val">positions</span>)</h4>
+      <p>Specify the vertex position of the polygon as an array of <a href="Position.html">Position objects</a>. This method connects the last position with the first position in the array, and closes the path. The rotation angle (<span class="val">rotate</span>) cannot be specified.</p>
+      <dl>
+        <dt class="val">positions</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a> array.</dd>
+        <dd>A collection of vertex positions of the polygon.</dd>
+      </dl>
+    </div>
+
+    <h3>Square</h3>
+    <div class="method">
+      <h4>HuTime.Square(<span class="val">style</span>, <span class="val">position</span>, <span class="val">width</span> [, <span class="val">rotate</span>])</h4>
+      <p>Specify the center of the square as the position using a <a href="Position.html">Position object</a>, and the size as the width (the length of a side) in pixels. When the rotation angle (<span class="val">rotate</span>) is set to 45, a rhombus is drawn.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The center position of the square.</dd>
+        <dt class="val">width</dt>
+        <dd>Type: Number</dd>
+        <dd>The width of the square (in pixels). It corresponds to the length of the side.</dd>
+      </dl>
+    </div>
+
+    <h3>Rectangle</h3>
+    <div class="method">
+      <h4>HuTime.Rect(<span class="val">style</span>, <span class="val">position1</span>, <span class="val">position2</span> [, <span class="val">rotate</span>])</h4>
+      <p>Specify the positions of two diagonal vertices of the rectangle as the position and size using <a href="Position.html">Position objects</a>.</p>
+      <dl>
+        <dt class="val">position1</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The position of one vertex of the rectangle, which is one endpoint of a diagonal joining two opposite vertices.</dd>
+        <dt class="val">position2</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The position of another vertex of the rectangle, which is the other endpoint of the diagonal joining two opposite vertices.</dd>
+      </dl>
+    </div>
+
+    <h3>Circle</h3>
+    <div class="method">
+      <h4>HuTime.Circle(<span class="val">style</span>, <span class="val">position</span>, <span class="val">width</span>)</h4>
+      <p>Specify the center of the circle as the position using a <a href="Position.html">Position object</a>, and the size as the width (the diameter) in pixels. The rotation angle (<span class="val">rotate</span>) cannot be specified.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The center position of the circle.</dd>
+        <dt class="val">width</dt>
+        <dd>Type: Number</dd>
+        <dd>The width of the figure (in pixels). It corresponds to the diameter of the circle.</dd>
+      </dl>
+    </div>
+
+    <h3>Circular Arc</h3>
+    <div class="method">
+      <h4>HuTime.Arc(<span class="val">style</span>, <span class="val">position</span>, <span class="val">radius</span>, <span class="val">startAngle</span>, <span class="val">endAngle</span>)</h4>
+      <p>Specify the center of the circle of which the circular arc is part as the position using a <a href="Position.html">Position object</a>, and the radius of the circle (in pixels) and the angles of the start and end positions (in degrees) as the size and shape. The rotation angle (<span class="val">rotate</span>) cannot be specified.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The center position of the circle of which the circular arc is part.</dd>
+        <dt class="val">radius</dt>
+        <dd>Type: Number</dd>
+        <dd>The radius of the circle of which the circular arc is part (in pixels).</dd>
+        <dt class="val">startAngle</dt>
+        <dd>Type: Number</dd>
+        <dd>The start angle of the circular arc (in degrees).</dd>
+        <dt class="val">endAngle</dt>
+        <dd>Type: Number</dd>
+        <dd>The end angle of the circular arc (in degrees).</dd>
+      </dl>
+    </div>
+
+    <h3>Sector</h3>
+    <div class="method">
+      <h4>HuTime.Pie(<span class="val">style</span>, <span class="val">position</span>, <span class="val">radius</span>, <span class="val">startAngle</span>, <span class="val">endAngle</span>)</h4>
+      <p>Specify the center of the circle of which the sector is part as the position using a <a href="Position.html">Position object</a>, and the radius of the circle (in pixels) and the angles of the start and end positions (in degrees) as the size and shape. The rotation angle (<span class="val">rotate</span>) cannot be specified.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The center position of the circle of which the sector is part.</dd>
+        <dt class="val">radius</dt>
+        <dd>Type: Number</dd>
+        <dd>The radius of the circle of which the sector is part (in pixels).</dd>
+        <dt class="val">startAngle</dt>
+        <dd>Type: Number</dd>
+        <dd>The start angle of the sector (in degrees).</dd>
+        <dt class="val">endAngle</dt>
+        <dd>Type: Number</dd>
+        <dd>The end angle of the sector (in degrees).</dd>
+      </dl>
+    </div>
+
+    <h3>Triangle</h3>
+    <div class="method">
+      <h4>HuTime.Triangle(<span class="val">style</span>, <span class="val">position</span>, <span class="val">width</span> [, <span class="val">rotate]</span>)</h4>
+      <p>Specify the center of the triangle (the center of gravity) as the position using a <a href="Position.html">Position object</a>, and the width (the length of the base) as the size in pixels.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The position of the center (the center of gravity) of the triangle.</dd>
+        <dt class="val">width</dt>
+        <dd>Type: Number</dd>
+        <dd>The width of the triangle (in pixels). It corresponds to the length of the base.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>3. Key Properties and Methods of On-layer Objects</h2>
+
+    <h3>Properties</h3>
+    <dl>
+      <dt>id</dt>
+      <dd>Type: String</dd>
+      <dd>Default value: null</dd>
+      <dd>The ID for uniquely identifying the object.</dd>
+
+      <dt>name</dt>
+      <dd>Type: String</dd>
+      <dd>Default value: null</dd>
+      <dd>The name of the object.</dd>
+
+      <dt>visible</dt>
+      <dd>Type: Boolean</dd>
+      <dd>Default value: true</dd>
+      <dd>Whether the object is visible or invisible. If true, it is visible.</dd>
+
+      <dt>zIndex</dt>
+      <dd>Type: Number</dd>
+      <dd>Default value: 0</dd>
+      <dd>The stack order of the object. An object with a greater value appears at an upper position.</dd>
+    </dl>
+
+    <h3>Methods</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>Redraws the object.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>addEventListener(<span class="val">type</span>, <span class="val">handler</span> [, <span class="val">useCapture</span>])</h4>
+      <p>Adds event handling.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+
+        <dt class="val">type</dt>
+        <dd>Type: String</dd>
+        <dd>The string that represents the type of the event.</dd>
+
+        <dt class="val">handler</dt>
+        <dd>Type: Function (function(<span class="val">ev</span>))</dd>
+        <dd>The function to handle the event. The <span class="val">ev</span> argument is an event object (type: HuTime.Event).</dd>
+
+        <dt class="val">useCapture</dt>
+        <dd>Type: Boolean</dd>
+        <dd>Specify which phase of the event is used. If true, the capture phase is used; if false, the bubbling phase is used. If omitted, it is set to false (the bubbling phase).</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>dispatchEvent(<span class="val">ev</span>)</h4>
+      <p style="padding-bottom: 0;">Triggers the event from the on-layer object.</p>
+      <dl style="padding-left:10px;">
+        <dt>Return value</dt>
+        <dd>None</dd>
+
+        <dt class="val">ev</dt>
+        <dd>Type: HuTime.Event object</dd>
+        <dd>The event object for the event to be triggered. <span class="val">ev</span>.target is set to the source on-layer object.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2><a name="04">4. Adding an Object to a Layer</a></h2>
+    <p>You can add an object to a layer by using the appendObject method of the layer. Also, you can remove an object from a layer by using the removeObject method of the layer. One layer can have only one object on it. Thus, when you execute appendObject on the object that has been placed on a different layer, it is removed from the layer to which it already belongs.</p>
+    <div class="method">
+      <h4><span class="val">layer</span>.appendObject(<span class="val">obj</span> [, <span class="val">canvas</span>])</h4>
+      <h4><span class="val">layer</span>.removeObject(<span class="val">obj</span>)</h4>
+      <dl>
+        <dt class="val">layer</dt>
+        <dd>Type: <a href="Layer.html">HuTime.Layer</a></dd>
+        <dd>The layer to which the object is added or from which it is removed.</dd>
+        <dt class="val">obj</dt>
+        <dd>Type: HuTime.OnLayerObjectBase</dd>
+        <dd>The object to be added or removed.</dd>
+        <dt class="val">canvas</dt>
+        <dd>Type: canvas element</dd>
+        <dd>The canvas on which the figure is drawn. This can be optionally specified. If omitted, it is set to <span class="val">layer</span>.canvas. It is used when you want to draw a figure on a Layer object with multiple canvas elements, such as <a href="TLineLayer.html">chronological table layer</a> or <a href="ChartLayer.html">chart layer</a>.</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure"><img src="img/OLObject04-01.png" alt="On Layer Object drawing example"/><p>An example of displaying on-layer objects (see the sample code below).</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="OLObjectSample04-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var objCircle = new HuTime.Circle(
+        new HuTime.FigureStyle(&quot;blue&quot;),
+        new HuTime.TVPosition(100, 50),
+        50
+    );
+    lyr.appendObject(objCircle);
+
+    var objImage = new HuTime.Image(
+        new HuTime.FigureStyle(),
+        new HuTime.TVPosition(50, 30),
+        &quot;img/ImageSample.jpg&quot;,
+        100
+    );
+    lyr.appendObject(objImage);
+
+    var objString = new HuTime.String(
+        new HuTime.StringStyle(20, &quot;red&quot;),
+        new HuTime.TVPosition(120, 80),
+        &quot;Hello World!&quot;
+    );
+    lyr.appendObject(objString);
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2><a name="05">5. Event Handling of On-layer Objects</a></h2>
+    <p>You can define an action that receives an event directly and deals with it for an on-layer object. How the event is handled is added by the addEventListener method. In the sample code below, the color of the circle changes when you click the gray rectangle that is displayed as an on-layer object.</p>
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="OLObjectSample05-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    var objCircle = new HuTime.Circle(
+        new HuTime.FigureStyle(&quot;blue&quot;),
+        new HuTime.TVPosition(50, 50),
+        100
+    );
+    lyr.appendObject(objCircle);
+
+    var objButton = new HuTime.Rect(
+        new HuTime.FigureStyle(&quot;lightgray&quot;),
+        new HuTime.TVPosition(100, 40), new HuTime.TVPosition(140, 60)
+    );
+    lyr.appendObject(objButton);
+    objButton.addEventListener(&quot;click&quot;, function(ev) {
+        if (objCircle.style.fillColor == &quot;blue&quot;)
+            objCircle.style.fillColor = &quot;red&quot;;
+        else
+            objCircle.style.fillColor = &quot;blue&quot;;
+        objCircle.redraw();
+    });
+
+    ht.redraw(0, 200);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <p style="text-indent:0;"><a href="index.html">Back to the Contents of this Manual</a></p>
+
+  </div>
+
+</div>
+
+<div id="footer">
+  
+  <table>
+    <tr>
+      <td><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><a href="http://www.hutime.org/about/license.html">HuTime Project</a></td>
+      <td class="banners"><span><a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="http://jigsaw.w3.org/css-validator/images/vcss"
+               alt="Valid CSS!"  class="microBanner" /></a></span><span about=""
+              resource="http://www.w3.org/TR/rdfa-syntax"
+              rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" class="microBanner" /></a></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>
