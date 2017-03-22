@@ -50,7 +50,7 @@
         <dd>The angle of rotation of the figure (in degrees). This argument is optional; if omitted, it is set to 0. The figure is rotated around the center of the figure itself. It cannot be specified for some figures, such as lines and circles.</dd>
         <dt class="val">canvas</dt>
         <dd>Type: canvas element</dd>
-        <dd>The canvas on which the figure is drawn. This argument is optional; if omitted, it is set to <span class="val">layer</span>.canvas. It is used when you want to draw a figure on a Layer object with multiple canvas elements, such as <a href="TLineLayer.html">chronological table layer</a> or <a href="ChartLayer.html">chart layer</a>.</dd>
+        <dd>The canvas on which the figure is drawn. This argument is optional; if omitted, it is set to <span class="val">layer</span>.canvas. It is used when you want to draw a figure on a Layer object with multiple canvas elements, such as <a href="TLineLayer.html">timeline layer</a> or <a href="ChartLayer.html">chart layer</a>.</dd>
       </dl>
     </div>
 
@@ -211,7 +211,7 @@
 
   <h2><a name="04">4. When Figures are Drawn</a></h2>
   <p>If a figure is drawn using a method of HuTime.Drawing, it disappears when the layer that it is on is redrawn. Therefore, you need to write your code so that each method of HuTime.Drawing is invoked when the layer is redrawn. In practice, write the code in the <a
-          href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), both of which have the ability to add operations when the layer is redrawn. When you use the processBeforeRedraw method, the figure is drawn behind records on a <a href="TLineLayer.html">chronological table layer</a>, plots on a <a href="ChartLayer.html">chart layer</a>, <a href="OLObject.html">on-layer objects</a>, etc. On the contrary, when you use the processAfterRedraw method, the figure is drawn in front of these.</p>
+          href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), both of which have the ability to add operations when the layer is redrawn. When you use the processBeforeRedraw method, the figure is drawn behind records on a <a href="TLineLayer.html">timeline layer</a>, plots on a <a href="ChartLayer.html">chart layer</a>, <a href="OLObject.html">on-layer objects</a>, etc. On the contrary, when you use the processAfterRedraw method, the figure is drawn in front of these.</p>
 
   <div class="contentFigure"><img src="/manual/img/Figure04-01.png" alt="figure drawing example"/><p>An example of drawing figures (see the sample code below). As the circle is drawn by the processBeforeRedraw method, it is displayed behind the chart. On the other hand, the triangle, drawn by the processAfterRedraw method, is displayed in front of the chart.</p>
   </div>

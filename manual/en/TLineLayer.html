@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Chronological Table Layer - HuTime API Manual</title>
+  <title>Timeline Layer - HuTime API Manual</title>
   <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
   <meta property="dcterms:title" content="HuTime Manual" />
   <meta property="dcterms:description" content="User's manual about usage of HuTime." />
@@ -12,7 +12,7 @@
 <div id="header">
   <div style="height:50px; float:left;">
     <h2>HuTime API Manual</h2>
-    <h1>Chronological Table Layer</h1>
+    <h1>Timeline Layer</h1>
   </div>
   <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
             style="padding-top:13px"/></a></div>
@@ -23,11 +23,11 @@
 
   <div id="section01">
     <h2>1. Overview</h2>
-    <p>A chronological table is displayed with a chronological table layer (HuTime.TLineLayer). The chronological table layer, a class derived from the <a href="Layer.html">Layer class</a>, can basically be used like other layers, for example, when you put it on a panel. Source data for a chronological table can be separately given in a different form, such as a CSV file. You can use a record set for the chronological table (HuTime.TLineRecordset) to specify which items (columns) in the source data correspond to the start and end times, as well as which items are displayed.</p>
+    <p>A timeline (e.g., chronological table) is displayed with a timeline layer (HuTime.TLineLayer). The timeline layer, a class derived from the <a href="Layer.html">Layer class</a>, can basically be used like other layers, for example, when you put it on a panel. Source data for a timeline can be separately given in a different form, such as a CSV file. You can use a record set for the timeline (HuTime.TLineRecordset) to specify which items (columns) in the source data correspond to the start and end times, as well as which items are displayed.</p>
   </div>
 
   <div id="section02">
-    <h2>2. Source Data for a Chronological Table</h2>
+    <h2>2. Source Data for a Timeline</h2>
     <p>We recommend for easier handling that you use a file whose first line is the title row for the csv (comma separated value) file or tsv (tab separated value) file. Here is an example of source data, which contains the list of typhoons in 2015 (the first several rows only):</p>
 
     <div>
@@ -73,7 +73,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
     <div>
       <h3>Overview of the Record Set</h3>
-      <p>The record set for the chronological table is used.</p>
+      <p>The record set for the timeline is used.</p>
       <div class="method">
         <h4>HuTime.CalendarTLineRecordset(<span class="val">source</span>, <span class="val">tBegin</span>, <span class="val">tEnd</span>, <span class="val">label</span> [, <span class="val">calendarId</span>, [, <span class="val">rangeStyle</span> [, <span class="val">labelStyle</span>]]])</h4>
         <dl>
@@ -91,7 +91,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
           <dt><span class="val">label</span></dt>
           <dd>Type: String or number</dd>
-          <dd>The item name or the column number for the strings that are displayed in the chronological table, in the record.</dd>
+          <dd>The item name or the column number for the strings that are displayed in the timeline, in the record.</dd>
 
           <dt><span class="val">calendarId</span></dt>
           <dd>Type: String</dd>
@@ -99,11 +99,11 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
           <dt><span class="val">rangeStyle</span></dt>
           <dd>Type: HuTime.FigureStyle</dd>
-          <dd>The format of the band that shows the record duration on the chronological table. If omitted, it is formatted with the default for the chronological table layer.</dd>
+          <dd>The format of the band that shows the record duration on the timeline. If omitted, it is formatted with the default for the timeline layer.</dd>
 
           <dt><span class="val">labelStyle</span></dt>
           <dd>Type: HuTime.StringStyle</dd>
-          <dd>The format of the record label on the chronological table. If omitted, it is formatted with the default for the chronological table layer.</dd>
+          <dd>The format of the record label on the timeline. If omitted, it is formatted with the default for the timeline layer.</dd>
         </dl>
       </div>
     </div>
@@ -111,9 +111,9 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
   <div id="section04">
     <h2>4. Adding a Layer to the Panel and Displaying</h2>
-    <p>Just like other layers, you can add a chronological table layer to a panel using the appendLayer method of a Panel object. The object is drawn according to the sequence of the redraw method, but if the source data has not been read completely, it takes time to show the object.</p>
+    <p>Just like other layers, you can add a timeline layer to a panel using the appendLayer method of a Panel object. The object is drawn according to the sequence of the redraw method, but if the source data has not been read completely, it takes time to show the object.</p>
 
-    <div class="contentFigure"><img src="/manual/img/TLineLayer04-01.png" alt="TLine layer example"/><p>An example of displaying a chronological table layer (see the sample code below). The source data is the list of typhoons in 2015, which is shown in <a href="TLineLayer.html#section02">&quot;2. Source Data for a Chronological Table.&quot;</a></p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer04-01.png" alt="TLine layer example"/><p>An example of displaying a timeline layer (see the sample code below). The source data is the list of typhoons in 2015, which is shown in <a href="TLineLayer.html#section02">&quot;2. Source Data for a Timeline.&quot;</a></p>
     </div>
 
     <div>
@@ -149,9 +149,9 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
   <div id="section05">
     <h2>5. Formatting</h2>
-    <p>In a chronological table, you can format the band for duration, and labels. A chronological table can be formatted on a record-set basis. When a format value is passed to the constructor of a record set as an argument, it will be the default format of that record set. The following figure shows an example with some format set to the sample code in <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying.&quot;</a></p>
+    <p>In a timeline, you can format the band for duration, and labels. A timeline can be formatted on a record-set basis. When a format value is passed to the constructor of a record set as an argument, it will be the default format of that record set. The following figure shows an example with some format set to the sample code in <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying.&quot;</a></p>
 
-    <div class="contentFigure"><img src="/manual/img/TLineLayer05-01.png" alt="TLine layer example"/><p>An example of formatting the chronological table layer (see the sample code below). <a href="TLineLayer.html#section04"></a>In the example above, the chronological table of the sample code in &quot;2. Source Data for a Chronological Table&rdquo; and <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying&rdquo;</a> is formatted by passing arguments to the constructor of HuTime.CalendarTLineRecordset.</p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer05-01.png" alt="TLine layer example"/><p>An example of formatting the timeline layer (see the sample code below). <a href="TLineLayer.html#section04"></a>In the example above, the timeline of the sample code in <a href="TLineLayer.html#section04">&quot;4. Adding a Layer to the Panel and Displaying&rdquo;</a> is formatted by passing arguments to the constructor of HuTime.CalendarTLineRecordset.</p>
     </div>
 
     <div>
@@ -192,10 +192,10 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
   <div id="section06">
     <h2>6. Displaying Multiple Data Sets</h2>
-    <p>You can add multiple record sets to a chronological table layer by using the appendRecordset property. When different record sets have different formats, a chronological table can show the differences of record sets.</p>
+    <p>You can add multiple record sets to a timeline layer by using the appendRecordset property. When different record sets have different formats, a timeline can show the differences of record sets.</p>
     <div class="method">
       <h4>appendRecordset(<span class="val">recordset</span>)</h4>
-      <p>Adds the record set to a chronological table layer.</p>
+      <p>Adds the record set to a timeline layer.</p>
       <dl>
         <dt class="val">recordset</dt>
         <dd>Type: HuTime.TLineRecordset</dd>
@@ -203,7 +203,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
       </dl>
     </div>
 
-    <div class="contentFigure"><img src="/manual/img/TLineLayer06-01.png" alt="TLine layer example"/><p>An example of the chronological table layer with multiple record sets added to it (see the sample code below). The Hurricane2015.csv file (the list of hurricanes in 2015) is added as new source data using the appendRecordset method, and the band for duration is formatted in light blue and the label in red.</p>
+    <div class="contentFigure"><img src="/manual/img/TLineLayer06-01.png" alt="TLine layer example"/><p>An example of the timeline layer with multiple record sets added to it (see the sample code below). The Hurricane2015.csv file (the list of hurricanes in 2015) is added as new source data using the appendRecordset method, and the band for duration is formatted in light blue and the label in red.</p>
     </div>
 
     <div>
@@ -248,7 +248,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
   <div id="section07">
     <h2>7. Formatting Individual Records</h2>
-    <p>To color-code data in a chronological table based on a particular item in the same record set, set a color-coding function for the rangeStyle property of the record set object. A HuTime.TLineRecord object is passed to the set function as an argument, and return a HuTime.FigureStyle object based on its contents.</p>
+    <p>To color-code data in a timeline based on a particular item in the same record set, set a color-coding function for the rangeStyle property of the record set object. A HuTime.TLineRecord object is passed to the set function as an argument, and return a HuTime.FigureStyle object based on its contents.</p>
     <p>In the figure and sample code below, if the data item Category in the source data has a value of 4 or more, the record is displayed in yellow, and it has a value of 3 or less, the record is displayed in light blue. First, two formats (styleStrong and styleWeak) are defined. Next, a record set object is created additionally, and the settings for reading the data item Category are added to that record set. Finally, a processing for outputting the formats to the rangeStyle property of the created record set is described.</p>
     <div class="contentFigure"><img src="/manual/img/TLineLayer07-01.png" alt="TLine layer example"/><p>An example of formatting individual record (see the sample code below). Typhoons in category 4 or higher are displayed in yellow, and those in category 3 or lower in light blue.</p>
     </div>
@@ -301,7 +301,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
 
   <div id="section08">
     <h2>8. Events Handling for Records</h2>
-    <p>The actions listed below on records on a chronological table can be supplemented as an event on a chronological table layer. The clicked record is stored in records of the event object as an array. When multiple overlapped records are displayed, the corresponding records are all stored in records. An event handler is added using addEventListener, just like other events.</p>
+    <p>The actions listed below on records on a timeline can be supplemented as an event on a timeline layer. The clicked record is stored in records of the event object as an array. When multiple overlapped records are displayed, the corresponding records are all stored in records. An event handler is added using addEventListener, just like other events.</p>
 
     <table>
       <tr>
@@ -318,7 +318,7 @@ Number,From,To,Name,PeakWS,PeakAP,Category
       </tr>
     </table>
 
-    <p>In the example below, the recordClick function is added to the chronological table layer as plotclick event handling. The recordClick function concatenates the labels of clicked records and displays the combined label in the pop-up window.</p>
+    <p>In the example below, the recordClick function is added to the timeline layer as plotclick event handling. The recordClick function concatenates the labels of clicked records and displays the combined label in the pop-up window.</p>
 
     <div>
       <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/TLineLayerSample08-01.html" target="_blank">click here for a running example</a>):</p>

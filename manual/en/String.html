@@ -24,7 +24,7 @@
   <p>Strings are drawn on the canvas element of a <a href="Layer.html">Layer object</a>. Just like <a href="Figure.html">displaying figures</a>, one method for displaying a string and another for drawing the rectangle path containing the string are available.</p>
 
   <h2><a name="02">2. Displaying Strings</a></h2>
-  <p>The method for displaying a string is defined in the HuTime.Drawing class, just like figures. drawImage is the method for displaying the string, and pathString is the one for drawing the rectangle path containing the string. Unlike other figures and images, you specify a format for the path-drawing method, as the size of a string varies depending on its format. You also use <a href="StringStyle.html">HuTime.StringStyle</a> to format the string.</p>
+  <p>The method for displaying a string is defined in the HuTime.Drawing class, just like figures. drawString is the method for displaying the string, and pathString is the one for drawing the rectangle path containing the string. Unlike other figures and images, you specify a format for the path-drawing method, as the size of a string varies depending on its format. You also use <a href="StringStyle.html">HuTime.StringStyle</a> to format the string.</p>
 
   <div class="method">
     <h4>HuTime.Drawing.drawString(<span class="val">style</span>, <span class="val">layer</span>, <span class="val">position</span>, <span class="val">text</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
@@ -58,7 +58,7 @@
   </div>
 
   <h2><a name="03">3. When Strings are Displayed</a></h2>
-  <p><a href="Figure.html#04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the string is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">chronological table layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures do. Describe it. They have the same relationship with plots on a chart and <a href="String.html#">on-layer objects</a> as other figures do.</p>
+  <p><a href="Figure.html#04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the string is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">timeline layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures do. Describe it. They have the same relationship with plots on a chart and <a href="String.html#">on-layer objects</a> as other figures do.</p>
 
   <div class="contentFigure"><img src="/manual/img/String03-01.png" alt="string drawing example"/><p>An example of displaying a string (see the sample code below). The font is set to 32px in size and the string is centered, using the formatting (HuTime.StringStyleobject).</p>
   </div>
