@@ -22,12 +22,12 @@
 <div id="mainContent">
   <div id="section01">
     <h2>1. Overview</h2>
-    <p>HuTime is a platform for visualizing and analyzing chronological tables and charts on a Web page. You can add new ideas to the view of your chronological table or chart or develop a new Web application, through HuTime APIs.</p>
+    <p>HuTime is a platform for visualizing and analyzing timelines and charts on a Web page. You can add new ideas to the view of your timeline or chart or develop a new Web application, through HuTime APIs.</p>
   </div>
 
   <div id="section02">
     <h2>2. Basic Structure</h2>
-    <p>HuTime consists primarily of three types of containers, a <a href="PanelCollection.html">panel collection</a>, <a href="Panel.html">panel</a>, and <a href="Layer.html">layer</a>, and of an <a href="HuTimeRoot.html">application root</a> that provides control over these containers. Data, figures, text, images, and others are displayed on layers. You can also combine these layers together on a panel for use. A wide variety of classes are defined for layers depending on their purposes, such as displaying chronological tables, charts or scales.</p>
+    <p>HuTime consists primarily of three types of containers, a <a href="PanelCollection.html">panel collection</a>, <a href="Panel.html">panel</a>, and <a href="Layer.html">layer</a>, and of an <a href="HuTimeRoot.html">application root</a> that provides control over these containers. Data, figures, text, images, and others are displayed on layers. You can also combine these layers together on a panel for use. A wide variety of classes are defined for layers depending on their purposes, such as displaying timelines, charts or scales.</p>
     <table>
       <tr>
         <th style="width: 120px;">Type</th>
@@ -52,7 +52,7 @@
       <tr>
         <td>Layer</td>
         <td>HuTime.Layer</td>
-        <td>Serves as a container that displays figures and text. Multiple types of layer classes are available depending on the functions, such as for chronological tables or for charts.</td>
+        <td>Serves as a container that displays figures and text. Multiple types of layer classes are available depending on the functions, such as for timelines or for charts.</td>
       </tr>
     </table>
     <div class="contentFigure"><img src="/manual/img/HuTimeStructure.gif" alt="HuTime structure"/></div>
@@ -82,7 +82,7 @@
 
   <div id="section05">
     <h2>5. Hierarchical Structure of Containers and the Relationship between Containers and DOM Elements</h2>
-    <p>As containers, a panel collection, panel, and layer correspond to objects of HuTime.PanelCollection, HuTime.TilePanel, HuTime.Layer and HuTime.OverlayPanel classes. Each of the classes is associated with a DOM element for display (div element) via the element property. Based on containment relationships between objects, objects for the classes are put into a hierarchy of objects, and at the same time, DOM elements associated with these objects are also added, in the form of hierarchy, to the DOM elements in a Web page prepared by a user.</p>
+    <p>As containers, a panel collection, panel, and layer correspond to objects of HuTime.PanelCollection, HuTime.TilePanel (or HuTime.OverlayPanel), and HuTime.Layer classes, respectively. Each of the classes is associated with a DOM element for display (div element) via the element property. Based on containment relationships between objects, objects for the classes are put into a hierarchy of objects, and at the same time, DOM elements associated with these objects are also added, in the form of hierarchy, to the DOM elements in a Web page prepared by a user.</p>
     <p>The HuTime.PanelCollection class has the canvas element, which is used to obtain mouse events and control the shape of the cursor, and is displayed on all of other DOM elements. This canvas element can be referenced through the captureElement property of each class. Furthermore, the HuTime.Layer class has the canvas element for drawing associated with it. Figures, text images, and others that are displayed on a layer are drawn.</p>
     <p>The application root (a HuTime object), located at the top of the object tree, accommodates one or more panel collections and provides control over how the entire application works, including managing the displayed range. Each object under the panel collection in the hierarchy can refer to the HuTime object to which the object itself belongs, through the hutimeRoot property.</p>
     <div class="contentFigure"><img src="/manual/img/ObjectTree.gif" alt="object tree"/></div>

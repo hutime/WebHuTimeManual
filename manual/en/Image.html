@@ -62,12 +62,12 @@
 
       <dt class="val">canvas</dt>
       <dd>Type: canvas element</dd>
-      <dd>The canvas on which the figure is drawn. This can be optionally specified. If omitted, it is set to <span class="val">layer</span>.canvas. It is used when you want to draw a image on a Layer object with multiple canvas elements, such as <a href="TLineLayer.html">chronological table layer</a> or <a href="ChartLayer.html">chart layer</a>.</dd>
+      <dd>The canvas on which the figure is drawn. This can be optionally specified. If omitted, it is set to <span class="val">layer</span>.canvas. It is used when you want to draw a image on a Layer object with multiple canvas elements, such as <a href="TLineLayer.html">timeline layer</a> or <a href="ChartLayer.html">chart layer</a>.</dd>
     </dl>
   </div>
 
   <h2><a name="03">3. When Images are Displayed</a></h2>
-  <p><a href="Figure.html#04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the image is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">chronological table layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures.</p>
+  <p><a href="Figure.html#04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the image is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">timeline layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures.</p>
 
   <div class="contentFigure"><img src="/manual/img/Image03-01.png" alt="Image drawing example"/><p>An example of displaying images (see the sample code below).</p>
   </div>

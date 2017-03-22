@@ -60,16 +60,16 @@
 
   <div id="section03">
     <h2>3. Adding a Layer</h2>
-    <p>You can add a layer using the appendPanel method of a panel object.</p>
+    <p>You can add a layer using the appendLayer method of a panel object.</p>
     <div class="method">
-      <h4><span class="val">pnl</span>.appendPanelCollection(<span class="val">layer</span>)</h4>
+      <h4><span class="val">pnl</span>.appendLayer(<span class="val">layer</span>)</h4>
       <dl>
         <dt><span class="val">pnl</span></dt>
-        <dd>Type: HuTime</dd>
+        <dd>Type: HuTime.PanelBase</dd>
         <dd>The panel object to which the layer is added.</dd>
 
         <dt><span class="val">layer</span></dt>
-        <dd>Type: HuTime.PanelBase</dd>
+        <dd>Type: HuTime.Layer</dd>
         <dd>The layer that is added to the panel.</dd>
       </dl>
     </div>
@@ -206,7 +206,7 @@
 
   <div id="section06">
     <h2>6. Other Key Properties and Methods</h2>
-    <p>A panel collection has properties for controlling the behavior of panels in it.</p>
+    <p>A layer has properties for specifying the behavior of layers in the panel.</p>
     <h3>Properties</h3>
     <dl>
       <dt>id</dt>

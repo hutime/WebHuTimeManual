@@ -30,7 +30,7 @@
     <p>HuTime can handle two types of events: mouse events and HuTime&apos;s own events. These types of events are slightly different in terms of event propagation.</p>
 
     <h3>(1) Mouse Event</h3>
-    <p>Trigger conditions for this type of events are the same as those for mouse events of DOM elements. Trigger sources may include basic structures, such as panel collections, panels, and layers, as well as figure objects on layers. However, this type of event uses a HuTime&apos;s own mouse event object (HuTime.MouseEvent), which is different from that for DOM elements. The following mouse events are targeted:</p>
+    <p>Trigger conditions for this type of events are the same as those for mouse events of DOM elements. Event targets may include basic structures, such as panel collections, panels, and layers, as well as figure objects on layers. However, this type of event uses a HuTime&apos;s own mouse event object (HuTime.MouseEvent), which is different from that for DOM elements. The following mouse events are targeted:</p>
     <p>click, dblclick, mouseup, mousedown, mousemove, mouseover, mouseout, wheel</p>
 
     <h3>(2) HuTime&apos;s own Events</h3>
@@ -48,11 +48,11 @@
     <p>Events are propagated differently between mouse events and HuTime&apos;s own events.</p>
 
     <h3>(1) Mouse Event</h3>
-    <p>To capture a mouse operation on a figure or others that is drawn on canvas, captureElement (of the canvas element) of the panel collection object is used to receive the mouse event. From the perspective of the DOM tree, the trigger source is captureElement, and HuTime deals with it in the target phase of this event. When an event is triggered, captureElement passes control of it to the HuTime object, which traces back the object tree and tries to extract the trigger source object and the type of the event. Next, control is returned to the HuTime object via the capture phase in which the trigger source object is reached, to the target phase at the trigger source, to the bubbling phase from the trigger source. When event handling is finished in the object tree, the HuTime object returns control to captureElement. However, the bubbling phase will not occur afterward in the DOM tree because it is prevented in order to avoid unintended behavior.</p>
+    <p>To capture a mouse operation on a figure or others that is drawn on canvas, captureElement (of the canvas element) of the panel collection object is used to receive the mouse event. From the perspective of the DOM tree, the event target is captureElement, and HuTime deals with it in the target phase of this event. When an event is triggered, captureElement passes control of it to the HuTime object, which traces back the object tree and tries to extract the target object and the type of the event. Next, control is returned to the HuTime object via the capture phase in which the target object is reached, to the target phase at the target object, to the bubbling phase from the traget. When event handling is finished in the object tree, the HuTime object returns control to captureElement. However, the bubbling phase will not occur afterward in the DOM tree because it is prevented in order to avoid unintended behavior.</p>
     <div class="contentFigure"><img src="/manual/img/EventFlow.gif" alt="mouse event"/></div>
 
     <h3>(2) HuTime&apos;s own Events</h3>
-    <p>When a HuTime&apos;s own event is triggered, the trigger source passes control to the HuTime object. After that, control is returned to the HuTime object via the capture phase in which the trigger source object is reached, to the target phase at the trigger source, to the bubbling phase from the trigger source, then causing the process to end. HuTime&apos;s own events are not propagated to the DOM tree.</p>
+    <p>When a HuTime&apos;s own event is triggered, the target object passes control to the HuTime object. After that, control is returned to the HuTime object via the capture phase in which the target object is reached, to the target phase at the target object, to the bubbling phase from the target, then causing the process to end. HuTime&apos;s own events are not propagated to the DOM tree.</p>
   </div>
 
 
