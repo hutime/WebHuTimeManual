@@ -277,66 +277,70 @@ var pos2 = new HuTime.XYPosition(40, HuTime.PositionConstant.yTop);
     </div>
   </div>
 
-  <h2><a name="Position05">5. Converting Coordinate Values into Integers</a></h2>
-  <p>If a decimal is used for positioning (XY coordinates) on HTML5 Canvas, anti-aliasing may blur drawn objects. To avoid this situation on your HuTime, use the Position class that has the ability to convert coordinate values on canvas that are output from a Position object into an integer, to wrap the original Position class. The three types of classes below are available depending on the way they are converted into integers. You can apply these classes to whichever Position classes for the TV coordinate system or XY coordinate system.</p>
+  <div id="section05">
+    <h2>5. Converting Coordinate Values into Integers</h2>
+    <p>If a decimal is used for positioning (XY coordinates) on HTML5 Canvas, anti-aliasing may blur drawn objects. To avoid this situation on your HuTime, use the Position class that has the ability to convert coordinate values on canvas that are output from a Position object into an integer, to wrap the original Position class. The three types of classes below are available depending on the way they are converted into integers. You can apply these classes to whichever Position classes for the TV coordinate system or XY coordinate system.</p>
 
-  <h3>Constructor</h3>
-  <div class="method">
-    <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
-    <p>The coordinate position on the screen, rounded down to convert it into an integer.</p>
-    <dl>
-      <dt class="val">position</dt>
-      <dd>Type: HuTime.PositionBase</dd>
-      <dd>The position to be converted into the integer.</dd>
-    </dl>
-  </div>
-  <div class="method">
-    <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
-    <p>The coordinate position on the screen, rounded up to convert it into an integer.</p>
-    <dl>
-      <dt class="val">position</dt>
-      <dd>Type: HuTime.PositionCeil</dd>
-      <dd>The position to be converted into the integer.</dd>
-    </dl>
-  </div>
-  <div class="method">
-    <h4>HuTime.PositionRound(<span class="val">position</span>)</h4>
-    <p>The coordinate position on the screen, rounded to the nearest integer to convert it into an integer.</p>
-    <dl>
-      <dt class="val">position</dt>
-      <dd>Type: HuTime.PositionBase</dd>
-      <dd>The position to be converted into the integer.</dd>
-    </dl>
-  </div>
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
+      <p>The coordinate position on the screen, rounded down to convert it into an integer.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionBase</dd>
+        <dd>The position to be converted into the integer.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
+      <p>The coordinate position on the screen, rounded up to convert it into an integer.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionCeil</dd>
+        <dd>The position to be converted into the integer.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.PositionRound(<span class="val">position</span>)</h4>
+      <p>The coordinate position on the screen, rounded to the nearest integer to convert it into an integer.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionBase</dd>
+        <dd>The position to be converted into the integer.</dd>
+      </dl>
+    </div>
 
-  <div>
-    <p><span style="font-weight:700;">Sample code</span> (Applicable Lines Only):</p>
-    <pre class="code">
+    <div>
+      <p><span style="font-weight:700;">Sample code</span> (Applicable Lines Only):</p>
+      <pre class="code">
 var pos1 = new HuTime.PositionFloor(new HuTime.TVPosition(140, 20));
 var pos2 = new HuTime.PositionCeil(new HuTime.RelativeTVPosition(new HuTime.XYPosition(40, HuTime.PositionConstant.yTop), -10, 0));
-  </pre>
+      </pre>
+    </div>
   </div>
 
-  <h2><a name="Position06">6. Use Cases</a></h2>
-  <p>Here are some use cases for positioning on the layer.</p>
-  <table>
-    <tr>
-      <th style="width:200px;">Use Case</th>
-      <th>How to specify Position</th>
-    </tr>
-    <tr>
-      <td>Show an annotation at a particular point on the scatter chart.</td>
-      <td>Based on the position of the point specified as an absolute position of the TV coordinates (HuTime.TVPosition), specify the display position of the annotation by using the relative position of the XY coordinates (HuTime.RelativeXYPosition).</td>
-    </tr>
-    <tr>
-      <td>Show the error bar at the top of each of bars.</td>
-      <td>Based on the top position of the bar specified as an absolute position of the TV coordinates (HuTime.TVPosition), specify the start and end points of the error bars by using the relative position of the TV coordinates (HuTime.RelativeTVPosition).</td>
-    </tr>
-    <tr>
-      <td>Show a title at the top-left position of the layer.</td>
-      <td>Using the constants indicating the left end and top end (HuTime.PositionConstant.xLeft and HuTime.PositionConstant.yTop), specify the top left position of the layer as an absolute position of the XY coordinates (HuTime.XYPosition). To set a margin, specify it as a relative position of the XY coordinates (HuTime.RelativeXYPosition).</td>
-    </tr>
-  </table>
+  <div id="section06">
+    <h2>6. Use Cases</h2>
+    <p>Here are some use cases for positioning on the layer.</p>
+    <table>
+      <tr>
+        <th style="width:200px;">Use Case</th>
+        <th>How to specify Position</th>
+      </tr>
+      <tr>
+        <td>Show an annotation at a particular point on the scatter chart.</td>
+        <td>Based on the position of the point specified as an absolute position of the TV coordinates (HuTime.TVPosition), specify the display position of the annotation by using the relative position of the XY coordinates (HuTime.RelativeXYPosition).</td>
+      </tr>
+      <tr>
+        <td>Show the error bar at the top of each of bars.</td>
+        <td>Based on the top position of the bar specified as an absolute position of the TV coordinates (HuTime.TVPosition), specify the start and end points of the error bars by using the relative position of the TV coordinates (HuTime.RelativeTVPosition).</td>
+      </tr>
+      <tr>
+        <td>Show a title at the top-left position of the layer.</td>
+        <td>Using the constants indicating the left end and top end (HuTime.PositionConstant.xLeft and HuTime.PositionConstant.yTop), specify the top left position of the layer as an absolute position of the XY coordinates (HuTime.XYPosition). To set a margin, specify it as a relative position of the XY coordinates (HuTime.RelativeXYPosition).</td>
+      </tr>
+    </table>
+  </div>
 
   <div id="contentBottom">
     <!-- #include file="contentBottom.html" -->

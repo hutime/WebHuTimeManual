@@ -20,52 +20,57 @@
 
 <div id="mainContent">
 
-  <h2>1. Overview</h2>
-  <p>Strings are drawn on the canvas element of a <a href="Layer.html">Layer object</a>. Just like <a href="Figure.html">displaying figures</a>, one method for displaying a string and another for drawing the rectangle path containing the string are available.</p>
-
-  <h2><a name="02">2. Displaying Strings</a></h2>
-  <p>The method for displaying a string is defined in the HuTime.Drawing class, just like figures. drawString is the method for displaying the string, and pathString is the one for drawing the rectangle path containing the string. Unlike other figures and images, you specify a format for the path-drawing method, as the size of a string varies depending on its format. You also use <a href="StringStyle.html">HuTime.StringStyle</a> to format the string.</p>
-
-  <div class="method">
-    <h4>HuTime.Drawing.drawString(<span class="val">style</span>, <span class="val">layer</span>, <span class="val">position</span>, <span class="val">text</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
-    <h4>HuTime.Drawing.pathString(<span class="val">style</span>, <span class="val">layer</span>, <span class="val">position</span>, <span class="val">text</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
-    <p>Specify the reference position of the string using a <a href="Position.html">Position object</a>. Where the reference position is in the string is determined by the format. Similar to other figures, you can also rotate the string around the reference position.</p>
-    <dl>
-      <dt class="val">style</dt>
-      <dd>Type: <a href="StringStyle.html">HuTime.StringStyle</a></dd>
-      <dd>Specifies the format of the string (e.g., the font, size, and color).</dd>
-
-      <dt class="val">layer</dt>
-      <dd>Type: <a href="Layer.html">HuTime.Layer</a></dd>
-      <dd>The layer on which the string is displayed.</dd>
-
-      <dt class="val">position</dt>
-      <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
-      <dd>The reference position of the string. The reference position in the string is determined by the textAlign and textBaseline properties of the format (<a href="String.html#">HuTime.StringStyle</a> object).</dd>
-
-      <dt><span class="val">text</span></dt>
-      <dd>Type: String</dd>
-      <dd>Text in the string to be displayed. If the text contains newline characters, it appears on multiple lines.</dd>
-
-      <dt><span class="val">rotate</span></dt>
-      <dd>Type: Number</dd>
-      <dd>The angle of rotation of the string (in degrees). This can be optionally specified. If omitted, it is set to 0. It is rotated around the point indicated by the position property.</dd>
-
-      <dt><span class="val">canvas</span></dt>
-      <dd>Type: canvas element</dd>
-      <dd>canvas on which the figure is drawn. This can be optionally specified. If omitted, it is set to layer.canvas. It is used when you want to draw a string on a Layer object with multiple canvas elements, such as <a href="String.html#">RecordLayer</a>.</dd>
-    </dl>
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>Strings are drawn on the canvas element of a <a href="Layer.html">Layer object</a>. Just like <a href="Figure.html">displaying figures</a>, one method for displaying a string and another for drawing the rectangle path containing the string are available.</p>
   </div>
 
-  <h2><a name="03">3. When Strings are Displayed</a></h2>
-  <p><a href="Figure.html#04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the string is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">timeline layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures do. Describe it. They have the same relationship with plots on a chart and <a href="String.html#">on-layer objects</a> as other figures do.</p>
+  <div id="section02">
+    <h2>2. Displaying Strings</h2>
+    <p>The method for displaying a string is defined in the HuTime.Drawing class, just like figures. drawString is the method for displaying the string, and pathString is the one for drawing the rectangle path containing the string. Unlike other figures and images, you specify a format for the path-drawing method, as the size of a string varies depending on its format. You also use <a href="StringStyle.html">HuTime.StringStyle</a> to format the string.</p>
 
-  <div class="contentFigure"><img src="/manual/img/String03-01.png" alt="string drawing example"/><p>An example of displaying a string (see the sample code below). The font is set to 32px in size and the string is centered, using the formatting (HuTime.StringStyleobject).</p>
+    <div class="method">
+      <h4>HuTime.Drawing.drawString(<span class="val">style</span>, <span class="val">layer</span>, <span class="val">position</span>, <span class="val">text</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
+      <h4>HuTime.Drawing.pathString(<span class="val">style</span>, <span class="val">layer</span>, <span class="val">position</span>, <span class="val">text</span> [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
+      <p>Specify the reference position of the string using a <a href="Position.html">Position object</a>. Where the reference position is in the string is determined by the format. Similar to other figures, you can also rotate the string around the reference position.</p>
+      <dl>
+        <dt class="val">style</dt>
+        <dd>Type: <a href="StringStyle.html">HuTime.StringStyle</a></dd>
+        <dd>Specifies the format of the string (e.g., the font, size, and color).</dd>
+
+        <dt class="val">layer</dt>
+        <dd>Type: <a href="Layer.html">HuTime.Layer</a></dd>
+        <dd>The layer on which the string is displayed.</dd>
+
+        <dt class="val">position</dt>
+        <dd>Type: <a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>The reference position of the string. The reference position in the string is determined by the textAlign and textBaseline properties of the format (<a href="String.html#">HuTime.StringStyle</a> object).</dd>
+
+        <dt><span class="val">text</span></dt>
+        <dd>Type: String</dd>
+        <dd>Text in the string to be displayed. If the text contains newline characters, it appears on multiple lines.</dd>
+
+        <dt><span class="val">rotate</span></dt>
+        <dd>Type: Number</dd>
+        <dd>The angle of rotation of the string (in degrees). This can be optionally specified. If omitted, it is set to 0. It is rotated around the point indicated by the position property.</dd>
+
+        <dt><span class="val">canvas</span></dt>
+        <dd>Type: canvas element</dd>
+        <dd>canvas on which the figure is drawn. This can be optionally specified. If omitted, it is set to layer.canvas. It is used when you want to draw a string on a Layer object with multiple canvas elements, such as <a href="String.html#">RecordLayer</a>.</dd>
+      </dl>
+    </div>
   </div>
 
-  <div>
-    <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/StringSample03-01.html" target="_blank">click here for a running example</a>):</p>
-    <pre class="code">
+  <div id="section03">
+    <h2>3. When Strings are Displayed</h2>
+    <p><a href="Figure.html#section04">As with other HuTime.Drawing methods</a>, write the display processing in the <a href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), so that the string is redrawn when the layer is redrawn. They have the same relationship with records on a <a href="TLineLayer.html">timeline layer</a>, which relate to the display order, plots on a <a href="ChartLayer.html">chart layer</a>, and <a href="OLObject.html">on-layer objects</a> as other figures do. Describe it. They have the same relationship with plots on a chart and <a href="String.html#">on-layer objects</a> as other figures do.</p>
+
+    <div class="contentFigure"><img src="/manual/img/String03-01.png" alt="string drawing example"/><p>An example of displaying a string (see the sample code below). The font is set to 32px in size and the string is centered, using the formatting (HuTime.StringStyleobject).</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/StringSample03-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -95,14 +100,16 @@
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-    </pre>
+      </pre>
+    </div>
   </div>
 
-  <h2><a name="04">4. Use of the Path</a></h2>
-  <p>As with other figures, you can use the path-drawing method for purposes such as determining whether the mouse cursor is inside a string. In the sample code below, the color of the string changes when the mouse cursor goes into the area of it.</p>
-  <div>
-    <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/StringSample04-01.html" target="_blank">click here for a running example</a>):</p>
-    <pre class="code">
+  <div id="section04">
+    <h2>4. Use of the Path</h2>
+    <p>As with other figures, you can use the path-drawing method for purposes such as determining whether the mouse cursor is inside a string. In the sample code below, the color of the string changes when the mouse cursor goes into the area of it.</p>
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/StringSample04-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -146,9 +153,9 @@
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-    </pre>
+      </pre>
+    </div>
   </div>
-
 
   <div id="contentBottom">
     <!-- #include file="contentBottom.html" -->

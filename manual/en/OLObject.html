@@ -19,6 +19,7 @@
 </div>
 
 <div id="mainContent">
+
   <div id="section01">
     <h2>1. Overview</h2>
     <p>Figures, images and strings can be treated as on-layer objects. An on-layer object is created from a class derived from the HuTime.OnLayerObjectBase class. Unlike cases where figures, images and strings are displayed using a method of HuTime.Drawing, an on-layer object behaves as one object and therefore can receive events, etc. The on-layer object is useful for small numbers. However, you should preferably use methods of HuTime.Drawing if you want to use a large number of figures, images and strings, in terms of resource consumption.</p>
@@ -271,7 +272,7 @@
   </div>
 
   <div id="section04">
-    <h2><a name="04">4. Adding an Object to a Layer</a></h2>
+    <h2>4. Adding an Object to a Layer</h2>
     <p>You can add an object to a layer by using the appendObject method of the layer. Also, you can remove an object from a layer by using the removeObject method of the layer. One layer can have only one object on it. Thus, when you execute appendObject on the object that has been placed on a different layer, it is removed from the layer to which it already belongs.</p>
     <div class="method">
       <h4><span class="val">layer</span>.appendObject(<span class="val">obj</span> [, <span class="val">canvas</span>])</h4>
@@ -344,7 +345,7 @@
   </div>
 
   <div id="section05">
-    <h2><a name="05">5. Event Handling of On-layer Objects</a></h2>
+    <h2>5. Event Handling of On-layer Objects</h2>
     <p>You can define an action that receives an event directly and deals with it for an on-layer object. How the event is handled is added by the addEventListener method. In the sample code below, the color of the circle changes when you click the gray rectangle that is displayed as an on-layer object.</p>
     <div>
       <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/OLObjectSample05-01.html" target="_blank">click here for a running example</a>):</p>
