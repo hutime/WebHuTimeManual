@@ -208,17 +208,17 @@
     </div>
   </div>
 
-
-  <h2><a name="04">4. When Figures are Drawn</a></h2>
-  <p>If a figure is drawn using a method of HuTime.Drawing, it disappears when the layer that it is on is redrawn. Therefore, you need to write your code so that each method of HuTime.Drawing is invoked when the layer is redrawn. In practice, write the code in the <a
+  <div id="section04">
+    <h2>4. When Figures are Drawn</h2>
+    <p>If a figure is drawn using a method of HuTime.Drawing, it disappears when the layer that it is on is redrawn. Therefore, you need to write your code so that each method of HuTime.Drawing is invoked when the layer is redrawn. In practice, write the code in the <a
           href="Layer.html#section06">HuTime.Layer.processBeforeRedraw method</a> (before the layer is redrawn) or <a href="Layer.html#section06">HuTime.Layer.processAfterRedraw method</a> (after the layer is redrawn), both of which have the ability to add operations when the layer is redrawn. When you use the processBeforeRedraw method, the figure is drawn behind records on a <a href="TLineLayer.html">timeline layer</a>, plots on a <a href="ChartLayer.html">chart layer</a>, <a href="OLObject.html">on-layer objects</a>, etc. On the contrary, when you use the processAfterRedraw method, the figure is drawn in front of these.</p>
 
-  <div class="contentFigure"><img src="/manual/img/Figure04-01.png" alt="figure drawing example"/><p>An example of drawing figures (see the sample code below). As the circle is drawn by the processBeforeRedraw method, it is displayed behind the chart. On the other hand, the triangle, drawn by the processAfterRedraw method, is displayed in front of the chart.</p>
-  </div>
+    <div class="contentFigure"><img src="/manual/img/Figure04-01.png" alt="figure drawing example"/><p>An example of drawing figures (see the sample code below). As the circle is drawn by the processBeforeRedraw method, it is displayed behind the chart. On the other hand, the triangle, drawn by the processAfterRedraw method, is displayed in front of the chart.</p>
+    </div>
 
-  <div>
-    <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/FigureSample04-01.html" target="_blank">click here for a running example</a>):</p>
-    <pre class="code">
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/FigureSample04-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -253,14 +253,16 @@
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-    </pre>
-  </div>
+      </pre>
+    </div>
+    </div>
 
-  <h2><a name="Figure05">5. Use of the Path</a></h2>
-  <p>You can use a path-drawing method that is defined for each figure, for purposes such as determining whether the mouse cursor is located inside a figure. In the sample code below, the color of the figure changes when the mouse cursor goes into the area of it.</p>
-  <div>
-    <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/FigureSample05-01.html" target="_blank">click here for a running example</a>):</p>
-    <pre class="code">
+  <div id="section05">
+    <h2>5. Use of the Path</h2>
+    <p>You can use a path-drawing method that is defined for each figure, for purposes such as determining whether the mouse cursor is located inside a figure. In the sample code below, the color of the figure changes when the mouse cursor goes into the area of it.</p>
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/FigureSample05-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -301,7 +303,8 @@
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-  </pre>
+    </pre>
+    </div>
   </div>
 
   <div id="contentBottom">
