@@ -306,73 +306,74 @@ var pos2 = new HuTime.XYPosition(40, HuTime.PositionConstant.yTop);
     </div>
   </div>
 
-  <h2><a name="Position05">５．座標値の整数化</a></h2>
-  <p>
-    HTML5
-    Canvasで位置指定（XY座標）に小数を含む値を用いた場合、アンチエイリアス処理により描画が不鮮明になる場合がある。HuTime上でこれを避けるには、Positionオブジェクトが出力するcanvas上の座標値を整数化する機能を持つPositionクラスで元のPositionクラスをラッピングする。整数化の方法により、3種類のクラスがある。これらのクラスは、TV座標系、XY座標系いずれのPositionクラスにも適用可能である。</p>
+  <div id="section05">
+    <h2>５．座標値の整数化</h2>
+    <p>
+    HTML5 Canvasで位置指定（XY座標）に小数を含む値を用いた場合、アンチエイリアス処理により描画が不鮮明になる場合がある。HuTime上でこれを避けるには、Positionオブジェクトが出力するcanvas上の座標値を整数化する機能を持つPositionクラスで元のPositionクラスをラッピングする。整数化の方法により、3種類のクラスがある。これらのクラスは、TV座標系、XY座標系いずれのPositionクラスにも適用可能である。</p>
 
-  <h3>コンストラクタ</h3>
-  <div class="method">
-    <h4>HuTime.PositionFloor(<span class="val">position</span>)
-    </h4>
-    <p>切り捨てにより整数化した画面上の座標位置。</p>
-    <dl>
-      <dt class="val">position</dt>
-      <dd>型：HuTime.PositionBase</dd>
-      <dd>整数化する位置。</dd>
-    </dl>
-  </div>
-  <div class="method">
-    <h4>HuTime.PositionFloor(<span class="val">position</span>)
-    </h4>
-    <p>切り上げにより整数化した画面上の座標位置。</p>
-    <dl>
-      <dt class="val">position</dt>
-      <dd>型：HuTime.PositionCeil</dd>
-      <dd>整数化する位置。</dd>
-    </dl>
-  </div>
-  <div class="method">
-    <h4>HuTime.PositionRound(<span class="val">position</span>)
-    </h4>
-    <p>四捨五入により整数化した画面上の座標位置。</p>
-    <dl>
-      <dt class="val">position</dt>
-      <dd>型：HuTime.PositionBase</dd>
-      <dd>整数化する位置。</dd>
-    </dl>
-  </div>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.PositionFloor(<span class="val">position</span>)
+      </h4>
+      <p>切り捨てにより整数化した画面上の座標位置。</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.PositionBase</dd>
+        <dd>整数化する位置。</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
+      <p>切り上げにより整数化した画面上の座標位置。</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.PositionCeil</dd>
+        <dd>整数化する位置。</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.PositionRound(<span class="val">position</span>)</h4>
+      <p>四捨五入により整数化した画面上の座標位置。</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>型：HuTime.PositionBase</dd>
+        <dd>整数化する位置。</dd>
+      </dl>
+    </div>
 
-  <div>
-    <p><span style="font-weight:700;">サンプルコード</span>（該当部分のみ）。</p>
-    <pre class="code">
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（該当部分のみ）。</p>
+      <pre class="code">
 var pos1 = new HuTime.PositionFloor(new HuTime.TVPosition(140, 20));
 var pos2 = new HuTime.PositionCeil(new HuTime.RelativeTVPosition(new HuTime.XYPosition(40, HuTime.PositionConstant.yTop), -10, 0));
-  </pre>
+      </pre>
+    </div>
   </div>
 
-  <h2><a name="Position06">６．使用事例</a></h2>
-  <p>レイヤ上の位置指定について、いくつかの使用事例を挙げる。</p>
-  <table>
-    <tr>
-      <th style="width:200px;">使用事例</th>
-      <th>位置指定の方法</th>
-    </tr>
-    <tr>
-      <td>散布図の特定の点に注釈を表示する。</td>
-      <td>TV座標の絶対位置（HuTime.TVPosition）で指定された点の位置を起点とし、XY座標の相対位置（HuTime.RelativeXYPosition）で注釈の表示位置を指定する。</td>
-    </tr>
-    <tr>
-      <td>棒グラフの先端にエラーバーを表示する。</td>
-      <td>TV座標の絶対位置（HuTime.TVPosition）で指定された棒の先端位置を起点とし、TV座標の相対位置（HuTime.RelativeTVPosition）でエラーバーの始点と終点を指定する。</td>
-    </tr>
-    <tr>
-      <td>レイヤの左上に表題を表示する。</td>
-      <td>左端と上端を示す定数（HuTime.PositionConstant.xLeft,
+  <div id="section06">
+    <h2>６．使用事例</h2>
+    <p>レイヤ上の位置指定について、いくつかの使用事例を挙げる。</p>
+    <table>
+      <tr>
+        <th style="width:200px;">使用事例</th>
+        <th>位置指定の方法</th>
+      </tr>
+      <tr>
+        <td>散布図の特定の点に注釈を表示する。</td>
+        <td>TV座標の絶対位置（HuTime.TVPosition）で指定された点の位置を起点とし、XY座標の相対位置（HuTime.RelativeXYPosition）で注釈の表示位置を指定する。</td>
+      </tr>
+      <tr>
+        <td>棒グラフの先端にエラーバーを表示する。</td>
+        <td>TV座標の絶対位置（HuTime.TVPosition）で指定された棒の先端位置を起点とし、TV座標の相対位置（HuTime.RelativeTVPosition）でエラーバーの始点と終点を指定する。</td>
+      </tr>
+      <tr>
+        <td>レイヤの左上に表題を表示する。</td>
+        <td>左端と上端を示す定数（HuTime.PositionConstant.xLeft,
         HuTime.PositionConstant.yTop）により、XY座標の絶対位置（HuTime.XYPosition）でレイヤ左上を指定する。マージンを設定する場合は、XY座標の相対位置（HuTime.RelativeXYPosition）で指定する。
-      </td>
-    </tr>
-  </table>
+        </td>
+     </tr>
+    </table>
+  </div>
 
   <div id="contentBottom">
     <!-- #include file="contentBottom.html" -->

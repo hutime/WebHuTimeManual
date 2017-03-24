@@ -22,67 +22,72 @@
 
 <div id="mainContent">
 
-  <h2>１．概要</h2>
-  <p>
-    文字列は、<a href="Layer.html">Layerオブジェクト</a>が持つcanvas要素に描画される。<a href="Figure.html">図形の表示</a>と同様に、文字列を表示するためのメソッドと、文字列を含む矩形のパスを描画するためのメソッドがある。
-  </p>
-
-  <h2><a name="02">２．文字列の表示</a></h2>
-  <p>
-    文字列を表示するメソッドは、図形と同様にHuTime.Drawingクラスで定義されている。drawStringが文字列の表示、pathStringが文字列を含む矩形のパスを描画するメソッドである。文字列の大きさが書式設定により変化するため、他の図形や画像とは異なり、パスを描画するメソッドでも書式を指定する。また、文字列の書式指定には、<a href="StringStyle.html">HuTime.StringStyle</a>を使用する。
-  </p>
-
-  <div class="method">
-    <h4>HuTime.Drawing.drawString(<span class="val">style</span>, <span class="val">layer</span>,
-      <span class="val">position</span>, <span class="val">text</span>
-      [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
-    <h4>HuTime.Drawing.pathString(<span class="val">style</span>, <span class="val">layer</span>,
-      <span class="val">position</span>, <span class="val">text</span>
-      [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
+  <div id="section01">
+    <h2>１．概要</h2>
     <p>
-      文字列の基準位置を<a href="Position.html">Positionオブジェクト</a>で指定する。文字列のどこが基準位置になるかは、書式により決まる。他の図形と同様に、基準位置を中心に文字列を回転させることも可能である。
+    文字列は、<a href="Layer.html">Layerオブジェクト</a>が持つcanvas要素に描画される。<a href="Figure.html">図形の表示</a>と同様に、文字列を表示するためのメソッドと、文字列を含む矩形のパスを描画するためのメソッドがある。
     </p>
-    <dl>
-      <dt class="val">style</dt>
-      <dd>型：<a href="StringStyle.html">HuTime.StringStyle</a></dd>
-      <dd>文字列の書式（フォント、大きさ、色など）を指定する。</dd>
-
-      <dt class="val">layer</dt>
-      <dd>型：<a href="Layer.html">HuTime.Layer</a></dd>
-      <dd>文字列を表示するレイヤ。</dd>
-
-      <dt class="val">position</dt>
-      <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
-      <dd>文字列の基準位置。文字列のどこが基準位置になるかは、書式（<a href="#">HuTime.StringStyle</a>オブジェクト）のtextAlignプロパティ、および、textBaselineプロパティにより決まる。</dd>
-
-      <dt><span class="val">text</span></dt>
-      <dd>型：文字列</dd>
-      <dd>表示する文字列のテキスト。テキストに含まれる改行は、表示に反映される。</dd>
-
-      <dt><span class="val">rotate</span></dt>
-      <dd>型：数値</dd>
-      <dd>文字列を回転させる角度（単位:度）。指定は任意で、省略した場合は、0が指定される。回転の中心は、positionプロパティが示す位置。</dd>
-
-      <dt><span class="val">canvas</span></dt>
-      <dd>型：canvas要素</dd>
-      <dd>図形を描画するcanvas。指定は任意で、省略した場合は、layer.canvasが指定される。<a href="#">RecordLayer</a>など、複数のcanvas要素を持つLayerオブジェクトが対象の場合に使用。</dd>
-    </dl>
   </div>
 
-  <h2><a name="03">３．表示のタイミング</a></h2>
-  <p>
-    <a href="Figure.html#04">HuTime.Drawingの他のメソッドと同様に、</a>レイヤの再描画に合わせて、<a href="http://web.hutime.org/manual/Layer.html#section06">HuTime.Layer.processBeforeRedrawメソッド</a>（再描画の前）、または、<a href="http://web.hutime.org/manual/Layer.html#section06">HuTime.Layer.processAfterRedrawメソッド</a>（再描画の後）の中に表示の処理を記述する。表示の順序に関する<a href="TLineLayer.html">年表レイヤ</a>のレコード、<a href="ChartLayer.html">グラフレイヤ</a>のプロット、<a href="OLObject.html">レイヤ上のオブジェクト</a>などとの関係も、他の図形と同様である。
+  <div id="section02">
+    <h2>２．文字列の表示</h2>
+    <p>
+    文字列を表示するメソッドは、図形と同様にHuTime.Drawingクラスで定義されている。drawStringが文字列の表示、pathStringが文字列を含む矩形のパスを描画するメソッドである。文字列の大きさが書式設定により変化するため、他の図形や画像とは異なり、パスを描画するメソッドでも書式を指定する。また、文字列の書式指定には、<a href="StringStyle.html">HuTime.StringStyle</a>を使用する。
+    </p>
+
+    <div class="method">
+      <h4>HuTime.Drawing.drawString(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">text</span>
+      [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
+      <h4>HuTime.Drawing.pathString(<span class="val">style</span>, <span class="val">layer</span>,
+        <span class="val">position</span>, <span class="val">text</span>
+      [, <span class="val">rotate</span>, [, <span class="val">canvas</span>]])</h4>
+      <p>
+      文字列の基準位置を<a href="Position.html">Positionオブジェクト</a>で指定する。文字列のどこが基準位置になるかは、書式により決まる。他の図形と同様に、基準位置を中心に文字列を回転させることも可能である。
+      </p>
+      <dl>
+        <dt class="val">style</dt>
+        <dd>型：<a href="StringStyle.html">HuTime.StringStyle</a></dd>
+        <dd>文字列の書式（フォント、大きさ、色など）を指定する。</dd>
+
+        <dt class="val">layer</dt>
+        <dd>型：<a href="Layer.html">HuTime.Layer</a></dd>
+        <dd>文字列を表示するレイヤ。</dd>
+
+        <dt class="val">position</dt>
+        <dd>型：<a href="Position.html">HuTime.PositionBase</a></dd>
+        <dd>文字列の基準位置。文字列のどこが基準位置になるかは、書式（<a href="#">HuTime.StringStyle</a>オブジェクト）のtextAlignプロパティ、および、textBaselineプロパティにより決まる。</dd>
+
+        <dt><span class="val">text</span></dt>
+        <dd>型：文字列</dd>
+        <dd>表示する文字列のテキスト。テキストに含まれる改行は、表示に反映される。</dd>
+
+        <dt><span class="val">rotate</span></dt>
+        <dd>型：数値</dd>
+        <dd>文字列を回転させる角度（単位:度）。指定は任意で、省略した場合は、0が指定される。回転の中心は、positionプロパティが示す位置。</dd>
+
+        <dt><span class="val">canvas</span></dt>
+        <dd>型：canvas要素</dd>
+        <dd>図形を描画するcanvas。指定は任意で、省略した場合は、layer.canvasが指定される。<a href="#">RecordLayer</a>など、複数のcanvas要素を持つLayerオブジェクトが対象の場合に使用。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．表示のタイミング</h2>
+    <p>
+    <a href="Figure.html#section04">HuTime.Drawingの他のメソッドと同様に、</a>レイヤの再描画に合わせて、<a href="http://web.hutime.org/manual/Layer.html#section06">HuTime.Layer.processBeforeRedrawメソッド</a>（再描画の前）、または、<a href="http://web.hutime.org/manual/Layer.html#section06">HuTime.Layer.processAfterRedrawメソッド</a>（再描画の後）の中に表示の処理を記述する。表示の順序に関する<a href="TLineLayer.html">年表レイヤ</a>のレコード、<a href="ChartLayer.html">グラフレイヤ</a>のプロット、<a href="OLObject.html">レイヤ上のオブジェクト</a>などとの関係も、他の図形と同様である。
 記述する。グラフのプロットや<a href="#">レイヤ上のオブジェクト</a>との関係も、他の図形と同様である。
-  </p>
+    </p>
 
-  <div class="contentFigure">
-    <img src="/manual/img/String03-01.png" alt="string drawing example"/>
-    <p>文字列の表示の例（下記サンプルコード）。書式指定（HuTime.StringStyleオブジェクト）により、フォントサイズは32px、中央揃えとなっている。</p>
-  </div>
+    <div class="contentFigure">
+      <img src="/manual/img/String03-01.png" alt="string drawing example"/>
+      <p>文字列の表示の例（下記サンプルコード）。書式指定（HuTime.StringStyleオブジェクト）により、フォントサイズは32px、中央揃えとなっている。</p>
+    </div>
 
-  <div>
-    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/StringSample03-01.html" target="_blank">実行例はこちら</a>）。</p>
-    <pre class="code">
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/StringSample03-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -112,16 +117,18 @@
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-    </pre>
+      </pre>
+    </div>
   </div>
 
-  <h2><a name="04">４．パスの利用</a></h2>
-  <p>
+  <div id="section04">
+    <h2>４．パスの利用</h2>
+    <p>
     他の図形と同様に、パスを描画するメソッドを、マウスが文字列の中にあるかどうかを判断する場合などに利用できる。下記のサンプルコードでは、文字列内にマウスが入ると、文字列の色が変わる。
-  </p>
-  <div>
-    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/StringSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
-    <pre class="code">
+    </p>
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/StringSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -165,9 +172,9 @@
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-    </pre>
+      </pre>
+    </div>
   </div>
-
 
   <div id="contentBottom">
     <!-- #include file="contentBottom.html" -->
