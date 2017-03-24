@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Positioning on a Layer - HuTime API Manual</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Positioning on a Layer</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>You specify a position on a layer using an object of the Position classes (classes derived from the HuTime.PositionBase class) to draw an on-layer object such as a figure, string, and image. HuTime provides the <a href="Structure.html#section03">TV coordinate system</a>, which is used to put data or others, and the XY coordinate system, which is used to indicate positions where objects are drawn on the screen. You can position your objects by using the combination of these coordinate systems. Positioning can be achieved by <a href="Position.html#Position02">specifying an absolute position</a> and <a href="Position.html#Position03">specifying a relative position</a>. You first specify the absolute position, and then, if necessary, specify relative positions in reference to the absolute position. HuTime also provides <a href="Position.html#Position04">constants to indicate particular coordinates</a> and <a href="Position.html#Position05">classes for conversion into an integer</a> for coordinate values on Canvas to be output.</p>
+
+    <div class="contentFigure"><img src="/manual/img/Position01-01.png" alt="Position classes"/><p>The list of Position classes (classes derived from the HuTime.PositionBase class). The PositionBase is defined as an abstract class, and is not used in practice.</p>
+    </div>
+  </div>
+
+  <div id="section02">
+    <h2>2. Absolute Position</h2>
+    <p>This type of position works as a reference, and falls into two classes depending on the difference in the coordinate systems. When you show charts or records on a timeline, use HuTime.TVPosition for the TV coordinate system. If a position is specified on the TV coordinate system, the display position on the screen changes depending on changes in display statuses, such as the <a href="Position.html#">display mode of the screen (vertical and horizontal display modes)</a>, the displayed range of the t axis, the displayed range of the v axis, and the height of the layer. On the other hand, use HuTime.XYPosition for the XY coordinate system, with regard to objects that is fixed to a particular position on the screen, including the title of a layer. When you specify a position on the XY coordinate system, the object at that position is displayed in the same position on the screen if the display status varies.</p>
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime.TVPosition(<span class="val">t</span>, <span class="val">v</span>)</h4>
+      <p>The absolute position on the TV coordinate system.</p>
+      <dl>
+        <dt class="val">t</dt>
+        <dd>Type: Number</dd>
+        <dd>The t value of the absolute position.</dd>
+        <dt class="val">v</dt>
+        <dd>Type: Number</dd>
+        <dd>The v value of the absolute position.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.XYPosition(<span class="val">x</span>, <span class="val">y</span>)</h4>
+      <p>The absolute position on the XY coordinate system.</p>
+      <dl>
+        <dt class="val">x</dt>
+        <dd>Type: Number</dd>
+        <dd>The x value of the absolute position.</dd>
+        <dt class="val">y</dt>
+        <dd>Type: Number</dd>
+        <dd>The y value of the absolute position.</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure"><img src="/manual/img/Position02-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of absolute position)" width="600px"/><p>How the display position of the absolute positions on a layer depend on the display modes. The absolute position specified on the TV coordinate system (the blue circle) indicates the display position on the screen according to the display mode. On the other hand, the absolute position specified on the XY coordinate system (the red circle) indicates the same display positions on the screen independent of the display mode.</p>
+    </div>
+    <div class="contentFigure"><img src="/manual/img/Position02-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of absolute position)" width="400px"/><p>How the display position changes as the displayed range of the t axis varies (changed and zoomed in or out). The absolute positions specified on the TV coordinate system (the blue circle) change their position on the screen according to the displayed range of the t axis. On the other hand, the absolute position specified on the XY coordinate system (the red circle) does not change its position on the screen even when the displayed range of the t axis varies (it returns to the original position upon redrawing).</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/PositionSample02-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  var ht = new HuTime();
+  var pnls = new HuTime.PanelCollection(100, 200);
+  ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+
+  var pnl = new HuTime.TilePanel(100);
+  pnls.appendPanel(pnl);
+
+  var lyr = new HuTime.Layer(100, 0, 0, 100, 0);
+  lyr.vForX = HuTime.VForX.bottomForLeft;
+  pnl.appendLayer(lyr);
+
+  var posTV = new HuTime.TVPosition(140, 20);
+  var posXY = new HuTime.XYPosition(40, 30);
+  var objTV = new HuTime.Circle(new HuTime.FigureStyle(0, &quot;blue&quot;, &quot;blue&quot;), posTV, 10);
+  lyr.appendObject(objTV);
+  var objXY = new HuTime.Circle(new HuTime.FigureStyle(0, &quot;red&quot;, &quot;red&quot;), posXY, 10);
+  lyr.appendObject(objXY);
+
+  ht.redraw(100, 200);
+&lt;/script&gt;
+&lt;p&gt;
+  &lt;input type=&quot;radio&quot; title=&quot;LtoR&quot; name=&quot;displayMode&quot; value=&quot;0&quot; onClick=&quot;radioChange(event)&quot; checked=&quot;checked&quot; /&gt;Horizontal　
+  &lt;input type=&quot;radio&quot; title=&quot;TtoB&quot; name=&quot;displayMode&quot; value=&quot;2&quot; onClick=&quot;radioChange(event)&quot; /&gt;Vertical
+&lt;/p&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  radioChange = function(ev) {
+    pnls.displayMode = parseInt(ev.target.value);
+    ht.redraw();
+  };
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>3. Relative Position</h2>
+    <p>Using the following classes, you specify the relative position with reference to the position specified by a Position object. The relative position is specified on the TV coordinate system or XY coordinate system, but does not have to match the coordinate system for the reference position. For example, to add a label or annotation to a record on a chart or timeline, set a display position of the record as a reference position, and specify the display position of the label or annotation as a relative position from there. In this case, the position of the record is specified on the TV coordinate system, but the relative position can be specified on either of the TV or XY coordinate system.</p>
+
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime.RelativeTVPosition(<span class="val">position</span>, <span class="val">ofsT</span>, <span class="val">ofsV</span>)</h4>
+      <p>The relative position on the TV coordinate system.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionBase</dd>
+        <dd>The reference position for relative positions.</dd>
+        <dt class="val">ofsT</dt>
+        <dd>Type: Number</dd>
+        <dd>The displacement from the reference position in the t-value direction.</dd>
+        <dt class="val">ofsV</dt>
+        <dd>Type: Number</dd>
+        <dd>The displacement from the reference position in the v-value direction.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.RelativeXYPosition(<span class="val">position</span>, <span class="val">ofsX</span>, <span class="val">ofsY</span>)</h4>
+      <p>The relative position on the XY coordinate system.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionBase</dd>
+        <dd>The reference position for relative positions.</dd>
+        <dt class="val">ofsX</dt>
+        <dd>Type: Number</dd>
+        <dd>The displacement from the reference position in the x-value direction.</dd>
+        <dt class="val">ofsY</dt>
+        <dd>Type: Number</dd>
+        <dd>The displacement from the reference position in the y-value direction.</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure"><img src="/manual/img/Position03-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of relative position)" width="600px"/><p>How the display position of the relative positions depend on the display modes. The absolute position (the blue-filled circle) specified on the TV coordinate system being used as the reference, one relative position as the TV coordinates (the blue circle) and another as the XY coordinates (the red circle) are indicated. Also, the absolute position (the red-filled circle) specified on the XY coordinate system being used as the reference, one relative position as the TV coordinates (the blue circle) and another as the XY coordinates (the red circle) are indicated. The relative positions as the TV coordinates are displayed at different positions on the screen, in relation to the reference position in each display mode. On the other hand, the relative positions as the XY coordinates have the same positional relation with the reference positions, independent of the display mode.</p>
+    </div>
+    <div class="contentFigure"><img src="/manual/img/Position03-02.png" alt="Differences of displayed position between TV and XY cordinates according to displayed t range (in case of relative position)" width="400px"/><p>How the drawing position changes as the displayed range of the t axis varies (changed and zoomed in or out). The relative positions specified on the TV coordinate system (the blue circles) change their positional relation with the reference positions (distance from the reference positions), as the displayed range of the t axis is changed, or zoomed in or out. On the other hand, the relative positions specified on the XY coordinate system (the red circles) do not change their positional relation with the reference positions even when the displayed range of the t axis varies (they return to the original positions upon redrawing).</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/PositionSample03-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  var ht = new HuTime();
+  var pnls = new HuTime.PanelCollection(100, 200);
+  ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+
+  var pnl = new HuTime.TilePanel(100);
+  pnls.appendPanel(pnl);
+
+  var lyr = new HuTime.Layer(100, 0, 0, 100, 0);
+  lyr.vForX = HuTime.VForX.bottomForLeft;
+  pnl.appendLayer(lyr);
+
+  var posTV = new HuTime.TVPosition(140, 20);
+  var posXY = new HuTime.XYPosition(40, 30);
+  var objTV = new HuTime.Circle(new HuTime.FigureStyle(0, &quot;blue&quot;, &quot;blue&quot;), posTV, 10);
+  lyr.appendObject(objTV);
+  var objXY = new HuTime.Circle(new HuTime.FigureStyle(0, &quot;red&quot;, &quot;red&quot;), posXY, 10);
+  lyr.appendObject(objXY);
+
+  var posTVrTV = new HuTime.RelativeTVPosition(posTV, -10, 0);
+  var objTVrTV = new HuTime.Circle(new HuTime.FigureStyle(2, &quot;blue&quot;), posTVrTV, 10);
+  lyr.appendObject(objTVrTV);
+  var posTVrXY = new HuTime.RelativeXYPosition(posTV, 10, 0);
+  var objTVrXY = new HuTime.Circle(new HuTime.FigureStyle(2, &quot;red&quot;), posTVrXY, 10);
+  lyr.appendObject(objTVrXY);
+
+  var posXYrTV = new HuTime.RelativeTVPosition(posXY, -10, 0);
+  var objXYrTV = new HuTime.Circle(new HuTime.FigureStyle(2, &quot;blue&quot;), posXYrTV, 10);
+  lyr.appendObject(objXYrTV);
+  var posXYrXY = new HuTime.RelativeXYPosition(posXY, 10, 0);
+  var objXYrXY = new HuTime.Circle(new HuTime.FigureStyle(2, &quot;red&quot;), posXYrXY, 10);
+  lyr.appendObject(objXYrXY);
+
+  ht.redraw(100, 200);
+&lt;/script&gt;
+&lt;p&gt;
+  &lt;input type=&quot;radio&quot; title=&quot;LtoR&quot; name=&quot;displayMode&quot; value=&quot;0&quot; onClick=&quot;radioChange(event)&quot; checked=&quot;checked&quot; /&gt;Horizontal　
+  &lt;input type=&quot;radio&quot; title=&quot;TtoB&quot; name=&quot;displayMode&quot; value=&quot;2&quot; onClick=&quot;radioChange(event)&quot; /&gt;Vertical
+&lt;/p&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  radioChange = function(ev) {
+    pnls.displayMode = parseInt(ev.target.value);
+    ht.redraw();
+  };
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>4. Constants for Indicating Coordinates</h2>
+    <p>Constants to indicate particular coordinate positions, such as the top end or left end of a layer, are defined as shown below. When specifying coordinates on each of the coordinate systems, you can use these constants, instead of numbers. The coordinate specified by the constant remains in the position indicated by it, even when the displayed range of the t axis is changed (it returns to the original position upon redrawing).</p>
+
+    <table>
+      <tr>
+        <th>Coordinate System</th>
+        <th>Coordinate Axis</th>
+        <th>Constant</th>
+        <th>Parameter to the Constructor</th>
+      </tr>
+      <tr>
+        <td rowspan="4">TV Coordinate System</td>
+        <td rowspan="2">t Axis</td>
+        <td>HuTime.PositionConstant.tMin</td>
+        <td>The minimum value of the t-axis range currently displayed</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.tMax</td>
+        <td>The maximum value of the t-axis range currently displayed</td>
+      </tr>
+      <tr>
+        <td rowspan="2">v Axis</td>
+        <td>HuTime.PositionConstant.vMin</td>
+        <td>The minimum value of the v-axis range currently displayed</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.vMax</td>
+        <td>The maximum value of the v-axis range currently displayed</td>
+      </tr>
+      <tr>
+        <td rowspan="4">XY Coordinate System</td>
+        <td rowspan="2">x Axis</td>
+        <td>HuTime.PositionConstant.xLeft</td>
+        <td>The left end of a layer</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.xRight</td>
+        <td>The right end of a layer</td>
+      </tr>
+      <tr>
+        <td rowspan="2">y Axis</td>
+        <td>HuTime.PositionConstant.yTop</td>
+        <td>The top end of a layer</td>
+      </tr>
+      <tr>
+        <td>HuTime.PositionConstant.yBottom</td>
+        <td>The bottom end of a layer</td>
+      </tr>
+    </table>
+
+    <div class="contentFigure"><img src="/manual/img/Position04-01.png" alt="Differences of displayed position between TV and XY cordinates according to direction of t axis (in case of position constant)" width="600px"/><p>How the display positions of coordinates specified by the constants depend on the display mode. The positions specified on the TV coordinate system (the blue circles) are displayed at the positions on the screen according to the display mode. On the other hand, the positions specified on the XY coordinate system (the red circles) are displayed at the same positions on the screen, independent of the display mode.</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code</span> (Applicable Lines Only):</p>
+      <pre class="code">
+var pos1 = new new HuTime.TVPosition(HuTime.PositionConstant.tMax, 20);
+var pos2 = new HuTime.XYPosition(40, HuTime.PositionConstant.yTop);
+      </pre>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>5. Converting Coordinate Values into Integers</h2>
+    <p>If a decimal is used for positioning (XY coordinates) on HTML5 Canvas, anti-aliasing may blur drawn objects. To avoid this situation on your HuTime, use the Position class that has the ability to convert coordinate values on canvas that are output from a Position object into an integer, to wrap the original Position class. The three types of classes below are available depending on the way they are converted into integers. You can apply these classes to whichever Position classes for the TV coordinate system or XY coordinate system.</p>
+
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
+      <p>The coordinate position on the screen, rounded down to convert it into an integer.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionBase</dd>
+        <dd>The position to be converted into the integer.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.PositionFloor(<span class="val">position</span>)</h4>
+      <p>The coordinate position on the screen, rounded up to convert it into an integer.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionCeil</dd>
+        <dd>The position to be converted into the integer.</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.PositionRound(<span class="val">position</span>)</h4>
+      <p>The coordinate position on the screen, rounded to the nearest integer to convert it into an integer.</p>
+      <dl>
+        <dt class="val">position</dt>
+        <dd>Type: HuTime.PositionBase</dd>
+        <dd>The position to be converted into the integer.</dd>
+      </dl>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code</span> (Applicable Lines Only):</p>
+      <pre class="code">
+var pos1 = new HuTime.PositionFloor(new HuTime.TVPosition(140, 20));
+var pos2 = new HuTime.PositionCeil(new HuTime.RelativeTVPosition(new HuTime.XYPosition(40, HuTime.PositionConstant.yTop), -10, 0));
+      </pre>
+    </div>
+  </div>
+
+  <div id="section06">
+    <h2>6. Use Cases</h2>
+    <p>Here are some use cases for positioning on the layer.</p>
+    <table>
+      <tr>
+        <th style="width:200px;">Use Case</th>
+        <th>How to specify Position</th>
+      </tr>
+      <tr>
+        <td>Show an annotation at a particular point on the scatter chart.</td>
+        <td>Based on the position of the point specified as an absolute position of the TV coordinates (HuTime.TVPosition), specify the display position of the annotation by using the relative position of the XY coordinates (HuTime.RelativeXYPosition).</td>
+      </tr>
+      <tr>
+        <td>Show the error bar at the top of each of bars.</td>
+        <td>Based on the top position of the bar specified as an absolute position of the TV coordinates (HuTime.TVPosition), specify the start and end points of the error bars by using the relative position of the TV coordinates (HuTime.RelativeTVPosition).</td>
+      </tr>
+      <tr>
+        <td>Show a title at the top-left position of the layer.</td>
+        <td>Using the constants indicating the left end and top end (HuTime.PositionConstant.xLeft and HuTime.PositionConstant.yTop), specify the top left position of the layer as an absolute position of the XY coordinates (HuTime.XYPosition). To set a margin, specify it as a relative position of the XY coordinates (HuTime.RelativeXYPosition).</td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

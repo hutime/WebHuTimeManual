@@ -1,0 +1,508 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Panel Collection - HuTime API Manual</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Panel Collection</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>A panel collection is responsible for accommodating one or more panels and placing them in a given order. It is associated with DOM elements (e.g., div elements) on a Web page, and HuTime will be displayed on that page. In addition, you can place multiple panel collections in a single Web page, by associating them with different elements on the Web page. In this case, when a user changes the displayed range in one panel collection, the displayed ranges of the other panel collections are also changed accordingly.</p>
+  </div>
+
+  <div id="section02">
+    <h2>2. Creating an Object</h2>
+    <h3>Constructor</h3>
+    <div class="method">
+      <h4>HuTime.PanelCollection([<span class="val">vBreadth</span> [, <span class="val">tLength</span>]])</h4>
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: null</dd>
+        <dd>The length in the v-axis direction (in pixels). The vBreadth setting is reflected to the length of the v axis, <a href="PanelCollection.html#section05">together with vBreadthMode and other setting values</a>.</dd>
+
+        <dt><span class="val">tLength</span></dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 600</dd>
+        <dd>The length in the t-axis direction (in pixels). The tLength setting is reflected to the length of the t axis, <a href="PanelCollection.html#section05">together with tLengthMode and other setting values</a>.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>3. Adding a Panel Collection</h2>
+    <p>You can add a panel collection using the appendPanelCollection method of an application root object.</p>
+    <div class="method">
+      <h4><span class="val">ht</span>.appendPanelCollection(<span class="val">panelCollection</span>, <span class="val">targetElement</span>)</h4>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+
+        <dt><span class="val">ht</span></dt>
+        <dd>Type: HuTime</dd>
+        <dd>The HuTime root object to which the panel collection is added.</dd>
+
+        <dt><span class="val">panelCollection</span></dt>
+        <dd>Type: HuTime.PanelCollection</dd>
+        <dd>The panel collection that is added to the HuTime root object.</dd>
+
+        <dt><span class="val">targetElement</span></dt>
+        <dd>Type: HTMLElement</dd>
+        <dd>The DOM element with which the panel collection is associated.</dd>
+      </dl>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/PanelCollection03-01.html" target="_blank">click here for a running example</a>). In this sample, a panel collection (variable pnls) is added to the application root object (variable ht). In this process, a div element, id=&quot;timeline,&quot; is specified as a DOM element in the page with which the panel collection is associated. By means of a property described later in <a
+              href="PanelCollection.html#section06">Formatting</a>, the background color of the panel collection is changed to pink.</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection();
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    pnls.style.backgroundColor = &quot;pink&quot;;
+    ht.redraw();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+
+  </div>
+
+  <div id="section04">
+    <h2>4. Specifying the Display Mode</h2>
+    <p>You specify a <a href="Structure.html#section04">display mode</a> by using the displayMode property of the panel collection.</p>
+    <div>
+      <dl>
+        <dt>displayMode</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 0</dd>
+        <dd>Reflected: After redrawing</dd>
+        <dd>
+          <table>
+            <tr>
+              <th>displayMode Value</th>
+              <th>t Axis Direction</th>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>Left to right</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Right to left</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Top to bottom</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Bottom to top</td>
+            </tr>
+          </table>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>5. Specifying the Size</h2>
+    <p>The display size of the panel collection is determined by the position and size of the DOM element (hereafter referred to as a &quot;parent element&quot;) with which the panel collection is associated when added to the application root, and by the properties below. Moreover, each property is reflected differently depending on the display mode.</p>
+
+    <div>
+      <h3>Properties</h3>
+      <dl>
+        <dt>tLengthMode</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 1</dd>
+        <dd>How the display width in the t-axis direction is determined (in pixels).<table>
+            <tr>
+              <td>0</td>
+              <td>Specified value</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>The width of the associated DOM element is used.</td>
+            </tr>
+          </table>
+        </dd>
+
+        <dt>vBreadthMode</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 2</dd>
+        <dd>How the display width in the v-axis direction is determined (in pixels).<table>
+            <tr>
+              <td>0</td>
+              <td>Specified value</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>The width of the associated DOM element is used.</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>The width of the panel that the panel collection contains is used.</td>
+            </tr>
+          </table>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
+      <h3>In Horizontal Display Mode:</h3>
+      <h4>Width of the t Axis (in Pixels)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">tLengthMode</th>
+          <th style="width:80px;">tLength</th>
+          <th style="width:130px;">Parent Element Width</th>
+          <th>t Axis Width</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Default value (600)</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (600)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>tLength value</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>tLength value</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Width of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Width of the parent element (changes together with the change in the width of the parent element upon a change in the window size)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>Width of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Width of the parent element (changes together with the change in the width of the parent element upon a change in the window size)</td>
+        </tr>
+      </table>
+
+      <h4>Width of the v Axis (in Pixels)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">vBreadthMode</th>
+          <th style="width:80px;">vBreadth</th>
+          <th style="width:130px;">Parent Element Height</th>
+          <th>v Axis Width</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Default value (150)</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (150)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>vBreadth value</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>vBreadth value</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Height of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (150)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>Height of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (150)</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">2</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Height of the panel the panel collection contains*</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Height of the panel the panel collection contains*</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>Height of the panel the panel collection contains*</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Height of the panel the panel collection contains*</td>
+        </tr>
+      </table>
+      <p>* If the panel collection contains no panels, the height is set to the default value (150).</p>
+
+    </div>
+
+    <div>
+      <h3>In Vertical Display Mode:</h3>
+      <h4>Width of the t Axis (in Pixels)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">tLengthMode</th>
+          <th style="width:80px;">tLength</th>
+          <th style="width:130px">Parent Element Height</th>
+          <th>t Axis Width</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Default value (600)</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (600)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>tLength value</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>tLength value</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Height of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (600)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>Height of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (600)</td>
+        </tr>
+      </table>
+
+      <h4>Width of the v Axis (in Pixels)</h4>
+      <table>
+        <tr>
+          <th style="width:130px;">vBreadthMode</th>
+          <th style="width:80px;">vBreadth</th>
+          <th style="width:130px;">Parent Element Width</th>
+          <th>v Axis Width</th>
+        </tr>
+
+        <tr>
+          <td rowspan="4">0</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Default value (150)</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Default value (150)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>vBreadth value</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>vBreadth value</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">1</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Width of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Width of the parent element (changes together with the change in the width of the parent element upon a change in the window size)</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>Width of the parent element</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Width of the parent element (changes together with the change in the width of the parent element upon a change in the window size)</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4">2</td>
+          <td rowspan="2">null</td>
+          <td>Specified</td>
+          <td>Width of the panel the panel collection contains*</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Width of the panel the panel collection contains*</td>
+        </tr>
+        <tr>
+          <td rowspan="2">Value</td>
+          <td>Specified</td>
+          <td>Width of the panel the panel collection contains*</td>
+        </tr>
+        <tr>
+          <td>Not specified</td>
+          <td>Width of the panel the panel collection contains*</td>
+        </tr>
+      </table>
+      <p>* If the panel collection contains no panels, the width is set to the default value (150).</p>
+    </div>
+
+  </div>
+
+  <div id="section06">
+    <h2>6. Formatting</h2>
+    <p>You can use the style property to format the panel collection. The value specified for the style property is reflected to the style attribute of the DOM element (div element) that the panel collection has. <a href="PanelCollection.html#section03"></a>In the example shown in <a href="PanelCollection.html#section03">&quot;3. Adding a Panel Collection,&quot;</a> the background color (style.backgroundColor) is set to pink. Usually, panels are displayed over the panel collection, therefore you cannot see its format. You can identify the format of the panel collection only through a part of it that is not covered by any panels. (In the sample code, you can see the entire panel collection because there are no panels on it.)</p>
+  </div>
+
+  <div class="section07">
+    <h2>7. Other Key Properties and Methods</h2>
+    <p>A panel collection has properties for controlling the behavior of panels in it.</p>
+    <div class="property">
+      <h3>Properties</h3>
+      <dl>
+        <dt>id</dt>
+        <dd>Type: String</dd>
+        <dd>Default value: null</dd>
+        <dd>The ID for uniquely identifying the panel collection.</dd>
+
+        <dt>name</dt>
+        <dd>Type: String</dd>
+        <dd>Default value: null</dd>
+        <dd>The name of the panel collection.</dd>
+
+        <dt>visible</dt>
+        <dd>Type: Boolean</dd>
+        <dd>Default value: true</dd>
+        <dd>Value is applied: After redrawing</dd>
+        <dd>Specify whether the panel collection is visible or invisible. If true, it is visible.</dd>
+
+        <dt>mouseEventCapture</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 3</dd>
+        <dd>The range to capture mouse events: 0: Not captured; 1: Panel collection only; 2: Contained panels only; 3: Both panel collection and contained panels</dd>
+
+        <dt>dragSensitivity</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 5</dd>
+        <dd>The minimum movement of the mouse for drag detection (in pixels).</dd>
+
+        <dt>vScrollable</dt>
+        <dd>Type: Boolean</dd>
+        <dd>Default value: true</dd>
+        <dd>Reflected: Immediately</dd>
+        <dd>Whether or not a panel can be scrolled in the v-axis direction. If true, it can be scrolled.</dd>
+
+        <dt>wheelZoomRatio</dt>
+        <dd>Type: Number</dd>
+        <dd>Default value: 0.02</dd>
+        <dd>How much the t axis is zoomed in or out per a turning operation of the wheel. A value 0 or less reverses the relationship between the rotation direction of the wheel and the zoom-in or zoom-out operation.</dd>
+      </dl>
+    </div>
+
+    <h3>Methods</h3>
+    <div class="method">
+      <h4>redraw()</h4>
+      <p>Redraws the panel collection. Panels that are contained in it are also redrawn recursively.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>clear()</h4>
+      <p>Clears what is displayed on the panel collection.</p>
+      <dl>
+        <dt>Return value</dt>
+        <dd>None</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

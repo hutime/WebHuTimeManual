@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Figure Formats - HuTime API Manual</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Figure Formats</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>You can format the color, the width of a line, etc. of a figure using HuTime.FigureStyle. You can also specify your own formats that are not supported by default, by redefining HuTime.FigureStyle.applyStyle.</p>
+  </div>
+
+  <div id="section02">
+    <h2>2. Formats by Default</h2>
+    <p>In HuTime.FigureStyle, the following formats are available:</p>
+
+    <dl>
+      <dt>lineWidth</dt>
+      <dd>Type: Number</dd>
+      <dd>Default value: 1</dd>
+      <dd>The width of the line (in pixels). If it is 0 or less, the line is not drawn. The maximum value is 999.</dd>
+
+      <dt>lineColor</dt>
+      <dd>Type: String</dd>
+      <dd>Default value: null</dd>
+      <dd>The color of the line. It can be specified in the same way a color is specified in CSS. The color name, color code, rgb(), and rgba() are available. If it is set to null, the line is not drawn.</dd>
+
+      <dt>lineDash</dt>
+      <dd>Type: Number array</dd>
+      <dd>Default value: [] (An empty array)</dd>
+      <dd>The settings for a dashed line. Specify the line type and length of spacing for the dashed line (in pixels) as an array. The maximum value of each element is 999.</dd>
+
+      <dt>fillColor</dt>
+      <dd>Type: String</dd>
+      <dd>Default value: null</dd>
+      <dd>The fill color. It can be specified in the same way a color is specified in CSS. The color name, color code, rgb(), and rgba() are available. If it is set to null, the figure is not filled (and is transparent).</dd>
+
+      <dt>alpha</dt>
+      <dd>Type: Number</dd>
+      <dd>Default value: 1.0</dd>
+      <dd>Transmittance. A value of 0.0 makes it completely transparent, and a value of 1.0 completely opaque. The entire figure (fill and lines) is affected.</dd>
+    </dl>
+
+    <div>
+      <p style="text-indent:0; margin-top:10px;">Among the styles above, the constructor of FigureStyle can be used to specify the fill color, together with the width and color of the line. When you omit these styles, they are set to the default values.</p>
+      <h3>Constructor</h3>
+      <div class="method">
+        <h4>HuTime.FigureStyle([<span class="val">fillColor</span> [, <span class="val">lineColor</span> [, <span class="val">lineWidth</span>]]])</h4>
+        <dl>
+          <dt class="val">fillColor</dt>
+          <dd>Type: String</dd>
+          <dd>The fill color (inside the figure). It can be specified in the same way a color is specified in CSS.</dd>
+          <dt class="val">lineColor</dt>
+          <dd>Type: String</dd>
+          <dd>The color of the line (the border of the figure). It can be specified in the same way a color is specified in CSS.</dd>
+          <dt class="val">lineWidth</dt>
+          <dd>Type: Number</dd>
+          <dd>The width of the line (the border of the figure) (in pixels).</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="contentFigure"><img src="/manual/img/FigureStyle02-01.png" alt="figure style example"/><p>An example of drawing figures (see the sample code below). The border of the circle is drawn in dashed line. The triangle is translucent because of its alpha setting. The square has an opaque border, but the inside of it is translucent because fillColor is specified with rgba().</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/FigureStyleSample02-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    posCircle = new HuTime.TVPosition(50, 50);
+    posSquare = new HuTime.TVPosition(65, 70);
+    posTriangle = new HuTime.TVPosition(35, 30);
+    styCircle = new HuTime.FigureStyle(&quot;#00ffff&quot;, &quot;red&quot;, 2);
+    styCircle.lineDash = [10, 3];
+    stySquare = new HuTime.FigureStyle(&quot;rgba(255,255,0,0.5)&quot;, &quot;rgb(0,0,255)&quot;, 5);
+    styTriangle = new HuTime.FigureStyle(&quot;#0000ff&quot;);
+    styTriangle.alpha = 0.3;
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(styCircle, layer, posCircle, 100);
+        HuTime.Drawing.drawSquare(stySquare, layer, posSquare, 100);
+        HuTime.Drawing.drawTriangle(styTriangle, layer, posTriangle, 100);
+    };
+
+    ht.redraw(0, 100);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>3. Your Own Formats</h2>
+    <p>You can specify your own formats by redefining the formatting methods of HuTime.FigureStyle shown below. The alpha property is applied to an entire figure, and thus even when you redefine the formatting methods for filling (applyFillStyle) and lines (applyLineStyle), their default actions are applied. If you want to use your own formats for the entire figure, including the alpha property, redefine applyStyle. To restore your own format to the original one, use the default method to redefine your own method. (If the format is redefined to null, it is also replaced back with the default method.)</p>
+    <div class="method">
+      <h4>applyFillStyle(<span class="val">ctx</span>)</h4>
+      <p>Applies the fill format (inside the figure). When you redefine it, you can define your own format. To restore it to its default action, use HuTime.FigureStyle.prototype.defaultFillApplyStyle.</p>
+      <dl>
+        <dt class="val">ctx</dt>
+        <dd>Type: CanvasRenderingContext2D</dd>
+        <dd>The context of the canvas element that contains the path to the figure to be formatted.</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>applyLineStyle(<span class="val">ctx</span>)</h4>
+      <p>Applies the format of the line (the border of the figure). When you redefine it, you can define your own format. To restore it to its default action, use HuTime.FigureStyle.prototype.defaultLineApplyStyle.</p>
+      <dl>
+        <dt class="val">ctx</dt>
+        <dd>Type: CanvasRenderingContext2D</dd>
+        <dd>The context of the canvas element that contains the path to the figure to be formatted.</dd>
+      </dl>
+    </div>
+
+    <div class="method">
+      <h4>applyStyle(<span class="val">ctx</span>)</h4>
+      <p>Applies all the formats, including the fill, line, and transmittance. When you redefine it, you can define your own format. To restore it to its default action, use HuTime.FigureStyle.prototype.defaultApplyStyle.</p>
+      <dl>
+        <dt class="val">ctx</dt>
+        <dd>Type: CanvasRenderingContext2D</dd>
+        <dd>The context of the canvas element that contains the path to the figure to be formatted.</dd>
+      </dl>
+    </div>
+
+    <div class="contentFigure"><img src="/manual/img/FigureStyle03-01.png" alt="figure style example"/><p>An example of drawing a figure with your own format (see the sample code below). A gradient effect, which is not supported by FigureStyle, is applied by redefining the applyFillStyle method.</p>
+    </div>
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/FigureStyleSample03-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+    var lyr = new HuTime.Layer(200);
+    pnl.appendLayer(lyr);
+
+    pos = new HuTime.TVPosition(50, 50);
+    sty = new HuTime.FigureStyle(null, &quot;red&quot;, 2);
+    sty.applyFillStyle = function applyFillStyle(ctx) {
+        var x = pos.cnvX(lyr);
+        var y = pos.cnvY(lyr);
+        ctx.fillStyle = ctx.createRadialGradient(x, y, 0, x, y, 50);
+        ctx.fillStyle.addColorStop(0, &quot;aqua&quot;);
+        ctx.fillStyle.addColorStop(1.0, &quot;yellow&quot;);
+        ctx.fill();
+    };
+
+    lyr.processBeforeRedraw = function processBeforeRedraw(layer) {
+        HuTime.Drawing.drawCircle(sty, layer, pos, 100);
+    };
+
+    ht.redraw(0, 100);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="/manual/ja/contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

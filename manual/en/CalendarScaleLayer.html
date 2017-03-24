@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Calendar Scale Layer - HuTime API Manual</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual" />
+  <meta property="dcterms:description" content="User's manual about usage of HuTime." />
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API Manual</h2>
+    <h1>Calendar Scale Layer</h1>
+  </div>
+  <div style="height:50px; float:right;"><a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30"
+                                          style="padding-top:13px"/></a></div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>1. Overview</h2>
+    <p>A calendar scale layer (HuTime.CalendarScaleLayer) is used to display a calendar scale. The calendar scale layer, a class derived from the <a href="Layer.html">Layer class</a>, can basically be used like other layers, for example, when you put it on a panel. Calendar data is obtained via the Web in cooperation with the calendar data service of the HuTime Project. Thus, calendar IDs for calendar types, dates, and other data can be formatted in the same way in other calendar data services in the HuTime Project.</p>
+  </div>
+
+  <div id="section02">
+    <h2>2. Creating a Layer Object</h2>
+    <p>You can specify a calendar ID for the scale to be displayed when creating an object. The height, as well as the top and bottom margins, of the layer can be specified similarly to other layers.</p>
+
+    <div class="method">
+      <h3>Constructor</h3>
+      <h4>HuTime.CalendarScaleLayer([<span class="val">vBreadth</span> [, <span class="val">vMarginTop</span> [, <span class="val">vMarginBottom</span> [, <span class="val">calendarId</span>]]]])</h4>
+
+      <dl>
+        <dt><span class="val">vBreadth</span></dt>
+        <dd>Type: Number</dd>
+        <dd>The height of the layer (in pixels).</dd>
+
+        <dt><span class="val">vMarginTop</span></dt>
+        <dd>Type: Number</dd>
+        <dd>The size of the top margin of the layer (in pixels).</dd>
+
+        <dt><span class="val">vMarginBottom</span></dt>
+        <dd>Type: Number</dd>
+        <dd>The size of the bottom margin of the layer (in pixels).</dd>
+
+        <dt><span class="val">calendarId</span></dt>
+        <dd>Type: String</dd>
+        <dd>The calendar ID of the scale to be displayed. For the list of calendar IDs, visit <a href="http://datetime.hutime.org/calendar/">http://datetime.hutime.org/calendar/</a>. If omitted, meaning that calendarId has the null value, it is set to the Gregorian calendar (and the calendar data is computed on the client).</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>3. Adding a Layer to the Panel and Displaying</h2>
+    <p>Just like other layers, you can add a calendar scale layer to a panel using the appendLayer method of a Panel object. The object is drawn according to the sequence of the redraw method, but there is a time difference when the layer is drawn because the calendar data is obtained via the Web. However, if calendarId is set to null or &quot;1.1&quot; (Julian Date), the calendar data is computed on the client, causing no time difference.</p>
+
+    <div class="contentFigure"><img src="/manual/img/CalendarScaleLayer03-01.png" alt="calendar scale layer example"/><p>An example of displaying calendar scale layers (see the sample code below). The top layer is displayed in the Gregorian calendar (calendarId omitted), the middle layer in the Hijri calendar (Islamic calendar) (calendarId = &quot;103.1&quot;), and the bottom layer in the Japanese calendar (calendarId = &quot;1001.1&quot;). As shown in the figure, multiple calendar scales can be placed on a single panel.</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/CalendarScaleLayerSample03-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr0 = new HuTime.CalendarScaleLayer(70, 0, null);
+    pnl.appendLayer(lyr0);
+    var lyr1 = new HuTime.CalendarScaleLayer(70, 70, null, &quot;103.1&quot;);
+    pnl.appendLayer(lyr1);
+    var lyr2 = new HuTime.CalendarScaleLayer(80, null, 0, &quot;1001.1&quot;);
+    pnl.appendLayer(lyr2);
+
+    ht.redraw(HuTime.timeToJd(2016, 7, 1), HuTime.timeToJd(2017, 6, 30));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>4. Formatting Labels</h2>
+    <p>You can format a label on a calendar scale by using the labelFormat property (except for the case where calendarId is set to null or &quot;1.1&quot;). The labelFormat property has more detailed properties depending on which label, such as year, month, or day, is specified, as shown in the list below. The combined formats are provided to reflect differences in the order of the name of an era, year, month, and day for different calendars or cultures. If a calendar does not have the era names, each format does not have to contain them.</p>
+    <table>
+      <tr>
+        <th>Setting targets</th>
+        <th>Properties</th>
+      </tr>
+      <tr>
+        <td>Era name</td>
+        <td>era</td>
+      </tr>
+      <tr>
+        <td>Year</td>
+        <td>year</td>
+      </tr>
+      <tr>
+        <td>Month</td>
+        <td>month</td>
+      </tr>
+      <tr>
+        <td>Day</td>
+        <td>day</td>
+      </tr>
+      <tr>
+        <td>Combination of the era name and year</td>
+        <td>toYear</td>
+      </tr>
+      <tr>
+        <td>Combination of the era name and month</td>
+        <td>toMonrh</td>
+      </tr>
+      <tr>
+        <td>Combination of the era name and day</td>
+        <td>toDay</td>
+      </tr>
+    </table>
+    <p>A calendar scale can be formatted in the same way in other calendar data services in the HuTime Project. For details, visit <a href="http://www.hutime.jp/basicdata/calendar/format.html">http://www.hutime.jp/basicdata/calendar/format.html</a>. If the formats for the year, month, or day labels are omitted, the differentials in the combined format are applied.</p>
+
+    <div class="contentFigure"><img src="/manual/img/CalendarScaleLayer04-01.png" alt="label format of calendar scale layer example"/><p>An example of formatting labels on calendar scale layers (see the sample code below). The top layer uses the default format, and the middle layer uses a format of Chinese characters for numbers. The bottom layer uses a format copied from the middle layer, but specifies the separate format for month. In the middle layer, the format for the month label is not specified. Thus, the differential between the format of the combination of the era name and month (&quot;ggyK1 year MK1 month&quot;) and the format of the combination of the era name and year (&quot;ggyK1 year&quot;) is set as the format of the month label. As a result, numbers are represented as the month labels in Chinese characters. On the other hand, the month label is represented according to the format specified separately (&quot;MMM month&quot;) in the bottom layer.</p>
+    </div>
+
+    <div>
+      <p><span style="font-weight:700;">Sample code </span>(<a href="/manual/sample/CalendarScaleLayerSample04-01.html" target="_blank">click here for a running example</a>):</p>
+      <pre class="code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://web.hutime.org/js/HuTime.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title&gt;Sample Code&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;timeline&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var ht = new HuTime();
+    var pnls = new HuTime.PanelCollection(200, 400);
+    ht.appendPanelCollection(pnls, document.getElementById(&quot;timeline&quot;));
+    var pnl = new HuTime.TilePanel(200);
+    pnls.appendPanel(pnl);
+
+    var lyr0 = new HuTime.CalendarScaleLayer(70, 0, null, &quot;1001.1&quot;);
+    pnl.appendLayer(lyr0);
+    var lyr1 = new HuTime.CalendarScaleLayer(70, 70, null, &quot;1001.1&quot;);
+    lyr1.labelFormat.toYear = &quot;ggyK1年&quot;;
+    lyr1.labelFormat.toMonth = &quot;ggyK1年MK1月&quot;;
+    lyr1.labelFormat.toDay = &quot;ggyK1年MK1月dK1日&quot;;
+    pnl.appendLayer(lyr1);
+    var lyr2 = new HuTime.CalendarScaleLayer(80, null, 0, &quot;1001.1&quot;);
+    lyr2.labelFormat.toYear = lyr1.labelFormat.toYear;
+    lyr2.labelFormat.toMonth = lyr1.labelFormat.toMonth;
+    lyr2.labelFormat.toDay = lyr1.labelFormat.toDay;
+    lyr2.labelFormat.month = &quot;MMM月&quot;;
+    pnl.appendLayer(lyr2);
+
+    ht.redraw(HuTime.timeToJd(2016, 7, 1), HuTime.timeToJd(2017, 6, 30));
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

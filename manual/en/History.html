@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>HuTime - History</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0; padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>&nbsp;</h2>
+    <h1>History</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30px"
+                                          style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+<div id="mainContent">
+
+  <div id="update_20170322">
+    <h2>2017-03-22</h2>
+    <h3>Manual in English</h3>
+    <ul>
+      <li>English manual of HuTime Web API is released.</li>
+    </ul>
+  </div>
+
+  <div id="update_20170222">
+    <h2>2017-02-22</h2>
+    <h3>API (20170222)</h3>
+    <ul>
+      <li>Added the functions to operate on touch devices such as a smartphone.</li>
+    </ul>
+  </div>
+
+  <div id="update_20170216">
+    <h2>2017-02-16</h2>
+    <h3>Source code of HuTime Web API</h3>
+    <p>Source code of HuTime Web API is released on <a href="https://github.com/hutime/">GitHub</a>.</p>
+    <ul>
+      <li>Source code: <a href="https://github.com/hutime/WebHuTime/">https://github.com/hutime/WebHuTime/</a></li>
+      <li>Manual: <a href="https://github.com/hutime/WebHuTimeManual/">https://github.com/hutime/WebHuTimeManual/</a></li>
+    </ul>
+  </div>
+
+  <div id="update_20170110">
+    <h2>2017-01-10</h2>
+    <h3>API (20170110)</h3>
+    <ul>
+      <li>
+        Added the function to read datetime which is not described in ISO 8601 in data sources.
+      </li>
+      <li>
+        Added the function to read datetime described as a month, a year or a era.
+      </li>
+      <li>Fixed the specification to specify plot format.
+        <br />(old)<span class="val">recordset</span>.plotStyle = Function (record){}
+        <br />(new)<span class="val">recordset</span>.plotStyle = Function (itemName, record){}
+        <br />cf: <a href="ChartLayer.html#section07">Formatting Individual Records</a>
+      </li>
+      <li>
+        Fixed the specification to label data.
+        <br />(old)<span class="val">record</span>.data["label"]
+        <br />(new)<span class="val">record</span>.data[<span class="val">itemName</span>]
+        <br />cf:<a href="TLineLayer.html#section07">Formatting Individual Records</a>
+      </li>
+      <li>
+        Fixed a bug that size of a image object (HuTime.Image) changes after redrawing.
+      </li>
+      <li>
+        Fixed a bug that final character in CSV or TSV files is not read when the file is not ended in CRLF.
+      </li>
+      <li>
+        Fixed a bug that labels are not shown correctly when scale intervals in a chart is less than 1.
+      </li>
+    </ul>
+
+    <h3>Manual updated</h3>
+    <ul>
+      <li>A sample of HuTime is shown on the index page.</li>
+      <li>Update information is shown on the index page.</li>
+      <li>Fixed according to latest version (20170110).</li>
+    </ul>
+  </div>
+
+  <div id="update_20161210">
+    <h2>2016-12-10</h2>
+    <h3>Released API (test version)</h3>
+    <p>Test version with minimum function is released.</p>
+
+    <h3>The test version is introduced in Computer and Humanities Symposium (JINMONCOM 2016).</h3>
+    <p>Title: Web HuTime - Web platform for temporal information (<a href="http://www.hutime.jp/documents/documents/jinmoncom2016_sekino.pdf">Slide (in Japanese)</a>).</p>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>
