@@ -22,6 +22,7 @@
 </div>
 
 <div id="mainContent">
+
   <div id="section01">
     <h2>１．概要</h2>
     <p>
@@ -281,22 +282,22 @@
     </div>
   </div>
 
-
-  <h2><a name="04">４．描画のタイミング</a></h2>
-  <p>
+  <div id="section04">
+    <h2>４．描画のタイミング</h2>
+    <p>
     HuTime.Drawingの各メソッドを用いで描画した図形は、レイヤが再描画されると消えてしまう。このため、レイヤの再描画に合わせてHuTime.Drawingの各メソッドが実施されるよう工夫する必要がある。実際には、レイヤの再描画に合わせた動作を追加できる<a
           href="Layer.html#section06">HuTime.Layer.processBeforeRedrawメソッド</a>（再描画の前）、または、<a href="Layer.html#section06">HuTime.Layer.processAfterRedrawメソッド</a>（再描画の後）の中に記述する。processBeforeRedrawメソッドを利用した場合は、<a href="TLineLayer.html">年表レイヤ</a>のレコード、<a href="ChartLayer.html">グラフレイヤ</a>のプロット、<a href="OLObject.html">レイヤ上のオブジェクト</a>などの下に図形が描画される。反対に、processAfterRedrawメソッドを利用した場合は、これらの上に図形が描画される。
-  </p>
+    </p>
 
-  <div class="contentFigure">
-    <img src="/manual/img/Figure04-01.png" alt="figure drawing example"/>
-    <p>
+    <div class="contentFigure">
+      <img src="/manual/img/Figure04-01.png" alt="figure drawing example"/>
+      <p>
       図形描画の例（下記サンプルコード）。円はprocessBeforeRedrawメソッド内で描画されたので、グラフの下に表示されている。一方、三角形は、processAfterRedrawメソッド内で描画されたので、グラフの上に表示されている。</p>
-  </div>
+    </div>
 
-  <div>
-    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
-    <pre class="code">
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureSample04-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -331,16 +332,18 @@
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-    </pre>
+      </pre>
+    </div>
   </div>
 
-  <h2><a name="Figure05">５．パスの利用</a></h2>
-  <p>
+  <div id="section05">
+    <h2>５．パスの利用</h2>
+    <p>
     各図形で定義されているパスを描画するメソッドは、マウスが図形の中にあるかどうかを判断する場合などに利用できる。下記のサンプルコードでは、図形内にマウスが入ると、図形の色が変化する。
-  </p>
-  <div>
-    <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureSample05-01.html" target="_blank">実行例はこちら</a>）。</p>
-    <pre class="code">
+    </p>
+    <div>
+      <p><span style="font-weight:700;">サンプルコード</span>（<a href="/manual/sample/FigureSample05-01.html" target="_blank">実行例はこちら</a>）。</p>
+      <pre class="code">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
@@ -381,7 +384,8 @@
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-  </pre>
+    </pre>
+    </div>
   </div>
 
   <div id="contentBottom">
