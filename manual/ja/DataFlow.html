@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>データの取得と設定 - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>データの取得と設定</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      年表やグラフに表示するデータは、ローカルファイル、または、Web上のリモートファイルから取得することができる。これらのファイルは、まず、データストリームによりプレーンテキストの生データとして読み込まれる。次に、この生データがそれぞれのファイルフォーマットに対応したストリームリーダに取り込まれ、正規化された中間データになる。最後に、どのデータ項目をどの用途に使用するかを記述したレコード設定（HuTime.RecordSettings）基づいて、年表やグラフを表示するためのレコードセットとなる。
+    </p>
+    <p>
+      これらの過程は、各レコードセットオブジェクトのloadRecordsetメソッドの中で実行されるため、データ表示等の基本的な使い方だけであれば、レコードセットオブジェクトに必要な値を設定するだけでよい（コンストラクタ内でもloadRecordsetメソッドが呼び出される）。ただし、データ読み込み時に何らかの手を加えたり、新たなファイル形式に対応する拡張を行うなど、より発展的にHuTimeを使う場合は、上記の過程の理解が必須である。<a href="Stream.html">データストリーム</a>、<a href="StreamReader.html">ストリームリーダ</a> 、および、レコードセット（<a href="TLineRecordset.html">年表</a>・<a href="ChartRecordset.html">グラフ</a>）の詳細は、それぞれのマニュアルを参照されたい。ここでは、<a href="#section02">中間データ</a>、および、<a href="#section03">レコード設定</a>について解説する。
+    </p>
+    <div class="contentFigure">
+      <img src="/manual/img/DataFlow.gif" alt="data flow"/>
+    </div>
+  </div>
+
+  <div id="section02">
+    <h2>２．中間データ</h2>
+    <p>中間データは、ストリームリーダによって生データから生成されるもので、異なるファイルフォーマットのデータを正規化し、効率的に年表やグラフのためのレコードセットを生成するためのものである。中間データでは、生データの内容がレコードごとに整理され、データ項目名の配列とそれに対応する値の配列を持つオブジェクトがレコードごとに生成される。さらに、各レコードに対応するこれらのオブジェクトが配列化され、中間データとなる。
+    </p>
+    <p>CSVファイルを例にすると、ある行の内容がデータ項目名の配列とそれに対応する値の配列に収容され、この２つの配列を持つオブジェクトが、１つのレコードに相当する。データ項目名は、タイトル行がある場合は、タイトル行の内容に基づいて付与される。タイトル行が無い場合や、タイトル行の項目数よりも多くのデータが記述されている場合は、列番号を表す数字がデータ項目名として用いられる。これらのオブジェクトが、行の出現順に配列化され、中間データとなる。</p>
+
+    <p style="text-indent: 0; padding: 0; font-weight: 700;">CSVファイル （1行目タイトル行）</p>
+    <pre style="margin: 3px 0 0 0;">
+"hoge","piyo","hogera"
+1,"aaa",3
+45,"bbb",-2,"ccc"
+    </pre>
+    <p style="text-indent: 0; padding: 0; font-weight: 700;">生成される中間データ</p>
+    <pre  style="margin: 3px 0 0 0;">
+recordData[0] = {
+    name: { "hoge", "piyo", "hogera", 3 },
+    value: { 1, "aaa", 3 }
+};
+recordData[1] = {
+    name: { "hoge", "piyo", "hogera", 3 },
+    value: { 45, "bbb", -2, "ccc" }
+};
+    </pre>
+    <p style="text-indent: 0;">CSVファイルの場合、データ項目名は、最も項目数の多いレコードに合わせて共通で付けられるため、最初のレコードにも4番目のデータ項目名（3）が存在する。</p>
+  </div>
+
+  <div id="section03">
+    <h2>３．レコード設定</h2>
+    <p>レコード設定は、生成された中間データのどのデータ項目をデータセットのどの変数に割り当てるかを指定する。t軸の値として用いるデータは、HuTime.TRangeオブジェクトとしてレコードに渡す必要があるため、独自の設定（HuTime.RecordTSetting）を用い、始点および終点のt値となるデータ項目を指定する。年表に表示する文字列やグラフの値など、それ以外のデータは、汎用的な設定（HuTime.RecordDataSetting）により、中間データのどのデータ項目を用いるかを指定する。これらの設定は、コンテナ（HuTime.RecordSettings）にまとめられ、レコードセットオブジェクトに渡される。レコードセットオブジェクトは、得られた中間データとこのレコード設定を用い、レコードセットの内容を生成する。</p>
+
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.RecordSettings()</h4>
+      <p>引数なし。</p>
+    </div>
+
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>tSetting</dt>
+        <dd>型：HuTime.RecordTSetting</dd>
+        <dd>既定値：null</dd>
+        <dd>
+          t値を取得するデータ項目の設定。
+        </dd>
+
+        <dt>dataSettings</dt>
+        <dd>型：Array (HuTime.RecordDataSetting)</dd>
+        <dd>既定値：[]</dd>
+        <dd>読み取り専用</dd>
+        <dd>
+          年表に表示する文字列やグラフの数値など、t値以外のデータを取得するデータ項目の設定の配列。
+        </dd>
+      </dl>
+    </div>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>appendDataSetting(<span class="val">setting</span>)</h4>
+      <p>データ（t値以外）を取得するデータ項目の設定を追加する。追加された設定は、dataSettingsプロパティに反映される。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+
+        <dt class="val">setting</dt>
+        <dd>型：HuTime.RecordDataSetting</dd>
+        <dd>
+          追加するデータ設定。
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．t値に関する設定</h2>
+    <p>生成された中間データからt値を取得する方法を設定する。指定されたデータ項目から取得された始点と終点のt値を元にしてHuTime.TRangeオブジェクトが生成され、レコードセットのレコードに代入される。</p>
+
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.RecordTSetting(<span class="val">itemNameBegin</span> [, <span class="val">itemNameEnd</span> [, <span class="val">getValue</span> ]])</h4>
+      <dl>
+        <dt class="val">itemNameBegin</dt>
+        <dd>型：String</dd>
+        <dd>
+          t値の始点を取得する中間データのデータ項目名。
+        </dd>
+
+        <dt class="val">itemNameEnd</dt>
+        <dd>型：String</dd>
+        <dd>
+          t値の終点を取得する中間データのデータ項目名。省略した場合は、始点と同じデータ項目名となる。
+        </dd>
+
+        <dt class="val">getValue</dt>
+        <dd>型：Function</dd>
+        <dd>
+          中間データから得られたt値をHuTime.TRangeオブジェクトを生成する前に加工するための関数。省略した場合は、引数<span class="val">itemNameBegin</span>および<span class="val">itemNameEnd</span>が指す値がそのままTRangeを生成するためのt値として用いられる。
+          <div class="method">
+            <h4>getValue(<span class="val">streamRecord</span>, <span class="val">itemName</span>)</h4>
+            <dl>
+              <dt>返値</dt>
+              <dd>型: 数値</dd>
+              <dd>加工後のデータを返す。HuTime.TRangeオブジェクトを生成するための始点または終点のt値として用いられる。</dd>
+
+              <dt class="val">streamRecord</dt>
+              <dd>型: Object</dd>
+              <dd>現在処理している中間データのレコードが渡される。</dd>
+
+              <dt class="val">itemName</dt>
+              <dd>型: String</dd>
+              <dd>現在処理しているデータ項目名（コンストラクタの引数<span class="val">itemNameBegin</span>または<span class="val">itemNameEnd</span>で設定した値）が渡される。</dd>
+            </dl>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section05">
+    <h2>５．汎用データ（t値以外のデータ）に関する設定</h2>
+    <p>年表に表示する文字やグラフの値などの汎用データを中間データから取得する方法を設定する。指定されたデータ項目から値が取得され、レコードセットのレコードに代入される。</p>
+
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.RecordDataSetting(<span class="val">itemName</span> [, <span class="val">recordDataName</span> [, <span class="val">getValue</span> ]])</h4>
+      <dl>
+        <dt class="val">itemName</dt>
+        <dd>型：String</dd>
+        <dd>
+          対象のデータを取得する中間データのデータ項目名。
+        </dd>
+
+        <dt class="val">recordDataName</dt>
+        <dd>型：String</dd>
+        <dd>
+          レコードセットのレコードに代入される際に、中間データと異なるデータ項目名を付与する場合に設定する。省略した場合は、<span class="val">itemName</span>と同じにデータ項目名なる。
+        </dd>
+
+        <dt class="val">getValue</dt>
+        <dd>型：String</dd>
+        <dd>
+          中間データから得られた値をレコードセットのレコードに代入される前に加工するための関数。省略した場合は、引数<span class="val">itemName</span>が指す値がそのまま用いられる。同じレコードの別のデータ項目（たとえば、エラーを識別するデータなど）に基づいて、当該データを書き換える（たとえば、エラーデータはnullやNaNとする）などの操作を行うことができる。
+          <div class="method">
+            <h4>getValue(<span class="val">streamRecord</span>, <span class="val">itemName</span>)</h4>
+            <dl>
+              <dt>返値</dt>
+              <dd>型: 数値</dd>
+              <dd>加工後のデータを返す。レコードセットのレコードの値として用いられる。</dd>
+
+              <dt class="val">streamRecord</dt>
+              <dd>型: Object</dd>
+              <dd>現在処理している中間データのレコードが渡される。</dd>
+
+              <dt class="val">itemName</dt>
+              <dd>型: String</dd>
+              <dd>現在処理しているデータ項目名（コンストラクタの引数<span class="val">itemName</span>で設定した値）が渡される。</dd>
+            </dl>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>

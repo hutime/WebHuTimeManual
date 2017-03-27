@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>データストリーム - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>データストリーム</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      データストリームは、ローカルやWeb上のファイルを読み込む機能を提供する。取得したファイルの内容は、文字列として格納され、<a href="DataFlow.html">年表やグラフのレコードセットの生成</a>などにおいて、次の工程で利用される。</p>
+  </div>
+
+  <div id="section02">
+    <h2>２．データストリームの生成</h2>
+    <p>ローカルファイル（HuTime.FileStream）およびWeb上のファイル（HuTime.HttpStream）を読み込むためのストリームがある。</p>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.FileStream(<span class="val">source</span>)</h4>
+      <p>ローカルファイルを読み込むためのデータストリーム。</p>
+      <dl>
+        <dt class="val">source</dt>
+        <dd>型：File</dd>
+        <dd>データとして読み込むファイルを示すFileオブジェクト。Fileオブジェクト以外を設定すると、loadStateプロパティは"error"に設定される。</dd>
+      </dl>
+    </div>
+    <div class="method">
+      <h4>HuTime.HttpStream(<span class="val">source</span>)</h4>
+      <p>Web上のリモートファイルを読み込むためのデータストリーム。</p>
+      <dl>
+        <dt class="val">source</dt>
+       <dd>型：String</dd>
+        <dd>読み込むファイルのURL。nullを設定するとloadStateプロパティは"error"に設定される。無効なURLである場合は、読み込み動作後にloadStateプロパティが"error"に設定される。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．データの読み込み</h2>
+    <p>sourceプロパティに必要な情報を設定した後、loadメソッドにより読み込む。読み込みの状態は、loadStateプロパティにより確認できる。</p>
+
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>source</dt>
+        <dd>型：String</dd>
+        <dd>
+          ストリームで読み込むファイルの取得元。HuTime.FileStreamの場合はFileオブジェクト、HuTime.HttpStreamの場合はURLを示す文字列を指定する。
+        </dd>
+      </dl>
+    </div>
+
+    <div>
+      <dl>
+        <dt>loadState</dt>
+        <dd>型：String</dd>
+        <dd>読み取り専用</dd>
+        <dd>
+          ストリームの読み込み状態を示す。
+          <ul>
+            <li>init: sourceプロパティが設定されていない初期状態。</li>
+            <li>ready: sourceプロパティが設定されており、読み込み可能な状態。</li>
+            <li>loading: 読み込み中。loadメソッド実行直後の状態。</li>
+            <li>loadend: 読み込み終了。</li>
+            <li>error: 読み込み時やsourceプロパティの設定にエラーが生じた状態。</li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>load()</h4>
+      <p>sourceプロパティで指定された取得元からファイルを読み込む。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．読み込んだファイルの参照</h2>
+    <p>読み込んだファイルの生データをreadAllメソッドにより、文字列として取得することができる。</p>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>readAll()</h4>
+      <p>読み込んだファイルの内容を文字列として取得する。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>型：String</dd>
+        <dd>読み込んだファイルの内容。読み込みに失敗した場合は、null。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>
