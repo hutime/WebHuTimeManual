@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>ストリームリーダ - HuTime API マニュアル</title>
+  <link href="/manual/common/manual.css" rel="stylesheet" type="text/css"/>
+  <meta property="dcterms:title" content="HuTime Manual"/>
+  <meta property="dcterms:description" content="User's manual about usage of HuTime."/>
+</head>
+<body style="margin:0;padding:0;">
+
+<div id="header">
+  <div style="height:50px; float:left;">
+    <h2>HuTime API マニュアル</h2>
+    <h1>ストリームリーダ</h1>
+  </div>
+  <div style="height:50px; float:right;">
+    <a href="http://www.hutime.org/"><img src="http://www.hutime.org/common/img/toplogo.gif" alt="HuTime" height="30" style="padding-top:13px"/></a>
+  </div>
+  <br class="clearfloat"/>
+</div>
+
+<div id="mainContent">
+
+  <div id="section01">
+    <h2>１．概要</h2>
+    <p>
+      ストリームリーダは、<a href="Stream.html">データストリーム</a>で読み込んだデータをファイルフォーマットに合わせてレコードごとに整理し、<a href="DataFlow.html#section02">中間データ</a>として出力する機能を提供する。この中間データを用いて、年表やグラフのレコードセットが生成される。</p>
+  </div>
+
+  <div id="section02">
+    <h2>２．ストリームリーダの生成</h2>
+    <p>CSV（カンマ区切りテキスト）、およびTSV（タブ区切りテキスト）に対応したストリームリーダが用意されている。</p>
+    <h3>コンストラクタ</h3>
+    <div class="method">
+      <h4>HuTime.CsvReader(<span class="val">source</span> [, <span class="val">isTitleRow</span>] )</h4>
+      <h4>HuTime.TsvReader(<span class="val">source</span> [, <span class="val">isTitleRow</span>] )</h4>
+      <dl>
+        <dt class="val">source</dt>
+        <dd>型：String</dd>
+        <dd>データとして読み込むソース。以下の3つが指定できる。
+          <ul>
+            <li>URLを示す文字列</li>
+            <li>Fileオブジェクト</li>
+            <li>HuTime.FileStreamオブジェクト、または、HuTime.HttpStreamオブジェクト</li>
+          </ul>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt class="val">isTitleRow</dt>
+        <dd>型：Boolean</dd>
+        <dd>既定値：true</dd>
+        <dd>先頭行がタイトル行であるかを示す真偽値。タイトル行である場合はtrue。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section03">
+    <h2>３．データの読み込み</h2>
+    <p>sourceプロパティに取得元の情報を設定した後、loadメソッドを実行すると、データストリームを介してファイルが読み込まれ、中間データが生成される。</p>
+
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>source</dt>
+        <dd>型：String | File | HuTime.StreamBase</dd>
+        <dd>
+          ストリームで読み込むファイルの取得元。FileStreamの場合はFileオブジェクト、HttpStreamの場合はURLを指定する。
+        </dd>
+      </dl>
+    </div>
+
+    <div>
+      <dl>
+        <dt>stream</dt>
+        <dd>型：HuTime.StreamBase</dd>
+        <dd>
+          ストリームリーダが読み込みに用いるストリーム。sourceプロパティを設定すると、自動的に適切なストリームが設定される。
+        </dd>
+      </dl>
+    </div>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>load()</h4>
+      <p>sourceプロパティで指定された取得元からファイルを読み込み、中間データを生成する。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section04">
+    <h2>４．中間データの参照</h2>
+    <p>recordDataプロパティで生成された中間データを参照することができる。</p>
+
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>recordData</dt>
+        <dd>読み取り専用</dd>
+        <dd>型：Array</dd>
+        <dd>読み込んだファイルから生成された中間データ。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="contentBottom">
+    <!-- #include file="contentBottom.html" -->
+  </div>
+
+</div>
+
+<div id="footer">
+  <!-- #include file="/manual/common/footer.html" -->
+</div>
+
+</body>
+</html>
