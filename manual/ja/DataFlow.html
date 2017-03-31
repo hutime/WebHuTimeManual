@@ -133,7 +133,7 @@ recordData[1] = {
         <dd>
           中間データから得られたt値をHuTime.TRangeオブジェクトを生成する前に加工するための関数。省略した場合は、引数<span class="val">itemNameBegin</span>および<span class="val">itemNameEnd</span>が指す値がそのままTRangeを生成するためのt値として用いられる。
           <div class="method">
-            <h4>getValue(<span class="val">streamRecord</span>, <span class="val">itemName</span>)</h4>
+            <h4>func(<span class="val">streamRecord</span>, <span class="val">itemName</span>)</h4>
             <dl>
               <dt>返値</dt>
               <dd>型: 数値</dd>
@@ -178,7 +178,7 @@ recordData[1] = {
         <dd>
           中間データから得られた値をレコードセットのレコードに代入される前に加工するための関数。省略した場合は、引数<span class="val">itemName</span>が指す値がそのまま用いられる。同じレコードの別のデータ項目（たとえば、エラーを識別するデータなど）に基づいて、当該データを書き換える（たとえば、エラーデータはnullやNaNとする）などの操作を行うことができる。
           <div class="method">
-            <h4>getValue(<span class="val">streamRecord</span>, <span class="val">itemName</span>)</h4>
+            <h4>func(<span class="val">streamRecord</span>, <span class="val">itemName</span>)</h4>
             <dl>
               <dt>返値</dt>
               <dd>型: 数値</dd>

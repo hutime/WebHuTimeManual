@@ -25,21 +25,24 @@
   <div id="section01">
     <h2>１．概要</h2>
     <p>
-      年表には、年表用のレコード（HuTime.TLineRecord）およびそれらを収容する年表用のレコードセット（HuTime.TLineRecordset）が用いられる。年表用のレコードセットに、書式、ラベルに用いるデータ項目など、年表を表示するために必要な情報を設定する。</p>
+      年表には、年表用のレコード（HuTime.TLineRecord）およびそれらを収容する年表用のレコードセット（HuTime.TLineRecordset）が用いられる。書式、ラベルに用いるデータ項目など、年表を表示するために必要な情報は、レコードセットに設定する。</p>
   </div>
 
   <div id="section02">
     <h2>２．レコードセットの生成</h2>
-    <p>年表のレコードセット（HuTime.TLineRecordset）は、以下のとおり、コンストラクタにより生成する。</p>
+    <p>年表のレコードセット（HuTime.TLineRecordset）は、以下のコンストラクタにより生成する。t値が時間データで暦に基づく表現である場合は、HuTime.CalendarTLineRecordset を用いる。。</p>
     <h3>コンストラクタ</h3>
     <div class="method">
       <h4>HuTime.TLineRecordset(<span class="val">source</span>,　<span class="val">tBeginItem</span>,
         <span class="val">tEndItem</span>, <span class="val">labelItem</span> [, <span class="val">rangeStyle</span> [,
         <span class="val">labelStyle</span> ]])</h4>
+      <h4>HuTime.CalendarTLineRecordset(<span class="val">source</span>,　<span class="val">tBeginItem</span>,
+        <span class="val">tEndItem</span>, <span class="val">labelItem</span>, <span class="val">calendarId</span> [, <span class="val">rangeStyle</span> [,
+        <span class="val">labelStyle</span> ]])</h4>
       <dl>
         <dt class="val">source</dt>
-        <dd>型：String</dd>
-        <dd>レコードセットを読み込むファイルのパスまたはURL。</dd>
+        <dd>型：String | HuTime.StreamReader</dd>
+        <dd>レコードセットを読み込むファイルのパスまたはURL、もしくは、ストリームリーダ。</dd>
 
         <dt class="val">tBeginItem</dt>
         <dd>型：String｜Number</dd>
@@ -56,6 +59,11 @@
         <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
         <dd>年表に示す文字の項目名（列名）または列番号。</dd>
 
+        <dt class="val">calendarId</dt>
+        <dd>（HuTime.CalendarTLineRecordset）</dd>
+        <dd>型：String</dd>
+        <dd>t値に用いる時間データの<a href="http://datetime.hutime.org/calendar/">暦ID</a>。</dd>
+
         <dt class="val">rangeStyle</dt>
         <dd>型：HuTime.FigureStyle</dd>
         <dd>レコードセット標準の年表の範囲書式。省略された場合は既定値が適用される。</dd>
@@ -69,12 +77,35 @@
 
   <div id="section03">
     <h2>３．データの読み込み</h2>
-    <p>。</p>
+    <p>コンストラクタでsource 引数を設定するか生成されたオブジェクトのreader プロパティを設定した後、loadRecordset メソッドにより、データの読み込みが実行する。</p>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>loadRecordset()</h4>
+      <p>データの読み込みを開始する。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>reader</dt>
+        <dd>型：HuTime.StreamReaderBase</dd>
+        <dd>読み込みに用いるストリームリーダ。読み込み状態は、reader.loadState プロパティにより確認できる。</dd>
+
+        <dt>source</dt>
+        <dd>型：String</dd>
+        <dd>読み込み元のURL。reader.sourceを参照している。</dd>
+      </dl>
+    </div>
   </div>
 
   <div id="section04">
     <h2>４．レコードの追加と削除</h2>
-    <p>年表には、レコードとしてHuTime.TLineRecordを用いる。レコードセットが持つレコードは、配列recordsに収容される。レコードの追加や削除は、appendRecord、removeRecordなどのメソッドを通じて行う。</p>
+    <p>年表には、レコードとしてHuTime.TLineRecordを用いる。それぞれのレコードは、レコードセットオブジェクトの records 配列に収容される。レコードの追加や削除は、appendRecord、removeRecordなどのメソッドで行う。</p>
 
     <div>
       <dl>
@@ -82,7 +113,7 @@
         <dd>型：Array</dd>
         <dd>読み取り専用</dd>
         <dd>
-          レコードセットが持つレコードを収容する。読み取り専用であるため、recordを別の配列に置き換えるなどの操作はできないが、psuh等の操作は可能である。ただし、他の処理との整合性を保つため、レコードの追加・削除は、appendRecord、removeRecordなどのメソッドを通じて行うべきである。
+          レコードセットが持つレコードを収容する。読み取り専用であるため、recordを別の配列に置き換えるなどの操作はできない。push の操作は可能であるが、他の処理との整合性を保つため、レコードの追加・削除は、appendRecord、removeRecordなどのメソッドを通じて行うべきである。
         </dd>
       </dl>
     </div>
@@ -216,7 +247,7 @@
         <dt>hideTRangeNonCentralValue</dt>
         <dd>型：Boolean</dd>
         <dd>既定値：false</dd>
-        <dd>代表値のないレコード（無限大を含むなど）が範囲の非表示・表示。true で非表示。</dd>
+        <dd>代表値のないレコード（無限大を含むなど）の範囲の非表示・表示。true で非表示。</dd>
 
         <dt>drawPRangeAsRRange</dt>
         <dd>型：Boolean</dd>
@@ -226,7 +257,7 @@
         <dt>showRecordAtTResolution</dt>
         <dd>型：Boolean | Function</dd>
         <dd>既定値：true</dd>
-        <dd>解像度に応じたレコードの表示・非表示の設定。trueで表示。
+        <dd>解像度に応じたレコードの表示・非表示の設定。trueで解像度にかかわらず常に表示。
           <ul>
             <li>真偽値で指定。解像度に関する処理を行わないのであれば、trueにしておく。</li>
             <li>以下の形式の関数で指定
@@ -251,13 +282,20 @@
     </div>
 
     <h3>t値の範囲の書式</h3>
-    <p>t値の範囲の書式（色や太さなど）を設定する。関数を設定することにより、条件ごとに異なる書式で範囲を表示することが可能になる。書式は、確実範囲、可能範囲に共通である。</p>
+    <p>年表におけるt値の範囲の書式の多くは、年表が描画されるレイヤ（HuTime.TLine）で設定される。レイヤで設定される書式は以下のとおり。</p>
+    <ul>
+      <li>useBandStyle: 帯表示・線表示の切り替え</li>
+      <li>plotInterval: 帯・線のv軸方向の間隔</li>
+      <li>padding: 帯・線のレイヤの端からの余白</li>
+      <li>plotDirection: 帯・線を表示する方向（ヨコ表示の場合、上から下/下から上）</li>
+    </ul>
+    <p style="text-indent: 0;">一方、t値の範囲の書式（色や太さなど）や帯の幅などは、レコードセットごとに設定する。関数を設定することにより、条件ごとに異なる書式で範囲を表示することが可能になる。書式は、確実範囲、可能範囲に共通である。</p>
     <div>
       <dl>
         <dt>rangeStyle</dt>
         <dd>型：HuTime.FigureStyle | Function</dd>
         <dd>既定値：HuTime.FigureStyle(null, "black", 2)</dd>
-        <dd>範囲の書式のレコードセットとしての標準値。
+        <dd>範囲の書式のレコードセットとしての標準値。nullを指定すると、既定値に戻る。
           <ul>
             <li>書式を固定値で指定。</li>
             <li>書式を出力する以下の形式の関数を指定。
@@ -274,7 +312,6 @@
                 </dl>
               </div>
             </li>
-            <li>nullを指定すると、既定値に戻る。</li>
           </ul>
         </dd>
       </dl>
@@ -284,12 +321,12 @@
         <dd>型：Number</dd>
         <dd>範囲：0 から 100。NaNは設定不可。</dd>
         <dd>既定値：10</dd>
-        <dd>範囲示す線において、確実範囲と可能範囲を区切る線の幅。</dd>
+        <dd>範囲示す線において、確実範囲と可能範囲を区切る線の幅。レコードセットが用いられるHuTime.TLine オブジェクトの useBandStyle が false（線による範囲の表示）の場合のみ有効。</dd>
 
         <dt>bandBreadth</dt>
         <dd>型：Number | Function</dd>
         <dd>既定値：20</dd>
-        <dd>年表上に表示されるレコードのt値の範囲（帯または線）の幅（単位：px）。</dd>
+        <dd>年表上に表示されるレコードのt値の範囲を示す帯の幅（単位：px）。</dd>
       </dl>
     </div>
 
@@ -299,7 +336,51 @@
         <dt>drawRange</dt>
         <dd>型：Function</dd>
         <dd>既定値：function (){}</dd>
-        <dd>範囲の表示処理をカスタマイズするする場合に設定する。</dd>
+        <dd>範囲の表示処理をカスタマイズするする場合に設定する。既定の処理に戻すには、null を設定する。</dd>
+        <dd>
+          <div class="method">
+            <h4>func(<span class="val">tRange</span>, <span class="val">v</span>,
+              <span class="val">style</span>,
+              <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+            <dl>
+              <dt>返値</dt>
+              <dd>なし</dd>
+
+              <dt class="val">tRange</dt>
+              <dd>型：HuTime.TRange</dd>
+              <dd>t値の範囲を描画するt値の範囲を示す HuTime.TRange オブジェクトが渡される。</dd>
+
+              <dt class="val">v</dt>
+              <dd>型：Number</dd>
+              <dd>t値の範囲を描画する位置を示すv値が渡される。</dd>
+
+              <dt class="val">style</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>t値の範囲の書式が渡される。</dd>
+
+              <dt class="val"> layer</dt>
+              <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+              <dd>描画対象のレイヤオブジェクトが渡される。</dd>
+
+              <dt class="val">recordset</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードセットが渡される。</dd>
+
+              <dt class="val">record</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードが渡される。</dd>
+
+              <dt class="val"> valueName</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のデータ項目名が渡される。</dd>
+
+              <dt class="val">canvas</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象の HTML canvas が渡される。</dd>
+            </dl>
+          </div>
+        </dd>
       </dl>
     </div>
   </div>
@@ -325,7 +406,7 @@
 
                     <dt class="val">record</dt>
                     <dd>型：HuTime.ChartRecord</dd>
-                    <dd>表示の可否を判断するラベルのレコードが渡される。</dd>
+                    <dd>ラベルの表示の可否を判断するレコードが渡される。</dd>
                   </dl>
                 </div>
               </li>
@@ -337,7 +418,7 @@
           <dt>labelStyle</dt>
           <dd>型：HuTime.StringStyle | Function</dd>
           <dd>既定値：HuTime.StringStyle(14, "black")</dd>
-          <dd>ラベルの書式のレコードセットとしての標準値。
+          <dd>ラベルの書式のレコードセットとしての標準値。nullを指定すると、既定値に戻る。
             <ul>
               <li>書式を固定値で指定。textBaselineは自動的に"middle"に設定される。
               </li>
@@ -351,11 +432,10 @@
 
                     <dt class="val">record</dt>
                     <dd>型：HuTime.ChartRecord</dd>
-                    <dd>書式を適用するラベルのレコードが渡される。</dd>
+                    <dd>ラベルの書式を適用するレコードが渡される。</dd>
                   </dl>
                 </div>
               </li>
-              <li>nullを指定すると、既定値に戻る。</li>
             </ul>
           </dd>
         </dl>
@@ -382,7 +462,51 @@
           <dt>drawLabel</dt>
           <dd>型：関数</dd>
           <dd>既定値：function (){}</dd>
-          <dd>ラベルの表示処理をカスタマイズするする場合に設定する。</dd>
+          <dd>ラベルの表示処理をカスタマイズするする場合に設定する。既定の処理には、null を設定する。</dd>
+          <dd>
+            <div class="method">
+              <h4>func(<span class="val">tRange</span>, <span class="val">v</span>,
+                <span class="val">style</span>,
+                <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+                <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+              <dl>
+                <dt>返値</dt>
+                <dd>なし</dd>
+
+                <dt class="val">tRange</dt>
+                <dd>型：HuTime.TRange</dd>
+                <dd>ラベルを描画するt値の範囲を示す HuTime.TRange オブジェクトが渡される。</dd>
+
+                <dt class="val">v</dt>
+                <dd>型：Number</dd>
+                <dd>t値の範囲を描画する位置を示すv値が渡される。</dd>
+
+                <dt class="val">style</dt>
+                <dd>型：HuTime.StringStyle</dd>
+                <dd>ラベルの書式が渡される。</dd>
+
+                <dt class="val"> layer</dt>
+                <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+                <dd>描画対象のレイヤオブジェクトが渡される。</dd>
+
+                <dt class="val">recordset</dt>
+                <dd>型：HuTime.FigureStyle</dd>
+                <dd>描画対象のレコードセットが渡される。</dd>
+
+                <dt class="val">record</dt>
+                <dd>型：HuTime.FigureStyle</dd>
+                <dd>描画対象のレコードが渡される。</dd>
+
+                <dt class="val"> valueName</dt>
+                <dd>型：HuTime.FigureStyle</dd>
+                <dd>描画対象のデータ項目名が渡される。</dd>
+
+                <dt class="val">canvas</dt>
+                <dd>型：HuTime.FigureStyle</dd>
+                <dd>描画対象の HTML canvas が渡される。</dd>
+              </dl>
+            </div>
+          </dd>
         </dl>
       </div>
 
