@@ -26,22 +26,28 @@
   <div id="section01">
     <h2>１．概要</h2>
     <p>
-      グラフには、グラフ用のレコード（HuTime.ChartRecord）およびそれらを収容するグラフ用のレコードセット（HuTime.ChartRecordset）が用いられる。グラフ用のレコードセットに、プロットや線の書式、値に用いるデータ項目など、年表を表示するために必要な情報を設定する。</p>
+      グラフには、グラフ用のレコード（HuTime.ChartRecord）、および、それらを収容するグラフ用のレコードセット（HuTime.ChartRecordset）が用いられる。値に用いるデータ項目やプロットや線の書式など、グラフを表示するために必要な情報は、レコードセットにを設定する。</p>
   </div>
 
   <div id="section02">
     <h2>２．レコードセットの生成</h2>
-    <p>グラフ用のレコードセット（HuTime.ChartRecordset）は、以下のとおり、コンストラクタにより生成する。</p>
+    <p>グラフ用のレコードセット（HuTime.ChartRecordset）は、以下のコンストラクタにより生成する。t値が時間データで暦に基づく表現である場合は、HuTime.CalendarChartRecordset を用いる。</p>
     <h3>コンストラクタ</h3>
     <div class="method">
       <h4>HuTime.ChartRecordset(<span class="val">source</span>,
         <span class="val">tBeginItem</span>, <span class="val">tEndItem</span>,
         <span class="val">valueItem</span>
         [, <span class="val">plotStyle</span> [, <span class="val">lineStyle</span> ]])</h4>
+
+      <h4>HuTime.CalendarChartRecordset(<span class="val">source</span>,
+        <span class="val">tBeginItem</span>, <span class="val">tEndItem</span>,
+        <span class="val">valueItem</span>, <span class="val">calendarId</span>
+        [, <span class="val">plotStyle</span> [, <span class="val">lineStyle</span> ]])</h4>
+
       <dl>
         <dt class="val">source</dt>
-        <dd>型：String</dd>
-        <dd>レコードセットを読み込むファイルのパスまたはURL。</dd>
+        <dd>型：String | HuTime.StreamReaderBase</dd>
+        <dd>レコードセットを読み込むファイルのパスまたはURL、もしくは、ストリームリーダ。</dd>
 
         <dt class="val">tBeginItem</dt>
         <dd>型：String｜Number</dd>
@@ -51,32 +57,60 @@
         <dt class="val">tEndItem</dt>
         <dd>型：String｜Number</dd>
         <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-        <dd>レコードのt値の終点を示すデータの項目名（列名）または列番号。null など無効な値が与えられた場合は、<span class="val">tBeginItem</span> と同じ値が設定される。</dd>
+        <dd>レコードのt値の終点を示すデータの項目名（列名）または列番号。null や無効な値が与えられた場合は、<span class="val">tBeginItem</span> と同じ値が設定される。</dd>
 
         <dt class="val">valueItem</dt>
         <dd>型：String｜Number</dd>
         <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-        <dd>グラフの値を示すデータの項目名（列名）または列番号。</dd>
+        <dd>グラフの値を示すデータの項目名（列名）または列番号。複数のデータ系列を持つグラフを作成する場合は、レコードセットオブジェクトを生成した後、<a href="#section05">selectValueItem メソッド</a>でグラフの値となる項目を選択する。</dd>
+
+        <dt class="val">calendarId</dt>
+        <dd>（HuTime.CalendarChartRecordsetのみ）</dd>
+        <dd>型：String</dd>
+        <dd>t値に用いる時間データの<a href="http://datetime.hutime.org/calendar/">暦ID</a>。</dd>
 
         <dt class="val">plotStyle</dt>
-        <dd>型：HuTime.FigureStyle</dd>
-        <dd>レコードセット標準のグラフのプロットの書式。省略された場合は既定値が適用される。</dd>
+        <dd>型：HuTime.FigureStyle | Function</dd>
+        <dd>レコードセット標準のグラフのプロットの書式。省略された場合は既定値が適用される。書式を出力する関数を指定する方法は、<a href="#section07">７．プロットの表示に関する設定</a>を参照。</dd>
 
         <dt class="val">lineStyle</dt>
-        <dd>型：HuTime.FigureStyle</dd>
-        <dd>レコードセット標準のグラフの線（プロット間の）書式。省略された場合は既定値が適用される。</dd>
+        <dd>型：HuTime.FigureStyle | Function</dd>
+        <dd>レコードセット標準のプロット間の線の書式。省略された場合は既定値が適用される。書式を出力する関数を指定する方法は、<a href="#section08">８．プロット間の線の表示に関する設定</a>を参照。</dd>
       </dl>
     </div>
   </div>
 
   <div id="section03">
     <h2>３．データの読み込み</h2>
-    <p>。</p>
+    <p>コンストラクタでsource 引数を設定するか生成されたオブジェクトのreader プロパティを設定した後、loadRecordset メソッドにより、データの読み込みが実行する。</p>
+
+    <h3>メソッド</h3>
+    <div class="method">
+      <h4>loadRecordset()</h4>
+      <p>データの読み込みを開始する。</p>
+      <dl>
+        <dt>返値</dt>
+        <dd>なし</dd>
+      </dl>
+    </div>
+
+    <h3>プロパティ</h3>
+    <div>
+      <dl>
+        <dt>reader</dt>
+        <dd>型：HuTime.StreamReaderBase</dd>
+        <dd>読み込みに用いるストリームリーダ。読み込み状態は、reader.loadState プロパティにより確認できる。</dd>
+
+        <dt>source</dt>
+        <dd>型：String</dd>
+        <dd>読み込み元のURL。reader.sourceを参照している。</dd>
+      </dl>
+    </div>
   </div>
 
   <div id="section04">
     <h2>４．レコードの追加と削除</h2>
-    <p>グラフには、レコードとしてHuTime.ChartRecordを用いる。レコードセットが持つレコードは、配列recordsに収容される。レコードの追加や削除は、appendRecord、removeRecordなどのメソッドを通じて行う。</p>
+    <p>グラフには、レコードとしてHuTime.ChartRecordを用いる。それぞれのレコードは、レコードセットオブジェクトの records 配列に収容される。レコードの追加や削除は、appendRecord、removeRecordなどのメソッドを通じて行う。</p>
 
     <div>
       <dl>
@@ -84,7 +118,7 @@
         <dd>型：Array</dd>
         <dd>読み取り専用</dd>
         <dd>
-          レコードセットが持つレコードを収容する。読み取り専用であるため、recordを別の配列に置き換えるなどの操作はできないが、psuh等の操作は可能である。ただし、他の処理との整合性を保つため、レコードの追加・削除は、appendRecord、removeRecordなどのメソッドを通じて行うべきである。
+          レコードセットが持つレコードを収容する。読み取り専用であるため、recordを別の配列に置き換えるなどの操作はできない。push等の操作は可能でが、他の処理との整合性を保つため、レコードの追加・削除は、appendRecord、removeRecordなどのメソッドを通じて行うべきである。
         </dd>
       </dl>
     </div>
@@ -113,9 +147,9 @@
         <dd>型：HuTime.ChartRecord | Number | Function</dd>
         <dd>削除するレコードオブジェクトを以下の方法で指定する。
           <ul>
-            <li>削除するレコードをHuTime.ChartRecordオブジェクトとして指定</li>
-            <li>削除するレコードをrecordsプロパティ内の要素番号として指定</li>
-            <li>削除するレコードを判定する関数を指定。レコードセット内の全てのレコードについて指定された関数が適用され、削除の可否が判定される。
+            <li>削除するレコードをHuTime.ChartRecordオブジェクトとして指定。</li>
+            <li>削除するレコードをrecordsの要素番号として指定。</li>
+            <li>削除するレコードを判定する関数を指定。レコードセットが持つ全てのレコードに指定された関数が適用され、削除の可否が判定される。
               <div class="method">
                 <h4>func(<span class="val">record</span>)</h4>
                 <dl>
@@ -135,18 +169,18 @@
   </div>
 
   <div id="section05">
-    <h2>５．レコードに関する設定</h2>
-    <p>レコードのどの項目をグラフの値とするかは、selectValueItem および、deselectValueItem メソッドで設定する。これらのメソッドを用いることにより、複数のデータ系列を持つグラフを作成することができる。</p>
+    <h2>５．レコード項目（データ系列）に関する設定</h2>
+    <p>レコードのどの項目をグラフの値とするかは、selectValueItem および、deselectValueItem メソッドで設定する。これらのメソッドを用いることにより、１つのレコードセットから複数のデータ系列を持つグラフを作成することができる。</p>
     <div class="method">
       <h4>selectValueItem(<span class="val">itemName</span>
         [, <span class="val">plotStyle</span> [, <span class="val">lineStyle</span>
         [, <span class="val">order</span>]]])</h4>
-      <p>グラフの値とするデータ項目を選択し、その項目の書式を設定する。既存の設定（<span class="val">itemName</span>が一致）がある場合は、書式設定や表示順が上書きされる（書式等を省略した場合は、規定値で上書き）。
+      <p>グラフの値とするデータ項目を選択し、その項目の書式を設定する。既存の設定（<span class="val">itemName</span>が一致）がある場合は、書式設定や表示順が上書きされる（書式等を省略した場合は、既定値で上書き）。
       </p>
       <dl>
         <dt>返値</dt>
         <dd>型：Boolean</dd>
-        <dd>選択が成功した場合はtrue、選択に失敗した場合はfalse。</dd>
+        <dd>選択が成功した場合はtrue、失敗した場合はfalse。</dd>
 
         <dt class="val">itemName</dt>
         <dd>型：String | Number</dd>
@@ -154,12 +188,12 @@
         <dd>グラフの値として使うデータ項目名（列名）または列番号。</dd>
 
         <dt class="val">plotStyle</dt>
-        <dd>型：HuTime.FigureStyle</dd>
-        <dd>設定するデータ項目のプロットの書式。省略された場合は既定値が適用される。</dd>
+        <dd>型：HuTime.FigureStyle | Function</dd>
+        <dd>選択したデータ項目のプロットの書式。省略された場合は既定値が適用される。書式を出力する関数を指定する方法は、<a href="#section07">７．プロットの表示に関する設定</a>を参照。</dd>
 
         <dt class="val">lineStyle</dt>
-        <dd>型：HuTime.FigureStyle</dd>
-        <dd>設定するデータ項目のレコードセット標準のグラフの線（プロット間の）書式。省略された場合は既定値が適用される。</dd>
+        <dd>型：HuTime.FigureStyle | Function</dd>
+        <dd>選択したデータ項目のグラフの線（プロット間の）書式。省略された場合は既定値が適用される。書式を出力する関数を指定する方法は、<a href="#section08">８．プロット間の線の表示に関する設定</a>を参照。</dd>
 
         <dt class="val">order</dt>
         <dd>型：Number</dd>
@@ -169,7 +203,7 @@
 
     <div class="method">
       <h4>deselectValueItem(<span class="val">itemName</span>)</h4>
-      <p>グラフの値として選択されているデータ項目を非選択とする。</p>
+      <p>グラフの値として選択されているデータ項目を非選択とする。当該項目の書式等の設定は削除される。</p>
       <dl>
         <dt>返値</dt>
         <dd>型：Boolean</dd>
@@ -177,7 +211,7 @@
 
         <dt>itemName</dt>
         <dd>型：String | Number</dd>
-        <dd>ラベルとして使うデータ項目名（列名）または列番号。</dd>
+        <dd>グラフの値として使うデータ項目名（列名）または列番号。</dd>
       </dl>
     </div>
 
@@ -185,23 +219,48 @@
       <dt>disableSortRecords</dt>
       <dd>型：Boolean</dd>
       <dd>既定値：false</dd>
-      <dd>t値に基づいたレコードのソートの抑止を設定する。抑止しない場合は、元データの順序に従ってデータが表示される。このため、元データがt値（例えば時間）の順となっていない場合、折れ線グラフでは、プロットがt軸上を前後しながら表示される。</dd>
+      <dd>trueに設定すると、t値に基づいたレコードのソートが抑止される。抑止しない場合は、元データの順序に従ってデータが表示される。</dd>
     </dl>
   </div>
 
   <div id="section06">
-    <h2>６．プロットの表示に関する設定</h2>
+    <h2>６．レコードセット全体の表示に関する設定</h2>
     <p>
-      グラフ上のプロット（棒グラフの場合は棒）について、表示の可否や書式などを設定する。表示の可否、書式、シンボルの種類、プロットの大きさ、プロットの回転角は、固定値だけでなく関数を設定することもできるため、それぞれの設定値を、レコードの内容に合わせて変化させることも可能である（棒グラフでは、表示の可否と書式のみ）。設定の多くで、レコードセットとしての標準の設定と項目ごとの設定を行うことができる。項目ごとの設定が無い場合は、レコードセットとしての標準の設定値が適用される。</p>
+      複数のレコード項目（データ系列）を表示する場合に、個々のレコード項目単位でなく、レコードセット全体でデータの表示・非表示を設定する。表示するレコード項目が１つである場合は、showPlot プロパティ、showLine プロパティを使っても表示・非表示の制御は可能である。レイヤのshowLineプロパティ、または、showPlotプロパティで非表示の設定がなされている場合は、レコードセットの設定は無視され、値にかかわらず、非表示となる。</p>
+
+    <div>
+      <dl>
+        <dt>showRecordset</dt>
+        <dd>型：Boolean</dd>
+        <dd>既定値：true</dd>
+        <dd>レコードセット全体のプロットとプロット間の線の表示・非表示を設定する。trueで表示。</dd>
+
+        <dt>showRecordsetPlot</dt>
+        <dd>型：Boolean</dd>
+        <dd>既定値：true</dd>
+        <dd>レコードセット全体のプロットの表示・非表示を設定する。trueで表示。</dd>
+
+        <dt>showRecordsetLine</dt>
+        <dd>型：Boolean</dd>
+        <dd>既定値：true</dd>
+        <dd>レコードセット全体のプロット間の線の表示・非表示を設定する。trueで表示。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div id="section07">
+    <h2>７．プロットの表示に関する設定</h2>
+    <p>
+      グラフ上のプロット（棒グラフの場合は棒）について、表示の可否や書式などを設定する。表示の可否、書式、シンボルの種類、プロットの大きさ、プロットの回転角は、固定値だけでなく関数を設定することもできるため、それぞれの設定値を、レコードの内容に合わせて変化させることも可能である（棒グラフでは、表示の可否と書式のみ）。</p>
 
     <h3>プロットの表示・非表示</h3>
-    <p>プロット（棒グラフの場合は棒）の表示・非表示を設定する。関数を設定することにより、何らかの条件を満たすレコードのプロットを非表示とする操作が可能になる（例えば、エラーとマークされたレコードを非表示にする）。</p>
+    <p>プロット（棒グラフの場合は棒）の表示・非表示を設定する。関数を設定することにより、何らかの条件を満たすレコードのプロットを非表示とする操作が可能になる（例えば、別のデータ項目でエラーとマークされたレコードを非表示にする）。</p>
     <div>
       <dl>
         <dt>showPlot</dt>
         <dd>型：Boolean | Function</dd>
         <dd>既定値：true</dd>
-        <dd>プロットの表示・非表示のレコードセットとしての標準値。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
+        <dd>レコードセットのプロットの表示・非表示の標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目を同様に表示・非表示に設定する場合は、setItemShowPlot メソッドの代わりに、このプロパティでプロットの表示・非表示を設定しても問題ない。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
           <ul>
             <li>真偽値を指定。trueで表示。</li>
             <li>表示・非表示を判定する以下の形式の関数を指定。
@@ -213,8 +272,7 @@
                   <dd>trueを返した場合、そのプロットは表示される。</dd>
 
                   <dt class="val">itemName</dt>
-                  <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
+                  <dd>型：String</dd>
                   <dd>表示の可否を判断するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -237,13 +295,13 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>プロットの表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showPlot プロパティ）に割り当てられている。</dd>
 
           <dt class="val">show</dt>
           <dd>型：Boolean | Function</dd>
-          <dd>プロットの表示・非表示の設定値。nullを指定すると、既定値（true）が設定される。無効な値を入力した場合は、無視される。
+          <dd>プロットの表示・非表示の設定値。nullを指定すると、設定が削除され、標準値（showPlot プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
-              <li>真偽値。trueで表示。</li>
+              <li>真偽値を指定。trueで表示。</li>
               <li>表示・非表示を判定する関数。関数の形式は、showPlot と同様。</li>
             </ul>
           </dd>
@@ -261,7 +319,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>プロットの表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showPlot プロパティ）に割り当てられており、showPlotの設定内容が返される。</dd>
         </dl>
       </div>
 
@@ -279,15 +337,15 @@
     </div>
 
     <h3>プロットの書式</h3>
-    <p>プロット（棒グラフの場合は棒）の書式（色など）を設定する。関数を設定することにより、条件ごとに異なる書式のプロットを表示することが可能になる。</p>
+    <p>プロット（棒グラフの場合は棒）の書式（色など）を設定する。関数を設定することにより、条件ごとに異なる書式のプロットを表示することができる。</p>
     <div>
       <dl>
         <dt>plotStyle</dt>
         <dd>型：HuTime.FigureStyle | Function</dd>
         <dd>既定値：HuTime.FigureStyle("#FF7F50")</dd>
-        <dd>プロットの書式のレコードセットとしての標準値。
+        <dd>プロットの書式のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目のプロットを同じ書式に設定する場合は、setItemPlotStyle メソッドの代わりに、このプロパティでプロットの書式を設定しても問題ない。nullを指定すると、既定値に戻る。
           <ul>
-            <li>書式を固定値で指定。</li>
+            <li>書式を HuTimeFigureStyle の固定値で指定。</li>
             <li>書式を出力する以下の形式の関数を指定。
               <div class="method">
                 <h4>func(<span class="val">itemName</span>, <span class="val">record</span>)</h4>
@@ -298,7 +356,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>書式を適用するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -307,7 +364,6 @@
                 </dl>
               </div>
             </li>
-            <li>nullを指定すると、既定値に戻る。</li>
           </ul>
         </dd>
       </dl>
@@ -322,15 +378,14 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>プロットの書式を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの書式を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotStyle プロパティ）に割り当てられている。</dd>
 
           <dt class="val">style</dt>
           <dd>型：HuTime.FigureStyle | Function</dd>
-          <dd>プロットの書式の設定値。
+          <dd>プロットの書式の設定値。nullを指定すると、設定が削除され、標準値（plotStyle プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
-              <li>真偽値。trueで表示。</li>
+              <li>HuTime.FigureStyleで書式を指定。</li>
               <li>書式を返す関数。関数の形式は、plotStyle と同様。</li>
-              <li>nullを指定すると、既定値が設定される。</li>
             </ul>
           </dd>
         </dl>
@@ -338,7 +393,7 @@
 
       <div class="method">
         <h4>getItemPlotStyle(<span class="val">itemName</span>)</h4>
-        <p>データ項目ごとのプロットの書式を確認する。データ項目ごとの指定が無い場合や、<span class="val">itemName</span> の指定が正しくない場合は、レコードセットの標準値（plotStyle）の内容が返される。
+        <p>データ項目ごとのプロットの書式を取得する。データ項目ごとの指定が無い場合や、<span class="val">itemName</span> の指定が正しくない場合は、レコードセットの標準値（plotStyle）の内容が返される。
         </p>
         <dl>
           <dt>返値</dt>
@@ -347,20 +402,20 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>プロットの書式を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの書式を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotStyle プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
     </div>
 
     <h3>プロットのシンボル</h3>
-    <p>プロット（棒グラフの場合は棒）のシンボルを設定する。関数を設定することにより、条件ごとに異なるシンボルのプロットを表示することが可能になる。</p>
+    <p>プロット（棒グラフの場合は設定無効）のシンボルを設定する。関数を設定することにより、条件ごとに異なるシンボルのプロットを表示することが可能になる。</p>
     <div>
       <dl>
         <dt>plotSymbol</dt>
         <dd>型：Number | Function</dd>
         <dd>制限：Number型では 0 ～ 3</dd>
         <dd>既定値：0</dd>
-        <dd>プロットのシンボルのレコードセットとしての標準値。0:丸, 1:四角, 2:三角, 3:十字。nullを指定すると既定値（0:丸）に戻る。無効な値を指定した場合は無視される。
+        <dd>プロットのシンボルのレコードセットとしての標準値。0:丸, 1:四角, 2:三角, 3:十字。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目を同じシンボルに設定する場合は、setItemPlotSymbol メソッドの代わりに、このプロパティでプロットのシンボルを設定しても問題ない。nullを指定すると既定値（0:丸）に戻る。無効な値を指定した場合は無視される。
           <ul>
             <li>シンボルを固定値で指定。</li>
             <li>シンボルを表す数値を出力する以下の形式の関数を指定。
@@ -373,7 +428,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>シンボルを設定するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -396,11 +450,11 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>プロットのシンボルを設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットのシンボルを設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotSymbol プロパティ）に割り当てられている。</dd>
 
           <dt class="val">symbol</dt>
           <dd>型：Number | Function</dd>
-          <dd>プロットのシンボルを表す数値。nullを指定すると、既定値（0：丸）が設定される。無効な値を入力した場合は、無視される。
+          <dd>プロットのシンボルを表す数値。nullを指定すると、既定値（0：丸）が設定される。nullを指定すると、設定が削除され、標準値（plotSymbol プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
               <li>シンボルの種類を表す数値。</li>
               <li>シンボルの種類を表す数値を返す関数。関数の形式は、plotSymbl と同様。</li>
@@ -420,19 +474,19 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>プロットのシンボルを取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットのシンボルを取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotSymbol プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
     </div>
 
-    <h3>プロットの大きさ（幅）</h3>
-    <p>プロットの大きさを設定する。関数を設定することにより、他のデータ項目の値を使ってプロットの大きさを変える表現が可能になる。</p>
+    <h3>プロットの大きさ</h3>
+    <p>プロットの大きさを設定する。棒グラフの場合は、plotWidthType プロパティが 3（XY値固定）に設定された場合のみ、棒の幅を任意に設定できる。関数を設定することにより、他のデータ項目の値を使ってプロットの大きさを変える表現が可能になる。</p>
     <div>
       <dl>
         <dt>plotWidth</dt>
         <dd>型：Number | Function</dd>
         <dd>既定値：10</dd>
-        <dd>プロットの大きさ（単位：px）のレコードセットとしての標準値。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
+        <dd>プロットの大きさ（単位：px）のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目のプロットを同じ大きさに設定する場合は、setItemPlotWidth メソッドの代わりに、このプロパティでプロットの大きさを設定しても問題ない。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
           <ul>
             <li>数値による指定。</li>
             <li>プロットの大きさを出力する以下の形式の関数を指定。
@@ -445,7 +499,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>大きさを指定するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -468,11 +521,11 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>プロットの大きさを設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの大きさを設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotWidth プロパティ）に割り当てられている。</dd>
 
           <dt class="val">width</dt>
           <dd>型：Number | Function</dd>
-          <dd>プロットの大きさを表す数値（単位；px）。nullを指定すると、既定値（10）が設定される。無効な値を入力した場合は、無視される。
+          <dd>プロットの大きさを表す数値（単位；px）。nullを指定すると、設定が削除され、標準値（plotWidth プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
               <li>プロットの大きさを表す数値。</li>
               <li>プロットの大きさを返す関数。関数の形式は、plotWidth と同様。</li>
@@ -492,19 +545,19 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>プロットの大きさを取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの大きさを取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotWidth プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
     </div>
 
     <h3>プロットのシンボルの回転角</h3>
-    <p>プロットのシンボルの回転角を設定する。四角のシンボルをひし形にする、十字のシンボルをXにする際などに利用する。関数による設定も可能である。</p>
+    <p>プロットのシンボルの回転角を設定する（棒グラフの場合は無効）。四角のシンボルをひし形にする、十字のシンボルをXにする際などに利用する。関数による設定も可能である。</p>
     <div>
       <dl>
         <dt>plotRotate</dt>
         <dd>型：Number | Function</dd>
         <dd>既定値：0</dd>
-        <dd>プロットのシンボルの回転角（単位：deg）のレコードセットとしての標準値。nullを指定すると、既定値（0）に戻る。無効な値を設定した場合は無視される。
+        <dd>プロットのシンボルの回転角（単位：deg）のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目のシンボルを同じ回転角に設定する場合は、setItemPlotRotate メソッドの代わりに、このプロパティでプロットのシンボルを設定しても問題ない。nullを指定すると、既定値（0）に戻る。無効な値を設定した場合は無視される。
           <ul>
             <li>数値による指定。</li>
             <li>プロットの回転角を出力する以下の形式の関数を指定。
@@ -517,7 +570,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>シンボルの回転角を指定するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -540,11 +592,11 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>プロットの大きさを設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットの大きさを設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotRotate プロパティ）に割り当てられている。</dd>
 
           <dt class="val">rotate</dt>
           <dd>型：Number | Function</dd>
-          <dd>プロットの大きさを表す数値（単位；px）。nullを指定すると、既定値（10）が設定される。無効な値を入力した場合は、無視される。
+          <dd>プロットの大きさを表す数値（単位；px）。nullを指定すると、設定が削除され、標準値（plotRotate プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
               <li>プロットのシンボルの回転角を表す数値。</li>
               <li>プロットのシンボルの回転角を表す数値を返す関数。関数の形式は、plotRotate と同様。</li>
@@ -565,7 +617,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>プロットのシンボルの回転角を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>プロットのシンボルの回転角を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（plotRotate プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
     </div>
@@ -576,29 +628,88 @@
         <dt>plotWidthType</dt>
         <dd>型：Number</dd>
         <dd>既定値：0</dd>
-        <dd>棒グラフにおいて、棒の幅の算出方法を指定する。0:確実範囲, 1:可能範囲, 2:t値固定, 3: xy値固定。t値固定、および、xy固定値での固定値は、plotWidthに設定する。</dd>
+        <dd>棒グラフにおいて、棒の幅を算出する方法を指定する。0:確実範囲, 1:可能範囲, 2:t値固定, 3: xy値固定。t値固定、および、xy固定値での固定値は、plotWidth プロパティに設定する。</dd>
 
         <dt>drawPlot</dt>
         <dd>型：関数</dd>
         <dd>既定値：function (){}</dd>
-        <dd>範囲の表示処理をカスタマイズするする場合に設定する。</dd>
+        <dd>プロットとしてアイコン画像を用いるなど、プロットの表示処理をカスタマイズするする場合に設定する。棒グラフとその他のグラフで渡される引数が異なる。既定の処理に戻すには、null を設定する。</dd>
+        <dd>
+          <div class="method">
+            <p style="text-indent: 0; padding: 8px 0 0 0; font-weight: 700;">棒グラフ</p>
+            <h4>func(<span class="val">tRange</span>, <span class="val">v</span>, <span class="val">baseV</span>,
+              <span class="val">style</span>,
+              <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+            <p style="text-indent: 0; padding: 8px 0 0 0; font-weight: 700;">その他のグラフ</p>
+            <h4>func(<span class="val">t</span>, <span class="val">v</span>,
+              <span class="val">style</span>,
+              <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+
+            <dl>
+              <dt>返値</dt>
+              <dd>なし</dd>
+
+              <dt class="val">tRange</dt>
+              <dd>型：HuTime.TRange</dd>
+              <dd>棒グラフの棒を描画するt値の範囲を示す HuTime.TRange オブジェクトが渡される。</dd>
+
+              <dt class="val">t</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフ以外のグラフで、プロットを描画するt値が渡される。</dd>
+
+              <dt class="val">v</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフの棒またはプロットのv値が渡される。</dd>
+
+              <dt class="val">baseV</dt>
+              <dd>型：Number</dd>
+              <dd>積み重ねの棒グラフにおいて、前のデータまでの積算のv値が渡される。したがって、棒を描画するv値の範囲は、<span class="val">baseV</span> から <span class="val">baseV</span> + <span class="val">v</span>までとなる。</dd>
+
+              <dt class="val">style</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>棒グラフの棒またはプロットの書式が渡される。</dd>
+
+              <dt class="val"> layer</dt>
+              <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+              <dd>描画対象のレイヤオブジェクトが渡される。</dd>
+
+              <dt class="val">recordset</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードセットが渡される。</dd>
+
+              <dt class="val">record</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードが渡される。</dd>
+
+              <dt class="val"> valueName</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のデータ項目名が渡される。</dd>
+
+              <dt class="val">canvas</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象の HTML canvas が渡される。</dd>
+            </dl>
+          </div>
+        </dd>
       </dl>
     </div>
   </div>
 
-  <div id="section07">
-    <h2>７．線（プロット間の）の表示に関する設定</h2>
+  <div id="section08">
+    <h2>８．プロット間の線の表示に関する設定</h2>
     <p>
       グラフ上のプロット間の線について、表示の可否や書式を設定する。表示の可否、書式は、固定値だけでなく関数を設定することもできるため、それぞれの設定値を、レコードの内容に合わせて変化させることも可能である。設定の多くで、レコードセットとしての標準の設定と項目ごとの設定を行うことができる。項目ごとの設定が無い場合は、レコードセットとしての標準の設定値が適用される。</p>
 
     <h3>線の表示・非表示</h3>
-    <p>プロット間の線の表示・非表示を設定する。関数を設定することにより、何らかの条件を満たすレコードのプロット間の線を非表示とする操作が可能になる（例えば、エラーとマークされたレコードには線を引かないなど）。</p>
+    <p>プロット間の線の表示・非表示を設定する。関数を設定することにより、何らかの条件を満たすレコードのプロット間の線を非表示とする操作が可能になる（例えば、別のデータ項目でエラーとマークされたレコードには線を引かないなど）。</p>
     <div>
       <dl>
         <dt>showLine</dt>
         <dd>型：Boolean | Function</dd>
         <dd>既定値：true</dd>
-        <dd>線の表示・非表示のレコードセットとしての標準値。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
+        <dd>線の表示・非表示のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目を同様に表示・非表示に設定する場合は、setItemShowLine メソッドの代わりに、このプロパティでプロット間の線の表示・非表示を設定しても問題ない。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
           <ul>
             <li>真偽値を指定。trueで表示。</li>
             <li>表示・非表示を判定する以下の形式の関数を指定。
@@ -612,7 +723,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>表示の可否を判断するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -639,11 +749,11 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>線の表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>線の表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showLine プロパティ）に割り当てられている。</dd>
 
           <dt class="val">show</dt>
           <dd>型：Boolean | Function</dd>
-          <dd>線の表示・非表示の設定値。nullを指定すると、既定値（true）が設定される。無効な値を入力した場合は、無視される。
+          <dd>線の表示・非表示の設定値。nullを指定すると、設定が削除され、標準値（showLine プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
               <li>真偽値。trueで表示。</li>
               <li>表示・非表示を判定する関数。関数の形式は、showLine と同様。</li>
@@ -654,7 +764,7 @@
 
       <div class="method">
         <h4>getItemShowLine(<span class="val">itemName</span>)</h4>
-        <p>データ項目ごとの線の表示・非表示を確認する。データ項目ごとの指定が無い場合や、<span class="val">itemName</span> の指定が正しくない場合は、レコードセットの標準値（showPlot）の内容が返される。
+        <p>データ項目ごとの線の表示・非表示を確認する。データ項目ごとの指定が無い場合や、<span class="val">itemName</span> の指定が正しくない場合は、レコードセットの標準値（showLine）の内容が返される。
         </p>
         <dl>
           <dt>返値</dt>
@@ -663,7 +773,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>線の表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>線の表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showLine プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
 
@@ -687,7 +797,7 @@
         <dt>lineStyle</dt>
         <dd>型：HuTime.FigureStyle | Function</dd>
         <dd>既定値：HuTime.FigureStyle(null, "black", 2)</dd>
-        <dd>線の書式のレコードセットとしての標準値。
+        <dd>レコードセットとしての線の書式の標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目のプロット間の線を同じ書式に設定する場合は、setItemLineStyle メソッドの代わりに、このプロパティでプロットの書式を設定しても問題ない。null を指定すると、既定値に戻る。
           <ul>
             <li>書式を固定値で指定。</li>
             <li>書式を出力する以下の形式の関数を指定。
@@ -701,7 +811,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>書式を適用する線のデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -714,13 +823,12 @@
                 </dl>
               </div>
             </li>
-            <li>nullを指定すると、既定値に戻る。</li>
           </ul>
         </dd>
       </dl>
 
       <div class="method">
-        <h4>setItemPlotStyle(<span class="val">itemName</span>, <span class="val">style</span>)</h4>
+        <h4>setItemLineStyle(<span class="val">itemName</span>, <span class="val">style</span>)</h4>
         <p>データ項目ごとの線の書式を設定する。</p>
         <dl>
           <dt>返値</dt>
@@ -729,22 +837,21 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>線の書式を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>線の書式を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（lineStyle プロパティ）に割り当てられている。</dd>
 
           <dt class="val">style</dt>
           <dd>型：HuTime.FigureStyle | Function</dd>
-          <dd>線の書式の設定値。
+          <dd>線の書式の設定値。nullを指定すると、設定が削除され、標準値（lineStyle プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
-              <li>真偽値。trueで表示。</li>
+              <li>線の書式を HuTime.FigureStyle による固定値で指定。</li>
               <li>線の書式を返す関数。関数の形式は、lineStyle と同様。</li>
-              <li>nullを指定すると、既定値が設定される。</li>
             </ul>
           </dd>
         </dl>
       </div>
 
       <div class="method">
-        <h4>getItemPlotStyle(<span class="val">itemName</span>)</h4>
+        <h4>getItemLineStyle(<span class="val">itemName</span>)</h4>
         <p>データ項目ごとの線の書式を確認する。データ項目ごとの指定が無い場合や、<span class="val">itemName</span> の指定が正しくない場合は、レコードセットの標準値（plotStyle）の内容が返される。
         </p>
         <dl>
@@ -754,7 +861,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>線の書式を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>線の書式を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（lineStyle プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
     </div>
@@ -765,15 +872,84 @@
         <dt>drawLine</dt>
         <dd>型：関数</dd>
         <dd>既定値：function (){}</dd>
-        <dd>線の表示処理をカスタマイズするする場合に設定する。</dd>
+        <dd>線の表示処理をカスタマイズするする場合に設定する。棒グラフとその他のグラフで渡される引数が異なる。既定の処理に戻すには、null を設定する。</dd>
+        <dd>
+          <div class="method">
+            <p style="text-indent: 0; padding: 8px 0 0 0; font-weight: 700;">棒グラフ</p>
+            <h4>func(<span class="val">tRange</span>, <span class="val">v</span>,
+              <span class="val">tRangePrev</span>, <span class="val">vPrev</span>,
+              <span class="val">style</span>,
+              <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+            <p style="text-indent: 0; padding: 8px 0 0 0; font-weight: 700;">その他のグラフ</p>
+            <h4>func(<span class="val">t</span>, <span class="val">v</span>,
+              <span class="val">tPrev</span>, <span class="val">vPrev</span>,
+              <span class="val">style</span>,
+              <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+
+            <dl>
+              <dt>返値</dt>
+              <dd>なし</dd>
+
+              <dt class="val">tRange</dt>
+              <dd>型：HuTime.TRange</dd>
+              <dd>棒グラフの棒を描画するt値の範囲を示す HuTime.TRange オブジェクトが渡される。</dd>
+
+              <dt class="val">t</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフ以外のグラフで、プロットを描画するt値が渡される。</dd>
+
+              <dt class="val">v</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフの棒またはプロットのv値が渡される。棒グラフの場合、前のデータまでの積算が足されたv値。</dd>
+
+              <dt class="val">tRangePrev</dt>
+              <dd>型：HuTime.TRange</dd>
+              <dd>棒グラフの前のレコードの棒を描画するt値の範囲を示す HuTime.TRange オブジェクトが渡される。</dd>
+
+              <dt class="val">tPrev</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフ以外のグラフで、前のレコードのプロットを描画するt値が渡される。</dd>
+
+              <dt class="val">vPrev</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフの前のレコードの棒またはプロットのv値が渡される。棒グラフの場合、前のデータまでの積算が足されたv値。</dd>
+
+              <dt class="val">style</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>棒グラフの棒またはプロットの間の線の書式が渡される。</dd>
+
+              <dt class="val"> layer</dt>
+              <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+              <dd>描画対象のレイヤオブジェクトが渡される。</dd>
+
+              <dt class="val">recordset</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードセットが渡される。</dd>
+
+              <dt class="val">record</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードが渡される。</dd>
+
+              <dt class="val"> valueName</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のデータ項目名が渡される。</dd>
+
+              <dt class="val">canvas</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象の HTML canvas が渡される。</dd>
+            </dl>
+          </div>
+        </dd>
       </dl>
     </div>
   </div>
 
-  <div id="section08">
-    <h2>８．t値の範囲（期間など）の表示に関する設定</h2>
+  <div id="section09">
+    <h2>９．t値の範囲（期間など）の表示に関する設定</h2>
     <p>
-      グラフ上のプロットのt値の範囲について、表示の可否や書式を設定する。表示の可否、書式は、固定値だけでなく関数を設定することもできるため、それぞれの設定値を、レコードの内容に合わせて変化させることも可能である。設定の多くで、レコードセットとしての標準の設定と項目ごとの設定を行うことができる。項目ごとの設定が無い場合は、レコードセットとしての標準の設定値が適用される。<span style="color: red;"> レイヤの設定が非表示の場合は無視される。</span></p>
+      グラフ上のプロットのt値の範囲（機関など）について、表示の可否や書式を設定する。表示の可否、書式は、固定値だけでなく関数を設定することもできるため、それぞれの設定値を、レコードの内容に合わせて変化させることも可能である。設定の多くで、レコードセットとしての標準の設定と項目ごとの設定を行うことができる。項目ごとの設定が無い場合は、レコードセットとしての標準の設定値が適用される。</p>
 
     <h3>t値の範囲の表示・非表示</h3>
     <p>t値の範囲の表示・非表示を確実範囲と可能範囲に分けて設定する。関数を設定することにより、何らかの条件を満たすレコードのt値の範囲を非表示とする操作が可能になる。</p>
@@ -782,7 +958,7 @@
         <dt>showReliableTRange</dt>
         <dd>型：Boolean | Function</dd>
         <dd>既定値：true</dd>
-        <dd>確実範囲の表示・非表示のレコードセットとしての標準値。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
+        <dd>確実範囲の表示・非表示のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目の確実範囲を同様に表示・非表示に設定する場合は、setItemShowReliableTRange メソッドの代わりに、このプロパティでプロットの書式を設定しても問題ない。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
           <ul>
             <li>真偽値を指定。trueで表示。</li>
             <li>表示・非表示を判定する以下の形式の関数を指定。
@@ -795,7 +971,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>表示の可否を判断するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -818,11 +993,11 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>確実範囲の表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>確実範囲の表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showReliableTRange プロパティ）に割り当てられている。</dd>
 
           <dt class="val">show</dt>
           <dd>型：Boolean | Function</dd>
-          <dd>確実範囲の表示・非表示の設定値。nullを指定すると、既定値（true）が設定される。無効な値を入力した場合は、無視される。
+          <dd>確実範囲の表示・非表示の設定値。nullを指定すると、設定が削除され、標準値（showReliableTRange プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
               <li>真偽値。trueで表示。</li>
               <li>表示・非表示を判定する関数。関数の形式は、showReliableTRange と同様。</li>
@@ -842,7 +1017,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>確実範囲の表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>確実範囲の表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showReliableTRange プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
 
@@ -850,7 +1025,7 @@
         <dt>showPossibleTRange</dt>
         <dd>型：Boolean | Function</dd>
         <dd>既定値：true</dd>
-        <dd>可能範囲の表示・非表示のレコードセットとしての標準値。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
+        <dd>可能範囲の表示・非表示のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目の可能範囲を同様に表示・非表示に設定する場合は、setItemShowPossibleTRange メソッドの代わりに、このプロパティでプロットの書式を設定しても問題ない。nullを指定すると、既定値（true）に戻る。無効な値を設定した場合は無視される。
           <ul>
             <li>真偽値を指定。trueで表示。</li>
             <li>表示・非表示を判定する以下の形式の関数を指定。
@@ -863,7 +1038,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>表示の可否を判断するプロットのデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -886,11 +1060,11 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>可能範囲の表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>可能範囲の表示・非表示を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showPossibleTRange プロパティ）に割り当てられている。</dd>
 
           <dt class="val">show</dt>
           <dd>型：Boolean | Function</dd>
-          <dd>可能範囲の表示・非表示の設定値。nullを指定すると、既定値（true）が設定される。無効な値を入力した場合は、無視される。
+          <dd>可能範囲の表示・非表示の設定値。nullを指定すると、設定が削除され、標準値（showPossibleTRange プロパティ）が適用されるようになる。無効な値を入力した場合は、無視される。
             <ul>
               <li>真偽値。trueで表示。</li>
               <li>表示・非表示を判定する関数。関数の形式は、showReliableTRange と同様。</li>
@@ -910,7 +1084,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>可能範囲の表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>可能範囲の表示・非表示を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（showPossibleTRange プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
 
@@ -928,7 +1102,7 @@
         <dt>hideTRangeNonCentralValue</dt>
         <dd>型：Boolean</dd>
         <dd>既定値：false</dd>
-        <dd>代表値のないレコード（無限大を含むなど）が範囲の非表示・表示。true で非表示。</dd>
+        <dd>代表値のないレコード（無限大を含むなど）の範囲の非表示・表示。true で非表示。</dd>
 
         <dt>drawPRangeAsRRange</dt>
         <dd>型：Boolean</dd>
@@ -945,7 +1119,7 @@
         <dt>rangeStyle</dt>
         <dd>型：HuTime.FigureStyle | Function</dd>
         <dd>既定値：HuTime.FigureStyle(null, "black", 2)</dd>
-        <dd>範囲の書式のレコードセットとしての標準値。
+        <dd>範囲の書式のレコードセットとしての標準値。グラフのレコード項目（データ系列）が１つの場合やすべてのグラフのレコード項目のt値の範囲を同じ書式に設定する場合は、setItemRangeStyle メソッドの代わりに、このプロパティでプロットの書式を設定しても問題ない。nullを指定すると、既定値に戻る。
           <ul>
             <li>書式を固定値で指定。</li>
             <li>書式を出力する以下の形式の関数を指定。
@@ -958,7 +1132,6 @@
 
                   <dt class="val">itemName</dt>
                   <dd>型：String | Number</dd>
-                  <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
                   <dd>書式を適用する範囲のデータ項目名（列名）または列番号が渡される。</dd>
 
                   <dt class="val">record</dt>
@@ -967,7 +1140,7 @@
                 </dl>
               </div>
             </li>
-            <li>nullを指定すると、既定値に戻る。</li>
+            <li></li>
           </ul>
         </dd>
       </dl>
@@ -982,15 +1155,14 @@
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
           <dd>制限：String 型では、空文字および空白のみは不可。Number 型では、NaN および無限大は不可。</dd>
-          <dd>範囲の書式を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>範囲の書式を設定するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（rangeStyle プロパティ）に割り当てられている。</dd>
 
           <dt class="val">style</dt>
           <dd>型：HuTime.FigureStyle | Function</dd>
-          <dd>範囲の書式の設定値。
+          <dd>範囲の書式の設定値。nullを指定すると、設定が削除され、標準値（rangeStyle プロパティ）が適用されるようになる。。無効な値を入力した場合は、無視される。
             <ul>
               <li>真偽値。trueで表示。</li>
               <li>範囲の書式を返す関数。関数の形式は、lineStyle と同様。</li>
-              <li>nullを指定すると、既定値が設定される。</li>
             </ul>
           </dd>
         </dl>
@@ -1007,7 +1179,7 @@
 
           <dt class="val">itemName</dt>
           <dd>型：String | Number</dd>
-          <dd>範囲の書式を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値に割り当てられている。</dd>
+          <dd>範囲の書式を取得するデータ項目名（列名）または列番号。なお、"default" はレコードセットの標準値（rangeStyle プロパティ）に割り当てられている。</dd>
         </dl>
       </div>
 
@@ -1026,7 +1198,51 @@
         <dt>drawRange</dt>
         <dd>型：関数</dd>
         <dd>既定値：function (){}</dd>
-        <dd>範囲の表示処理をカスタマイズするする場合に設定する。</dd>
+        <dd>範囲の表示処理をカスタマイズするする場合に設定する。既定の処理に戻すには、null を設定する。</dd>
+        <dd>
+          <div class="method">
+            <h4>func(<span class="val">tRange</span>, <span class="val">v</span>,
+              <span class="val">style</span>,
+              <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
+              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+            <dl>
+              <dt>返値</dt>
+              <dd>なし</dd>
+
+              <dt class="val">tRange</dt>
+              <dd>型：HuTime.TRange</dd>
+              <dd>t値の範囲を描画するt値の範囲を示す HuTime.TRange オブジェクトが渡される。</dd>
+
+              <dt class="val">v</dt>
+              <dd>型：Number</dd>
+              <dd>棒グラフの棒またはプロットのv値が渡される。</dd>
+
+              <dt class="val">style</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>t値の範囲の書式が渡される。</dd>
+
+              <dt class="val"> layer</dt>
+              <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+              <dd>描画対象のレイヤオブジェクトが渡される。</dd>
+
+              <dt class="val">recordset</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードセットが渡される。</dd>
+
+              <dt class="val">record</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のレコードが渡される。</dd>
+
+              <dt class="val"> valueName</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象のデータ項目名が渡される。</dd>
+
+              <dt class="val">canvas</dt>
+              <dd>型：HuTime.FigureStyle</dd>
+              <dd>描画対象の HTML canvas が渡される。</dd>
+            </dl>
+          </div>
+        </dd>
       </dl>
     </div>
   </div>
