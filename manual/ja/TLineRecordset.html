@@ -359,7 +359,7 @@
             <h4>func(<span class="val">tRange</span>, <span class="val">v</span>,
               <span class="val">style</span>,
               <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
-              <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+              <span class="val">itemName</span>, <span class="val">canvas</span>)</h4>
             <dl>
               <dt>返値</dt>
               <dd>なし</dd>
@@ -376,24 +376,24 @@
               <dd>型：HuTime.FigureStyle</dd>
               <dd>t値の範囲の書式が渡される。</dd>
 
-              <dt class="val"> layer</dt>
-              <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+              <dt class="val">layer</dt>
+              <dd>型：HuTime.TLineLayer</dd>
               <dd>描画対象のレイヤオブジェクトが渡される。</dd>
 
               <dt class="val">recordset</dt>
-              <dd>型：HuTime.FigureStyle</dd>
+              <dd>型：HuTime.TLineRecordset</dd>
               <dd>描画対象のレコードセットが渡される。</dd>
 
               <dt class="val">record</dt>
-              <dd>型：HuTime.FigureStyle</dd>
+              <dd>型：HuTime.TLineRecord</dd>
               <dd>描画対象のレコードが渡される。</dd>
 
-              <dt class="val"> valueName</dt>
-              <dd>型：HuTime.FigureStyle</dd>
+              <dt class="val">itemName</dt>
+              <dd>型：String</dd>
               <dd>描画対象のデータ項目名が渡される。</dd>
 
               <dt class="val">canvas</dt>
-              <dd>型：HuTime.FigureStyle</dd>
+              <dd>型：HTMLCanvasElement</dd>
               <dd>描画対象の HTML canvas が渡される。</dd>
             </dl>
           </div>
@@ -485,7 +485,7 @@
               <h4>func(<span class="val">tRange</span>, <span class="val">v</span>,
                 <span class="val">style</span>,
                 <span class="val">layer</span>, <span class="val">recordset</span>, <span class="val">record</span>,
-                <span class="val">valueName</span>, <span class="val">canvas</span>)</h4>
+                <span class="val">itemName</span>, <span class="val">canvas</span>)</h4>
               <dl>
                 <dt>返値</dt>
                 <dd>なし</dd>
@@ -503,23 +503,23 @@
                 <dd>ラベルの書式が渡される。</dd>
 
                 <dt class="val"> layer</dt>
-                <dd>型：HuTime.LineChartLayer | HuTime.PlotChartLayer | HuTime.BarChartLayer</dd>
+                <dd>型：HuTime.TLineLayer</dd>
                 <dd>描画対象のレイヤオブジェクトが渡される。</dd>
 
                 <dt class="val">recordset</dt>
-                <dd>型：HuTime.FigureStyle</dd>
+                <dd>型：HuTime.TLineRecordset</dd>
                 <dd>描画対象のレコードセットが渡される。</dd>
 
                 <dt class="val">record</dt>
-                <dd>型：HuTime.FigureStyle</dd>
+                <dd>型：HuTime.TLineRecord</dd>
                 <dd>描画対象のレコードが渡される。</dd>
 
-                <dt class="val"> valueName</dt>
-                <dd>型：HuTime.FigureStyle</dd>
+                <dt class="val">itemName</dt>
+                <dd>型：String</dd>
                 <dd>描画対象のデータ項目名が渡される。</dd>
 
                 <dt class="val">canvas</dt>
-                <dd>型：HuTime.FigureStyle</dd>
+                <dd>型：HTMLCanvasElement</dd>
                 <dd>描画対象の HTML canvas が渡される。</dd>
               </dl>
             </div>
