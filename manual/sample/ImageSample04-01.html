@@ -19,17 +19,17 @@
     pos = new HuTime.TVPosition(100, 50);
     sty = new HuTime.FigureStyle();
     lyr.processAfterRedraw = function processAfterRedraw(layer) {
-        HuTime.Drawing.drawImage(sty, layer, pos, "img/ImageSample.jpg");
+        HuTime.Drawing.drawImage(sty, layer, pos, "http://web.hutime.org/manual/img/ImageSample.jpg");
     };
 
     lyr.mouseEventCapture = HuTime.EventCapture.All;
     lyr.addEventListener("mousemove",
         function(ev) {
-            var ctx = HuTime.Drawing.pathImage(ev.target, pos, "img/ImageSample.jpg");
+            var ctx = HuTime.Drawing.pathImage(ev.target, pos, "http://web.hutime.org/manual/img/ImageSample.jpg");
             if (ctx.isPointInPath(ev.offsetX, ev.offsetY))
-                HuTime.Drawing.drawImage(sty, ev.target, pos, "img/ImageSample.jpg", null, null, 180);
+                HuTime.Drawing.drawImage(sty, ev.target, pos, "http://web.hutime.org/manual/img/ImageSample.jpg", null, null, 180);
             else
-                HuTime.Drawing.drawImage(sty, ev.target, pos, "img/ImageSample.jpg");
+                HuTime.Drawing.drawImage(sty, ev.target, pos, "http://web.hutime.org/manual/img/ImageSample.jpg");
         }
     );
 

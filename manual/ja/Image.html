@@ -118,9 +118,9 @@
     sty0 = new HuTime.FigureStyle();
     sty1 = new HuTime.FigureStyle(null, &quot;red&quot;, 5);
     lyr.processAfterRedraw = function processAfterRedraw(layer) {
-        HuTime.Drawing.drawImage(sty0, layer, posW, &quot;img/ImageSample.jpg&quot;, 80);
-        HuTime.Drawing.drawImage(sty1, layer, pos, &quot;img/ImageSample.jpg&quot;);
-        HuTime.Drawing.drawImage(sty0, layer, posH, &quot;img/ImageSample.jpg&quot;, null, 60);
+        HuTime.Drawing.drawImage(sty0, layer, posW, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;, 80);
+        HuTime.Drawing.drawImage(sty1, layer, pos, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;);
+        HuTime.Drawing.drawImage(sty0, layer, posH, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;, null, 60);
     };
 
     ht.redraw(0, 200);
@@ -159,17 +159,17 @@
     pos = new HuTime.TVPosition(100, 50);
     sty = new HuTime.FigureStyle();
     lyr.processAfterRedraw = function processAfterRedraw(layer) {
-        HuTime.Drawing.drawImage(sty, layer, pos, &quot;img/ImageSample.jpg&quot;);
+        HuTime.Drawing.drawImage(sty, layer, pos, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;);
     };
 
     lyr.mouseEventCapture = HuTime.EventCapture.All;
     lyr.addEventListener(&quot;mousemove&quot;,
         function(ev) {
-            var ctx = HuTime.Drawing.pathImage(ev.target, pos, &quot;img/ImageSample.jpg&quot;);
+            var ctx = HuTime.Drawing.pathImage(ev.target, pos, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;);
             if (ctx.isPointInPath(ev.offsetX, ev.offsetY))
-                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;img/ImageSample.jpg&quot;, null, null, 180);
+                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;, null, null, 180);
             else
-                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;img/ImageSample.jpg&quot;);
+                HuTime.Drawing.drawImage(sty, ev.target, pos, &quot;http://web.hutime.org/manual/img/ImageSample.jpg&quot;);
         }
     );
 
